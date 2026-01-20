@@ -58,6 +58,16 @@ const cartSlice = createSlice({
             state.totalAmount = calculateTotal(state.cartItems);
             localStorage.setItem('cartItems', JSON.stringify(state.cartItems));
         },
+        updateCartItem: (state, action: PayloadAction<{ id: string; type: 'regular' | 'sample'; oldCustomization?: string; newQuantity?: number; newCustomization?: string }>) => {
+            const { id, type, oldCustomization, newQuantity, newCustomization } = action.payload;
+            const item = state.cartItems.find(x => x.id === id && x.type === type && x.customization === oldCustomization);
+            if (item) {
+                if (newQuantity !== undefined) item.quantity = newQuantity;
+                if (newCustomization !== undefined) item.customization = newCustomization;
+            }
+            state.totalAmount = calculateTotal(state.cartItems);
+            localStorage.setItem('cartItems', JSON.stringify(state.cartItems));
+        },
         clearCart: (state) => {
             state.cartItems = [];
             state.totalAmount = 0;
@@ -66,5 +76,5 @@ const cartSlice = createSlice({
     },
 });
 
-export const { addToCart, removeFromCart, clearCart } = cartSlice.actions;
+export const { addToCart, removeFromCart, clearCart, updateCartItem } = cartSlice.actions;
 export default cartSlice.reducer;

@@ -318,21 +318,30 @@ const CheckoutPage = () => {
 
                                                 {/* UTR Input for Bank Transfer */}
                                                 {paymentMethod === 'BankTransfer' && method.id === 'BankTransfer' && (
-                                                    <div className="px-4 pb-4 pl-12">
-                                                        <label className="block text-sm font-bold text-secondary mb-1">
-                                                            UTR / Transaction Reference Number <span className="text-red-500">*</span>
-                                                        </label>
-                                                        <input
-                                                            type="text"
-                                                            placeholder="Enter the 12-digit UTR number"
-                                                            value={utrNumber}
-                                                            onChange={(e) => setUtrNumber(e.target.value)}
-                                                            className="w-full px-4 py-2 bg-primary border border-theme rounded text-primary focus:border-gold focus:ring-1 focus:ring-gold uppercase tracking-wider focus:outline-none"
-                                                            required={paymentMethod === 'BankTransfer'}
-                                                        />
-                                                        <p className="text-xs text-secondary mt-1">
-                                                            Please transfer the funds and enter the reference number here clearly.
-                                                        </p>
+                                                    <div className="px-4 pb-4 pl-4 md:pl-12 space-y-4">
+                                                        <div className="bg-secondary/20 p-4 rounded border border-theme text-sm text-secondary">
+                                                            <p className="font-bold text-primary mb-2">Account Details:</p>
+                                                            <p>Account Name: <span className="text-primary font-bold">ZAIN FABRICS</span></p>
+                                                            <p>Account No: <span className="text-primary font-bold">123456789012</span></p>
+                                                            <p>IFSC: <span className="text-primary font-bold">HDFC0001234</span></p>
+                                                            <p>Bank: <span className="text-primary">HDFC Bank, Perundurai</span></p>
+                                                        </div>
+                                                        <div>
+                                                            <label className="block text-sm font-bold text-secondary mb-1">
+                                                                UTR / Transaction Reference Number <span className="text-red-500">*</span>
+                                                            </label>
+                                                            <input
+                                                                type="text"
+                                                                placeholder="Enter the 12-digit UTR number"
+                                                                value={utrNumber}
+                                                                onChange={(e) => setUtrNumber(e.target.value)}
+                                                                className="w-full px-4 py-2 bg-primary border border-theme rounded text-primary focus:border-gold focus:ring-1 focus:ring-gold uppercase tracking-wider focus:outline-none"
+                                                                required={paymentMethod === 'BankTransfer'}
+                                                            />
+                                                            <p className="text-xs text-secondary mt-1">
+                                                                Please transfer the funds and enter the reference number here clearly.
+                                                            </p>
+                                                        </div>
                                                     </div>
                                                 )}
                                             </div>

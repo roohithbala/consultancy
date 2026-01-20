@@ -1,8 +1,8 @@
 import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { Trash2, ArrowRight, ShoppingBag, CreditCard, ShieldCheck } from 'lucide-react';
+import { Trash2, ArrowRight, ShoppingBag, CreditCard, ShieldCheck, Edit2 } from 'lucide-react';
 import type { RootState } from '../store';
-import { removeFromCart, clearCart } from '../store/cartSlice';
+import { removeFromCart, clearCart, updateCartItem } from '../store/cartSlice';
 
 const CartPage = () => {
     const dispatch = useDispatch();
@@ -14,6 +14,17 @@ const CartPage = () => {
 
     const removeHandler = (id: string, type?: 'regular' | 'sample') => {
         dispatch(removeFromCart({ id, type }));
+    };
+
+    const updateQuantity = (id: string, type: 'regular' | 'sample' | undefined, oldCustomization: string | undefined, newQty: number) => {
+        if (!type || newQty < 1) return;
+        if (type === 'regular' && newQty < 5) return; // Enforce Min 5m for regular
+        dispatch(updateCartItem({ id, type, oldCustomization, newQuantity: newQty }));
+    };
+
+    const updateNote = (id: string, type: 'regular' | 'sample' | undefined, oldCustomization: string | undefined, newNote: string) => {
+        if (!type) return;
+        dispatch(updateCartItem({ id, type, oldCustomization, newCustomization: newNote }));
     };
 
     if (cartItems.length === 0) {
@@ -44,10 +55,10 @@ const CartPage = () => {
                     {/* Cart Items */}
                     <div className="flex-1">
                         <div className="space-y-6">
-                            {cartItems.map((item) => (
-                                <div key={`${item.id}-${item.type}`} className="group relative bg-white/5 border border-white/10 p-6 flex flex-col md:flex-row items-center gap-6 hover:border-gold/30 transition-all duration-300">
+                            {cartItems.map((item, idx) => (
+                                <div key={`${item.id}-${item.type}-${idx}`} className="group relative bg-white/5 border border-white/10 p-6 flex flex-col md:flex-row gap-6 hover:border-gold/30 transition-all duration-300">
                                     {/* Image */}
-                                    <div className="w-full md:w-32 h-32 bg-gray-900 overflow-hidden relative">
+                                    <div className="w-full md:w-32 h-32 bg-gray-900 overflow-hidden relative flex-shrink-0">
                                         <img src={item.image} alt={item.name} className="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity" />
                                         {item.type === 'sample' && (
                                             <div className="absolute top-2 left-2 bg-blue-600/90 text-white text-[10px] uppercase font-bold px-2 py-1 tracking-wider">
@@ -57,26 +68,56 @@ const CartPage = () => {
                                     </div>
 
                                     {/* Details */}
-                                    <div className="flex-1 text-center md:text-left">
-                                        <h3 className="text-xl font-bold text-white mb-1 font-serif">{item.name}</h3>
-                                        <p className="text-sm text-gold uppercase tracking-wider mb-2">{item.materialType}</p>
-
-                                        {item.customization && (
-                                            <p className="text-xs text-gray-500 italic mb-2">Note: {item.customization}</p>
-                                        )}
-
-                                        <div className="flex items-center justify-center md:justify-start gap-6 mt-4">
-                                            <div className="text-sm">
-                                                <span className="text-gray-500 block text-xs uppercase tracking-wider">Price</span>
-                                                <span className="font-medium text-white">₹{item.price}</span>
+                                    <div className="flex-1">
+                                        <div className="flex justify-between items-start mb-2">
+                                            <div>
+                                                <h3 className="text-xl font-bold text-white mb-1 font-serif">{item.name}</h3>
+                                                <p className="text-sm text-gold uppercase tracking-wider">{item.materialType}</p>
                                             </div>
-                                            <div className="text-sm">
-                                                <span className="text-gray-500 block text-xs uppercase tracking-wider">Qty</span>
-                                                <span className="font-medium text-white">{item.quantity} m</span>
+                                            <div className="text-right">
+                                                <p className="font-bold text-gold text-lg">₹{item.price * item.quantity}</p>
+                                                <p className="text-xs text-gray-500">₹{item.price} / {item.type === 'sample' ? 'pc' : 'm'}</p>
                                             </div>
-                                            <div className="text-sm">
-                                                <span className="text-gray-500 block text-xs uppercase tracking-wider">Total</span>
-                                                <span className="font-bold text-gold">₹{item.price * item.quantity}</span>
+                                        </div>
+
+                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
+                                            {/* Quantity Control */}
+                                            <div>
+                                                <label className="text-xs text-gray-500 uppercase tracking-widest block mb-2">Quantity ({item.type === 'sample' ? 'Units' : 'Meters'})</label>
+                                                {item.type === 'regular' ? (
+                                                    <div className="flex items-center bg-white/10 border border-white/20 w-max">
+                                                        <button
+                                                            onClick={() => updateQuantity(item.id, item.type, item.customization, item.quantity - 5)}
+                                                            className="px-3 py-2 hover:bg-white/10 transition-colors text-white"
+                                                        >-</button>
+                                                        <input
+                                                            type="text"
+                                                            value={item.quantity}
+                                                            readOnly
+                                                            className="w-12 text-center bg-transparent border-none text-white font-bold text-sm focus:outline-none"
+                                                        />
+                                                        <button
+                                                            onClick={() => updateQuantity(item.id, item.type, item.customization, item.quantity + 5)}
+                                                            className="px-3 py-2 hover:bg-white/10 transition-colors text-white"
+                                                        >+</button>
+                                                    </div>
+                                                ) : (
+                                                    <span className="text-white font-bold text-sm">1 Unit</span>
+                                                )}
+                                            </div>
+
+                                            {/* Customization Note */}
+                                            <div>
+                                                <label className="text-xs text-gray-500 uppercase tracking-widest block mb-2 flex items-center gap-2">
+                                                    Customization Notes <Edit2 size={10} />
+                                                </label>
+                                                <textarea
+                                                    className="w-full bg-white/5 border border-white/10 text-gray-300 text-xs p-2 focus:border-gold focus:bg-white/10 transition-all outline-none rounded resize-none"
+                                                    rows={2}
+                                                    value={item.customization || ''}
+                                                    onChange={(e) => updateNote(item.id, item.type, item.customization, e.target.value)}
+                                                    placeholder="Add notes here (e.g. stiffness, color shade)..."
+                                                />
                                             </div>
                                         </div>
                                     </div>
@@ -84,7 +125,7 @@ const CartPage = () => {
                                     {/* Actions */}
                                     <button
                                         onClick={() => removeHandler(item.id, item.type)}
-                                        className="absolute top-4 right-4 md:static md:text-gray-600 md:hover:text-red-500 transition-colors p-2"
+                                        className="text-gray-500 hover:text-red-500 transition-colors p-2 self-start md:self-center"
                                         title="Remove Item"
                                     >
                                         <Trash2 size={20} />

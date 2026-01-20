@@ -103,49 +103,115 @@ const OrderDetailsPage = () => {
                 </div>
             </div>
 
-            {/* Admin Controls */}
-            {(user as any)?.isAdmin && (
-                <div className="bg-card border border-gold/30 p-6 rounded-xl mb-8 no-print shadow-lg shadow-gold/5 relative overflow-hidden">
-                    <div className="absolute top-0 right-0 p-4 opacity-5">
-                        <FileText size={100} />
-                    </div>
-                    <h2 className="text-xl font-serif font-bold mb-4 flex items-center gap-2 text-primary">
-                        <FileText className="text-gold" /> Admin Invoice Management
-                    </h2>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div>
-                            <label className="block text-sm font-bold text-secondary mb-2">Custom Invoice Number (Bill No)</label>
-                            <input
-                                type="text"
-                                value={invoiceForm.invoiceNumber}
-                                onChange={(e) => setInvoiceForm({ ...invoiceForm, invoiceNumber: e.target.value })}
-                                placeholder="e.g. INV-2024-001"
-                                className="w-full px-4 py-3 bg-secondary/10 border border-theme rounded-lg text-primary focus:border-gold focus:outline-none"
-                            />
+
+
+            {/* Order Actions & Status */}
+            <div className="flex flex-col md:flex-row justify-between items-start gap-6 mb-8 no-print">
+                <div className="flex-1">
+                    {order.refundStatus && order.refundStatus !== 'None' && (
+                        <div className="bg-blue-50 border-l-4 border-blue-500 p-4 mb-4 rounded-r shadow-sm">
+                            <div className="flex items-center">
+                                <div className="flex-shrink-0">
+                                    <svg className="h-5 w-5 text-blue-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                                        <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
+                                    </svg>
+                                </div>
+                                <div className="ml-3">
+                                    <p className="text-sm text-blue-700">
+                                        <span className="font-bold">Refund Status:</span> {order.refundStatus}
+                                        {order.refundAmount && ` (Amount: ₹${order.refundAmount})`}
+                                    </p>
+                                    {order.refundStatus === 'Processed' && (
+                                        <p className="text-xs text-blue-600 mt-1">Refund processed on {order.refundDate ? new Date(order.refundDate).toLocaleDateString() : 'N/A'}</p>
+                                    )}
+                                </div>
+                            </div>
                         </div>
-                        <div>
-                            <label className="block text-sm font-bold text-secondary mb-2">Manual Invoice URL (Optional)</label>
-                            <input
-                                type="text"
-                                value={invoiceForm.manualInvoiceUrl}
-                                onChange={(e) => setInvoiceForm({ ...invoiceForm, manualInvoiceUrl: e.target.value })}
-                                placeholder="http://..."
-                                className="w-full px-4 py-3 bg-secondary/10 border border-theme rounded-lg text-primary focus:border-gold focus:outline-none"
-                            />
-                            <p className="text-[10px] text-secondary mt-1">Provide a direct link to a hosted PDF if bypassing auto-generation.</p>
-                        </div>
-                    </div>
-                    <div className="mt-6 flex justify-end">
-                        <button
-                            onClick={handleUpdateInvoice}
-                            disabled={adminLoading}
-                            className="bg-primary border border-gold text-gold hover:bg-gold hover:text-black px-6 py-2 rounded-lg font-bold transition-all flex items-center gap-2"
-                        >
-                            <Save size={18} /> {adminLoading ? 'Saving...' : 'Save Invoice Details'}
-                        </button>
-                    </div>
+                    )}
                 </div>
-            )}
+
+                <div className="flex gap-4">
+                    {/* Conditionally Render Cancel Button */}
+                    {!['Shipped', 'OutForDelivery', 'Delivered', 'Cancelled'].includes(order.status) && (
+                        <button
+                            onClick={async () => {
+                                if (window.confirm('Are you sure you want to cancel this order? This action cannot be undone.')) {
+                                    try {
+                                        const res = await fetch(`http://localhost:5000/api/orders/${order._id}/cancel`, {
+                                            method: 'PUT',
+                                            headers: {
+                                                'Content-Type': 'application/json',
+                                                Authorization: `Bearer ${user?.token}`
+                                            },
+                                            body: JSON.stringify({ reason: 'User requested cancellation via dashboard' })
+                                        });
+                                        if (res.ok) {
+                                            const updated = await res.json();
+                                            setOrder(updated);
+                                            alert('Order cancelled successfully.');
+                                        } else {
+                                            const err = await res.json();
+                                            alert(err.message || 'Failed to cancel order');
+                                        }
+                                    } catch (e) {
+                                        console.error(e);
+                                        alert('Error cancelling order');
+                                    }
+                                }
+                            }}
+                            className="bg-red-50 text-red-600 border border-red-200 px-6 py-3 rounded-lg font-bold hover:bg-red-100 transition-colors uppercase tracking-widest text-xs"
+                        >
+                            Cancel Order
+                        </button>
+                    )}
+                </div>
+            </div>
+
+            {/* Admin Controls */}
+            {
+                (user as any)?.isAdmin && (
+                    <div className="bg-card border border-gold/30 p-6 rounded-xl mb-8 no-print shadow-lg shadow-gold/5 relative overflow-hidden">
+                        <div className="absolute top-0 right-0 p-4 opacity-5">
+                            <FileText size={100} />
+                        </div>
+                        <h2 className="text-xl font-serif font-bold mb-4 flex items-center gap-2 text-primary">
+                            <FileText className="text-gold" /> Admin Invoice Management
+                        </h2>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label className="block text-sm font-bold text-secondary mb-2">Custom Invoice Number (Bill No)</label>
+                                <input
+                                    type="text"
+                                    value={invoiceForm.invoiceNumber}
+                                    onChange={(e) => setInvoiceForm({ ...invoiceForm, invoiceNumber: e.target.value })}
+                                    placeholder="e.g. INV-2024-001"
+                                    className="w-full px-4 py-3 bg-secondary/10 border border-theme rounded-lg text-primary focus:border-gold focus:outline-none"
+                                />
+                            </div>
+                            <div>
+                                <label className="block text-sm font-bold text-secondary mb-2">Manual Invoice URL (Optional)</label>
+                                <input
+                                    type="text"
+                                    value={invoiceForm.manualInvoiceUrl}
+                                    onChange={(e) => setInvoiceForm({ ...invoiceForm, manualInvoiceUrl: e.target.value })}
+                                    placeholder="http://..."
+                                    className="w-full px-4 py-3 bg-secondary/10 border border-theme rounded-lg text-primary focus:border-gold focus:outline-none"
+                                />
+                                <p className="text-[10px] text-secondary mt-1">Provide a direct link to a hosted PDF if bypassing auto-generation.</p>
+                            </div>
+                        </div>
+                        <div className="mt-6 flex justify-end">
+                            <button
+                                onClick={handleUpdateInvoice}
+                                disabled={adminLoading}
+                                className="bg-primary border border-gold text-gold hover:bg-gold hover:text-black px-6 py-2 rounded-lg font-bold transition-all flex items-center gap-2"
+                            >
+                                <Save size={18} /> {adminLoading ? 'Saving...' : 'Save Invoice Details'}
+                            </button>
+                        </div>
+                    </div>
+                )
+            }
 
             {/* Tracking Timeline (Screen Only) */}
             <div className="bg-card backdrop-blur-md p-8 rounded-xl border border-white/10 mb-8 no-print shadow-xl">
@@ -299,7 +365,7 @@ const OrderDetailsPage = () => {
                     </p>
                 </div>
             </div>
-        </div>
+        </div >
     );
 };
 

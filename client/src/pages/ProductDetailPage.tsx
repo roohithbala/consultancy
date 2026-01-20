@@ -228,37 +228,49 @@ const ProductDetailPage = () => {
                             </div>
 
                             {/* Sample Verification */}
-                            <div className="mb-8 bg-card/30 p-4 border border-theme">
-                                <div className="flex items-center gap-2 mb-4">
-                                    <ShieldCheck size={16} className="text-gold" />
-                                    <h4 className="text-xs font-bold uppercase text-primary tracking-widest">Sample Verification</h4>
+                            <div className="mb-8 bg-card/50 p-5 border border-theme/50 rounded-lg relative overflow-hidden group hover:border-gold/30 transition-all">
+                                <div className="flex items-center gap-3 mb-4">
+                                    <div className="bg-gold/20 p-1.5 rounded-full text-gold">
+                                        <ShieldCheck size={18} />
+                                    </div>
+                                    <div>
+                                        <h4 className="text-sm font-bold uppercase text-primary tracking-widest leading-none">Sample Link</h4>
+                                        <p className="text-[10px] text-gray-500 mt-1">Verify quality before bulk purchase</p>
+                                    </div>
                                 </div>
 
                                 {verifiedSamples.length > 0 ? (
-                                    <select
-                                        className="w-full bg-secondary/10 border border-theme text-primary text-sm p-3 focus:border-gold outline-none mb-3"
-                                        value={selectedSampleId}
-                                        onChange={(e) => setSelectedSampleId(e.target.value)}
-                                    >
-                                        <option value="">-- Link Previous Sample --</option>
-                                        {verifiedSamples.map(sample => (
-                                            <option key={sample._id} value={sample._id}>
-                                                Sample #{sample._id.substring(0, 6)} ({new Date(sample.date).toLocaleDateString()})
-                                            </option>
-                                        ))}
-                                    </select>
+                                    <div className="relative">
+                                        <select
+                                            className="w-full appearance-none bg-black/40 border border-theme text-primary text-sm p-4 pr-10 focus:border-gold outline-none rounded transition-colors cursor-pointer hover:bg-black/60 font-mono"
+                                            value={selectedSampleId}
+                                            onChange={(e) => setSelectedSampleId(e.target.value)}
+                                        >
+                                            <option value="" className="bg-gray-900 text-gray-400">-- Select Previous Verified Sample --</option>
+                                            {verifiedSamples.map(sample => (
+                                                <option key={sample._id} value={sample._id} className="bg-gray-900 text-white">
+                                                    Sample #{sample._id.substring(0, 6).toUpperCase()} — {new Date(sample.date).toLocaleDateString()}
+                                                </option>
+                                            ))}
+                                        </select>
+                                        <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-gold">
+                                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                                        </div>
+                                    </div>
                                 ) : (
-                                    <input
-                                        type="text"
-                                        className="w-full bg-secondary/10 border border-theme text-primary text-sm p-3 focus:border-gold outline-none mb-3 placeholder:text-secondary/50"
-                                        placeholder="Enter Sample ID Manually"
-                                        value={manualSampleId}
-                                        onChange={(e) => setManualSampleId(e.target.value)}
-                                    />
+                                    <div className="relative">
+                                        <input
+                                            type="text"
+                                            className="w-full bg-black/40 border border-theme text-primary text-sm p-4 focus:border-gold outline-none rounded placeholder:text-gray-600 font-mono"
+                                            placeholder="Enter Sample ID Manually"
+                                            value={manualSampleId}
+                                            onChange={(e) => setManualSampleId(e.target.value)}
+                                        />
+                                        <p className="text-[10px] text-red-400/80 mt-2 flex items-center gap-1">
+                                            <AlertTriangle size={10} /> No delivered samples found on this account.
+                                        </p>
+                                    </div>
                                 )}
-                                <p className="text-[10px] text-gray-500">
-                                    Bulk orders require a verified sample ID to ensure quality matching.
-                                </p>
                             </div>
 
                             <div className="space-y-4">

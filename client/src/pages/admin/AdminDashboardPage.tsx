@@ -15,8 +15,6 @@ const AdminDashboardPage = () => {
     });
     const [loading, setLoading] = useState(true);
 
-
-
     // Facilities Management (Simulated)
     const [facilities, setFacilities] = useState({
         billDesk: true,
@@ -25,20 +23,34 @@ const AdminDashboardPage = () => {
         smsNotifications: false
     });
 
-    const toggleFacility = (key: keyof typeof facilities) => {
-        setFacilities(prev => ({ ...prev, [key]: !prev[key] }));
+    const toggleFacility = async (key: keyof typeof facilities) => {
+        // Optimistic update
+        const newVal = !facilities[key];
+        setFacilities(prev => ({ ...prev, [key]: newVal }));
+
+        try {
+            await fetch('http://localhost:5000/api/settings', {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${user?.token}`
+                },
+                body: JSON.stringify({ [key]: newVal })
+            });
+        } catch (error) {
+            console.error("Failed to update settings:", error);
+            // Revert on failure
+            setFacilities(prev => ({ ...prev, [key]: !newVal }));
+        }
     };
 
     const handleVerifyPayment = async (orderId: string) => {
         if (!window.confirm("Are you sure you want to verify this payment? Order will be marked as Paid.")) return;
 
         try {
-            // In a real app, you'd have a specific Verify endpoint. 
-            // Here we'll just update status to "Processing" and "isPaid" to true via a custom update if needed, 
-            // or just rely on the Manual Update in OrderDetails. 
-            // For this UI, we will simulate a quick success feedback.
+            // Simulated verification
             alert(`Payment for Order #${orderId} verified successfully.`);
-            // Optionally refresh stats
+            // In a real scenario, call API to update status
         } catch (error) {
             console.error("Verification failed", error);
         }
@@ -47,17 +59,30 @@ const AdminDashboardPage = () => {
     useEffect(() => {
         const fetchStats = async () => {
             try {
+                // Fetch Stats
                 const res = await fetch('http://localhost:5000/api/orders/admin/stats', {
-                    headers: {
-                        Authorization: `Bearer ${user?.token}`
-                    }
+                    headers: { Authorization: `Bearer ${user?.token}` }
                 });
                 const data = await res.json();
-                console.log("Admin Dashboard Stats Received:", data);
                 setStats(data);
+
+                // Fetch Settings
+                const settingsRes = await fetch('http://localhost:5000/api/settings', {
+                    headers: { Authorization: `Bearer ${user?.token}` }
+                });
+                if (settingsRes.ok) {
+                    const settingsData = await settingsRes.json();
+                    setFacilities({
+                        billDesk: settingsData.billDesk ?? true,
+                        bankTransfer: settingsData.bankTransfer ?? true,
+                        emailNotifications: settingsData.emailNotifications ?? true,
+                        smsNotifications: settingsData.smsNotifications ?? false,
+                    });
+                }
+
                 setLoading(false);
             } catch (error) {
-                console.error("Error fetching admin stats:", error);
+                console.error("Error fetching data:", error);
                 setLoading(false);
             }
         };
@@ -69,13 +94,11 @@ const AdminDashboardPage = () => {
 
     if (loading) {
         return (
-            <div className="min-h-screen flex items-center justify-center bg-gray-50">
-                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-900"></div>
+            <div className="min-h-screen flex items-center justify-center bg-black text-gold">
+                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gold"></div>
             </div>
         );
     }
-
-
 
     return (
         <div className="min-h-screen bg-black text-gray-200 p-8 font-sans">
@@ -100,12 +123,12 @@ const AdminDashboardPage = () => {
                 {/* Stats Grid */}
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
                     {[
-                        { title: 'Total Sales', value: `₹${stats.totalSales.toLocaleString()}`, icon: DollarSign, color: 'text-green-400' },
-                        { title: 'Active Orders', value: stats.activeOrders, icon: ShoppingBag, color: 'text-blue-400' },
-                        { title: 'Products', value: stats.totalProducts, icon: Package, color: 'text-purple-400' },
-                        { title: 'Customers', value: stats.totalUsers, icon: Users, color: 'text-orange-400' },
+                        { title: 'Total Sales', value: stats.totalSales ? `₹${stats.totalSales.toLocaleString()}` : '₹0', icon: DollarSign, color: 'text-green-400' },
+                        { title: 'Active Orders', value: stats.activeOrders || 0, icon: ShoppingBag, color: 'text-blue-400' },
+                        { title: 'Products', value: stats.totalProducts || 0, icon: Package, color: 'text-purple-400' },
+                        { title: 'Customers', value: stats.totalUsers || 0, icon: Users, color: 'text-orange-400' },
                     ].map((stat, idx) => (
-                        <div key={idx} className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl p-6 hover:border-gold/30 transition-all duration-300 group">
+                        <div key={idx} className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl p-6 hover:border-gold/30 transition-all duration-300 group shadow-sm hover:shadow-gold/5">
                             <div className="flex justify-between items-start mb-4">
                                 <div className={`p-3 bg-white/5 rounded-lg ${stat.color} group-hover:scale-110 transition-transform`}>
                                     <stat.icon size={24} />
@@ -121,7 +144,7 @@ const AdminDashboardPage = () => {
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
                     {/* Main Content - Recent Orders */}
                     <div className="lg:col-span-2 space-y-8">
-                        <div className="bg-white/5 backdrop-blur-md rounded-xl border border-white/10 overflow-hidden">
+                        <div className="bg-white/5 backdrop-blur-md rounded-xl border border-white/10 overflow-hidden shadow-sm">
                             <div className="p-6 border-b border-white/10 flex justify-between items-center">
                                 <h3 className="text-lg font-bold text-white font-serif tracking-wide">Recent Orders</h3>
                                 <div className="relative w-64">
@@ -136,7 +159,7 @@ const AdminDashboardPage = () => {
 
                             <div className="overflow-x-auto">
                                 <table className="w-full text-left">
-                                    <thead className="bg-black/40 text-gray-400 text-[10px] uppercase font-bold tracking-widest">
+                                    <thead className="bg-white/5 text-gray-400 text-[10px] uppercase font-bold tracking-widest border-b border-white/10">
                                         <tr>
                                             <th className="px-6 py-4">Order ID</th>
                                             <th className="px-6 py-4">Status</th>
@@ -145,7 +168,7 @@ const AdminDashboardPage = () => {
                                             <th className="px-6 py-4 text-right">Action</th>
                                         </tr>
                                     </thead>
-                                    <tbody className="divide-y divide-white/5 text-sm">
+                                    <tbody className="divide-y divide-white/10 text-sm">
                                         {stats.recentOrders && stats.recentOrders.length > 0 ? (
                                             stats.recentOrders.map((order: any) => (
                                                 <tr key={order._id} className="hover:bg-white/5 transition-colors group">
@@ -159,7 +182,7 @@ const AdminDashboardPage = () => {
                                                             {order.status}
                                                         </span>
                                                     </td>
-                                                    <td className="px-6 py-4 font-bold text-white">₹{order.totalPrice.toLocaleString()}</td>
+                                                    <td className="px-6 py-4 font-bold text-white">₹{order.totalPrice?.toLocaleString()}</td>
                                                     <td className="px-6 py-4">
                                                         {order.paymentResult?.status === 'Pending Verification' ? (
                                                             <div className="flex flex-col gap-1">
@@ -187,14 +210,14 @@ const AdminDashboardPage = () => {
                                             ))
                                         ) : (
                                             <tr>
-                                                <td colSpan={5} className="text-center py-8 text-gray-600">No recent orders found.</td>
+                                                <td colSpan={5} className="text-center py-8 text-gray-500">No recent orders found.</td>
                                             </tr>
                                         )}
                                     </tbody>
                                 </table>
                             </div>
                             <div className="p-4 border-t border-white/10 text-center">
-                                <Link to="/admin/orders" className="text-xs font-bold text-gray-500 hover:text-white uppercase tracking-widest transition-colors">
+                                <Link to="/admin/orders" className="text-xs font-bold text-gray-400 hover:text-white uppercase tracking-widest transition-colors">
                                     View All Orders
                                 </Link>
                             </div>
@@ -204,7 +227,7 @@ const AdminDashboardPage = () => {
                     {/* Sidebar - Facilities & Quick Actions */}
                     <div className="space-y-8">
                         {/* Facilities Management */}
-                        <div className="bg-white/5 backdrop-blur-md rounded-xl border border-white/10 p-6">
+                        <div className="bg-white/5 backdrop-blur-md rounded-xl border border-white/10 p-6 shadow-sm">
                             <h3 className="text-lg font-bold text-white font-serif mb-6 tracking-wide">Facilities</h3>
                             <div className="space-y-4">
                                 {Object.entries(facilities).map(([key, value]) => (
@@ -227,20 +250,20 @@ const AdminDashboardPage = () => {
                         </div>
 
                         {/* Recent Activity / System Status */}
-                        <div className="bg-white/5 backdrop-blur-md rounded-xl border border-white/10 p-6">
+                        <div className="bg-white/5 backdrop-blur-md rounded-xl border border-white/10 p-6 shadow-sm">
                             <h3 className="text-lg font-bold text-white font-serif mb-4 tracking-wide">System Status</h3>
                             <div className="space-y-3">
                                 <div className="flex items-center gap-3 text-sm text-gray-400">
                                     <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
-                                    <span>Database: <span className="text-green-400">Connected</span></span>
+                                    <span>Database: <span className="text-green-500 font-bold">Connected</span></span>
                                 </div>
                                 <div className="flex items-center gap-3 text-sm text-gray-400">
                                     <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
-                                    <span>Email Service: <span className="text-green-400">Active</span></span>
+                                    <span>Email Service: <span className="text-green-500 font-bold">Active</span></span>
                                 </div>
                                 <div className="flex items-center gap-3 text-sm text-gray-400">
                                     <span className="w-2 h-2 bg-amber-500 rounded-full"></span>
-                                    <span>Payment Gateway: <span className="text-amber-400">Test Mode</span></span>
+                                    <span>Payment Gateway: <span className="text-amber-500 font-bold">Test Mode</span></span>
                                 </div>
                             </div>
                         </div>

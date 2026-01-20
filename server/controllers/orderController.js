@@ -62,23 +62,27 @@ export const addOrderItems = async (req, res) => {
 export const getVerifiedSamples = async (req, res) => {
     const { productId } = req.params;
 
-    // Find delivered orders that contain this product as a sample
-    const orders = await Order.find({
-        user: req.user._id,
-        'orderItems.product': productId,
-        'orderItems.type': 'sample',
-        // In a real scenario, you might want to check if status is 'Delivered'
-        // status: 'Delivered' 
-    }).select('_id createdAt status orderItems');
+    try {
+        // Find delivered orders that contain this product as a sample
+        const orders = await Order.find({
+            user: req.user._id,
+            'orderItems.product': productId,
+            'orderItems.type': 'sample',
+            status: 'Delivered' // Enforce verification (delivery)
+        })
+            .select('_id createdAt status')
+            .sort({ createdAt: -1 });
 
-    // Filter to finding the specific item within the order (optional depth)
-    const validSamples = orders.map(order => ({
-        _id: order._id,
-        date: order.createdAt,
-        status: order.status
-    }));
+        const validSamples = orders.map(order => ({
+            _id: order._id,
+            date: order.createdAt,
+            status: order.status
+        }));
 
-    res.json(validSamples);
+        res.json(validSamples);
+    } catch (error) {
+        res.status(500).json({ message: 'Error fetching samples', error: error.message });
+    }
 };
 
 // @desc    Get order by ID
@@ -214,5 +218,86 @@ export const getAdminStats = async (req, res) => {
         });
     } catch (error) {
         res.status(500).json({ message: 'Error fetching stats', error: error.message });
+    }
+};
+
+// @desc    Cancel Order (User)
+// @route   PUT /api/orders/:id/cancel
+// @access  Private
+export const cancelOrder = async (req, res) => {
+    const order = await Order.findById(req.params.id);
+
+    if (order) {
+        // Check if user is owner or admin
+        if (order.user.toString() !== req.user._id.toString() && req.user.role !== 'admin') {
+            res.status(401);
+            throw new Error('Not authorized to cancel this order');
+        }
+
+        if (order.status === 'Delivered' || order.status === 'Shipped') {
+            res.status(400);
+            throw new Error('Cannot cancel order that has already been shipped or delivered. Please request a return instead.');
+        }
+
+        order.status = 'Cancelled';
+        order.cancellationReason = req.body.reason || 'User cancelled';
+
+        // If payment was made, request refund
+        if (order.isPaid) {
+            order.refundStatus = 'Requested';
+            order.refundAmount = order.totalPrice;
+        }
+
+        const updatedOrder = await order.save();
+
+        // Email Notification
+        if (req.user.email) {
+            sendEmail(
+                req.user.email,
+                `Order Cancelled - #${order._id}`,
+                `Your order #${order._id} has been cancelled.${order.isPaid ? ' A refund has been requested.' : ''}`
+            );
+        }
+
+        res.json(updatedOrder);
+    } else {
+        res.status(404);
+        throw new Error('Order not found');
+    }
+};
+
+// @desc    Update Refund Status (Admin)
+// @route   PUT /api/orders/:id/refund
+// @access  Private/Admin
+export const updateRefundStatus = async (req, res) => {
+    const { refundStatus, refundAmount } = req.body;
+    const order = await Order.findById(req.params.id);
+
+    if (order) {
+        order.refundStatus = refundStatus;
+        if (refundAmount) {
+            order.refundAmount = refundAmount;
+        }
+        if (refundStatus === 'Processed') {
+            order.refundDate = Date.now();
+        }
+
+        const updatedOrder = await order.save();
+
+        if (order.user) {
+            const user = await User.findById(order.user);
+            if (user) {
+                sendEmail(
+                    user.email,
+                    `Refund Status Update - Order #${order._id}`,
+                    `Your refund status for order #${order._id} is now: ${refundStatus}.`
+                );
+            }
+        }
+
+        res.json(updatedOrder);
+    } else {
+        res.status(404);
+        throw new Error('Order not found');
     }
 };

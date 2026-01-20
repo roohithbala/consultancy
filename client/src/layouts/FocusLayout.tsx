@@ -7,15 +7,15 @@ const FocusLayout = () => {
     const { cartItems } = useSelector((state: RootState) => state.cart);
 
     return (
-        <div className="min-h-screen flex flex-col bg-white">
-            <header className="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-gray-100">
+        <div className="min-h-screen flex flex-col bg-primary text-secondary transition-colors duration-300">
+            <header className="sticky top-0 z-50 bg-primary/95 backdrop-blur-md border-b border-theme transition-colors duration-300">
                 <div className="container mx-auto px-4 py-4 flex items-center justify-between">
-                    <Link to="/products" className="flex items-center text-sm font-medium text-gray-500 hover:text-black transition-colors">
+                    <Link to="/products" className="flex items-center text-sm font-medium text-secondary hover:text-primary transition-colors">
                         <ArrowLeft size={18} className="mr-2" /> Back to Collection
                     </Link>
 
-                    <Link to="/" className="text-xl font-bold tracking-tighter text-gray-900">
-                        ZAIN <span className="text-accent">INLINE</span>
+                    <Link to="/" className="text-xl font-bold tracking-tighter text-primary">
+                        ZAIN <span className="text-gold">FABRICS</span>
                     </Link>
 
                     <Link to="/cart" className="relative hover:text-accent transition-colors">

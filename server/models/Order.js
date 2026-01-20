@@ -108,7 +108,16 @@ const orderSchema = new mongoose.Schema({
     invoiceNumber: { type: String },
     isManualInvoice: { type: Boolean, default: false },
     manualInvoiceUrl: { type: String },
-    invoiceDate: { type: Date }
+    invoiceDate: { type: Date },
+    // Cancellation & Refund Fields
+    cancellationReason: { type: String },
+    refundStatus: {
+        type: String,
+        enum: ['None', 'Requested', 'Approved', 'Processed', 'Rejected'],
+        default: 'None'
+    },
+    refundAmount: { type: Number },
+    refundDate: { type: Date }
 }, {
     timestamps: true,
 });

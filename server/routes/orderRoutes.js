@@ -7,6 +7,8 @@ import {
     updateOrderStatus,
     getVerifiedSamples,
     getAdminStats,
+    cancelOrder,
+    updateRefundStatus,
 } from '../controllers/orderController.js';
 import { protect, admin } from '../middleware/authMiddleware.js';
 
@@ -23,5 +25,7 @@ router.route('/')
 router.route('/:id').get(protect, getOrderById);
 
 router.route('/:id/status').put(protect, admin, updateOrderStatus);
+router.route('/:id/cancel').put(protect, cancelOrder);
+router.route('/:id/refund').put(protect, admin, updateRefundStatus);
 
 export default router;
