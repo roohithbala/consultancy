@@ -5,7 +5,7 @@ import Product from './models/Product.js';
 import dotenv from 'dotenv';
 dotenv.config();
 
-const API_URL = 'http://localhost:5002/api';
+const API_URL = 'http://localhost:5003/api';
 
 const run = async () => {
     try {

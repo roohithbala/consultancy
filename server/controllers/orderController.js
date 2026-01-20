@@ -18,41 +18,55 @@ export const addOrderItems = async (req, res) => {
         taxPrice,
         shippingPrice,
         totalPrice,
+        isPaid,
+        paidAt,
+        paymentResult,
+        deliveryMethod,
     } = req.body;
 
     if (orderItems && orderItems.length === 0) {
         res.status(400).json({ message: 'No order items' });
         return;
     } else {
-        const order = new Order({
-            orderItems,
-            user: req.user._id,
-            shippingAddress,
-            billingAddress: req.body.billingAddress || shippingAddress,
-            paymentMethod,
-            itemsPrice,
-            taxPrice,
-            shippingPrice,
-            totalPrice,
-            trackingHistory: [{
-                status: 'Ordered',
-                description: 'Order has been placed successfully.',
-                location: 'System'
-            }]
-        });
+        try {
+            const order = new Order({
+                orderItems,
+                user: req.user._id,
+                shippingAddress,
+                billingAddress: req.body.billingAddress || shippingAddress,
+                paymentMethod,
+                deliveryMethod: deliveryMethod || 'Courier',
+                itemsPrice,
+                taxPrice,
+                shippingPrice,
+                totalPrice,
+                isPaid: isPaid || false,
+                paidAt: paidAt || undefined,
+                paymentResult: paymentResult || {},
+                trackingHistory: [{
+                    status: 'Ordered',
+                    description: 'Order has been placed successfully.',
+                    location: 'System'
+                }]
+            });
 
-        const createdOrder = await order.save();
+            const createdOrder = await order.save();
 
-        // Send Confirmation Email
-        if (req.user && req.user.email) {
-            sendEmail(
-                req.user.email,
-                `Order Confirmation #${createdOrder._id}`,
-                `Thank you for your order! Your order ID is ${createdOrder._id}. We will notify you when it ships.`
-            );
+            // Send Confirmation Email
+            if (req.user && req.user.email) {
+                // Don't await email, let it happen in background
+                sendEmail(
+                    req.user.email,
+                    `Order Confirmation #${createdOrder._id}`,
+                    `Thank you for your order! Your order ID is ${createdOrder._id}. We will notify you when it ships.`
+                ).catch(err => console.error("Email failed:", err));
+            }
+
+            res.status(201).json(createdOrder);
+        } catch (error) {
+            console.error("Create Order Error:", error);
+            res.status(400).json({ message: 'Invalid order data', error: error.message });
         }
-
-        res.status(201).json(createdOrder);
     }
 };
 
@@ -143,6 +157,20 @@ export const updateOrderStatus = async (req, res) => {
             order.manualInvoiceUrl = req.body.manualInvoiceUrl;
             order.invoiceUrl = req.body.manualInvoiceUrl; // Override main URL for easy access
             order.isManualInvoice = true;
+        }
+
+        // Tracking Info Handling
+        if (req.body.trackingInfo) {
+            order.trackingNumber = req.body.trackingInfo;
+            if (req.body.courierName) {
+                order.courierName = req.body.courierName;
+            }
+            // Add to tracking history
+            order.trackingHistory.push({
+                status: 'Tracking Updated',
+                description: `Tracking number added: ${req.body.trackingInfo}${req.body.courierName ? ' via ' + req.body.courierName : ''}`,
+                location: 'Admin Update'
+            });
         }
 
         if (req.body.status === 'Shipped' && !order.invoiceUrl) {
@@ -299,5 +327,67 @@ export const updateRefundStatus = async (req, res) => {
     } else {
         res.status(404);
         throw new Error('Order not found');
+    }
+};
+
+// @desc    Update Order Financials (Admin)
+// @route   PUT /api/orders/:id/financials
+// @access  Private/Admin
+export const updateOrderFinancials = async (req, res) => {
+    const { orderItems, shippingPrice } = req.body;
+    const order = await Order.findById(req.params.id);
+
+    if (order) {
+        // Update Order Items Price
+        if (orderItems && orderItems.length > 0) {
+            order.orderItems.forEach(item => {
+                const updatedItem = orderItems.find(i => i._id.toString() === item._id.toString());
+                if (updatedItem) {
+                    item.price = Number(updatedItem.price);
+                }
+            });
+        }
+
+        // Update Shipping
+        if (shippingPrice !== undefined) {
+            order.shippingPrice = Number(shippingPrice);
+        }
+
+        // Recalculate Totals
+        order.itemsPrice = order.orderItems.reduce((acc, item) => acc + item.price * item.quantity, 0);
+
+        // 18% Tax (Standard) - Re-calculate tax based on new item prices
+        order.taxPrice = order.itemsPrice * 0.18;
+
+        // Total
+        order.totalPrice = Math.round(order.itemsPrice + order.taxPrice + order.shippingPrice);
+
+        const updatedOrder = await order.save();
+        res.json(updatedOrder);
+    } else {
+        res.status(404).json({ message: 'Order not found' });
+    }
+};
+
+// @desc    Update Payment Status (Admin)
+// @route   PUT /api/orders/:id/payment
+// @access  Private/Admin
+export const updatePaymentStatus = async (req, res) => {
+    const { isPaid } = req.body;
+    const order = await Order.findById(req.params.id);
+
+    if (order) {
+        order.isPaid = isPaid;
+        if (isPaid && !order.paidAt) {
+            order.paidAt = Date.now();
+        }
+        if (!isPaid) {
+            order.paidAt = undefined;
+        }
+
+        const updatedOrder = await order.save();
+        res.json(updatedOrder);
+    } else {
+        res.status(404).json({ message: 'Order not found' });
     }
 };

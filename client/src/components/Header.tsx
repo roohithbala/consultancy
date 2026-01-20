@@ -29,10 +29,17 @@ const Header = () => {
                 <nav className="hidden md:flex items-center space-x-10">
                     {user ? (
                         <>
-                            <Link to="/products" className="text-xs font-bold tracking-[0.2em] text-secondary hover:text-gold transition-colors uppercase">Collection</Link>
-                            <Link to="/orders" className="text-xs font-bold tracking-[0.2em] text-secondary hover:text-gold transition-colors uppercase">My Orders</Link>
-                            {user?.role === 'admin' && (
-                                <Link to="/admin" className="text-xs font-bold tracking-[0.2em] text-gold hover:text-primary transition-colors uppercase">Admin</Link>
+                            {user?.role === 'admin' ? (
+                                <>
+                                    <Link to="/admin" className="text-xs font-bold tracking-[0.2em] text-gold hover:text-primary transition-colors uppercase">Dashboard</Link>
+                                    <Link to="/admin/orders" className="text-xs font-bold tracking-[0.2em] text-secondary hover:text-gold transition-colors uppercase">All Orders</Link>
+                                    <Link to="/admin/products" className="text-xs font-bold tracking-[0.2em] text-secondary hover:text-gold transition-colors uppercase">Products</Link>
+                                </>
+                            ) : (
+                                <>
+                                    <Link to="/products" className="text-xs font-bold tracking-[0.2em] text-secondary hover:text-gold transition-colors uppercase">Collection</Link>
+                                    <Link to="/orders" className="text-xs font-bold tracking-[0.2em] text-secondary hover:text-gold transition-colors uppercase">My Orders</Link>
+                                </>
                             )}
                         </>
                     ) : (
@@ -48,24 +55,30 @@ const Header = () => {
                 <div className="flex items-center space-x-6 text-primary">
                     <ThemeToggle />
 
-                    <button className="hover:text-gold transition-colors">
-                        <Search size={20} strokeWidth={1.5} />
-                    </button>
+                    {user?.role !== 'admin' && (
+                        <>
+                            <button className="hover:text-gold transition-colors">
+                                <Search size={20} strokeWidth={1.5} />
+                            </button>
 
-                    <Link to="/cart" className="relative hover:text-gold transition-colors">
-                        <ShoppingBag size={20} strokeWidth={1.5} />
-                        {cartItems.length > 0 && (
-                            <span className="absolute -top-2 -right-2 bg-gold text-black text-[10px] w-4 h-4 flex items-center justify-center rounded-full font-bold">
-                                {cartItems.length}
-                            </span>
-                        )}
-                    </Link>
+                            <Link to="/cart" className="relative hover:text-gold transition-colors">
+                                <ShoppingBag size={20} strokeWidth={1.5} />
+                                {cartItems.length > 0 && (
+                                    <span className="absolute -top-2 -right-2 bg-gold text-black text-[10px] w-4 h-4 flex items-center justify-center rounded-full font-bold">
+                                        {cartItems.length}
+                                    </span>
+                                )}
+                            </Link>
+                        </>
+                    )}
 
                     {user ? (
                         <div className="flex items-center gap-6 pl-6 border-l border-theme">
-                            <Link to="/orders" className="hidden lg:block text-xs font-bold tracking-widest hover:text-gold transition-colors uppercase">
-                                Orders
-                            </Link>
+                            {user?.role !== 'admin' && (
+                                <Link to="/orders" className="hidden lg:block text-xs font-bold tracking-widest hover:text-gold transition-colors uppercase">
+                                    Orders
+                                </Link>
+                            )}
                             <div className="flex items-center gap-2 group cursor-pointer relative">
                                 <Link to="/profile" className="flex items-center gap-2 group-hover:text-gold transition-colors">
                                     <User size={20} strokeWidth={1.5} />

@@ -90,7 +90,7 @@ const CheckoutPage = () => {
                 materialType: item.materialType,
                 type: item.type,
                 customization: item.customization,
-                relatedSampleId: item.relatedSampleId,
+                ...(item.relatedSampleId && { relatedSampleId: item.relatedSampleId }), // Only include if not empty
                 isRiskAccepted: item.isRiskAccepted
             })),
             shippingAddress: {

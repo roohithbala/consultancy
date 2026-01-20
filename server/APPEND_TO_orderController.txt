@@ -1,0 +1,33 @@
+import Order from '../models/Order.js';
+import User from '../models/User.js';
+import Product from '../models/Product.js';
+import path from 'path';
+import fs from 'fs';
+import { generateInvoice } from '../utils/generateInvoice.js';
+import { sendEmail } from '../utils/sendEmail.js';
+
+// ... existing functions ...
+
+// @desc    Update Payment Status (Admin)
+// @route   PUT /api/orders/:id/payment
+// @access  Private/Admin
+export const updatePaymentStatus = async (req, res) => {
+    const { isPaid } = req.body;
+    const order = await Order.findById(req.params.id);
+
+    if (order) {
+        order.isPaid = isPaid;
+        if (isPaid && !order.paidAt) {
+            order.paidAt = Date.now();
+        }
+        // If marking as unpaid, clear paidAt
+        if (!isPaid) {
+            order.paidAt = undefined;
+        }
+
+        const updatedOrder = await order.save();
+        res.json(updatedOrder);
+    } else {
+        res.status(404).json({ message: 'Order not found' });
+    }
+};

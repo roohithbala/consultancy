@@ -53,6 +53,12 @@ const orderSchema = new mongoose.Schema({
         required: true,
         default: 'Courier'
     },
+    trackingNumber: {
+        type: String
+    },
+    courierName: {
+        type: String
+    },
     trackingDetails: {
         provider: { type: String }, // e.g., 'FedEx', 'DTDC'
         trackingNumber: { type: String }
