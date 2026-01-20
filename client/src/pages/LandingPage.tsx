@@ -35,9 +35,9 @@ const LandingPage = () => {
     ];
 
     return (
-        <div className="bg-black text-gray-200 font-sans selection:bg-gold selection:text-black scroll-smooth">
+        <div className="bg-primary text-secondary font-sans selection:bg-gold selection:text-black scroll-smooth transition-colors duration-300">
             {/* Hero Section - Video Background */}
-            <section className="relative h-screen flex items-center justify-center overflow-hidden">
+            <section className="relative h-screen flex items-center justify-center overflow-hidden bg-black text-white">
                 <div className="absolute inset-0 z-0">
                     <div className="absolute inset-0 bg-black/60 z-10"></div>
                     {/* Simulated Abstract Video Background using CSS Animation */}
@@ -81,38 +81,38 @@ const LandingPage = () => {
             </section>
 
             {/* Global Presence Section - Map Visualization */}
-            <section className="py-32 bg-gray-900/50 relative overflow-hidden">
+            <section className="py-32 bg-secondary relative overflow-hidden transition-colors duration-300">
                 <div className="container mx-auto px-6 relative z-10">
                     <div className="flex flex-col lg:flex-row items-center gap-20">
                         <div className="lg:w-1/2">
                             <span className="text-gold uppercase tracking-[0.2em] text-sm font-bold mb-4 block">Strategic Network</span>
-                            <h2 className="text-4xl md:text-6xl font-serif text-white mb-8 leading-tight">
+                            <h2 className="text-4xl md:text-6xl font-serif text-primary mb-8 leading-tight">
                                 Powering the <br />
                                 <span className="text-gold">Global Footwear Industry</span>
                             </h2>
-                            <p className="text-gray-400 text-lg leading-relaxed mb-12 font-light">
+                            <p className="text-secondary text-lg leading-relaxed mb-12 font-light">
                                 Zain Fabrics stands at the intersection of tradition and innovation.
                                 Based in the heart of India's leather hub, we connect local craftsmanship
                                 with international standards, supplying critical components to manufacturers who craft for the world.
                             </p>
 
-                            <div className="grid grid-cols-2 gap-8 border-t border-white/10 pt-8">
+                            <div className="grid grid-cols-2 gap-8 border-t border-theme pt-8">
                                 <div>
-                                    <h3 className="text-5xl font-bold text-white mb-2">3</h3>
+                                    <h3 className="text-5xl font-bold text-primary mb-2">3</h3>
                                     <p className="text-gold uppercase text-xs tracking-widest">Key Manufacturing Hubs</p>
-                                    <p className="text-gray-500 text-xs mt-1">Ranipet • Ambur • Chennai</p>
+                                    <p className="text-secondary text-xs mt-1">Ranipet • Ambur • Chennai</p>
                                 </div>
                                 <div>
-                                    <h3 className="text-5xl font-bold text-white mb-2">10+</h3>
+                                    <h3 className="text-5xl font-bold text-primary mb-2">10+</h3>
                                     <p className="text-gold uppercase text-xs tracking-widest">International Partners</p>
-                                    <p className="text-gray-500 text-xs mt-1">Exporting Excellence</p>
+                                    <p className="text-secondary text-xs mt-1">Exporting Excellence</p>
                                 </div>
                             </div>
                         </div>
 
                         <div className="lg:w-1/2 relative">
                             {/* Abstract Map using CSS/SVG */}
-                            <div className="aspect-square bg-black/40 rounded-full border border-white/5 relative p-12 flex items-center justify-center">
+                            <div className="aspect-square bg-card rounded-full border border-theme relative p-12 flex items-center justify-center shadow-2xl">
                                 <div className="absolute inset-0 bg-gold/5 rounded-full blur-3xl"></div>
 
                                 {/* Central Hub */}
@@ -124,13 +124,13 @@ const LandingPage = () => {
                                     <div className="absolute inset-0 flex items-center justify-center">
                                         <div className="text-center">
                                             <Globe size={48} className="text-gold mx-auto mb-2 opacity-80" strokeWidth={1} />
-                                            <span className="text-white font-bold uppercase tracking-widest text-xs">India HQ</span>
+                                            <span className="text-primary font-bold uppercase tracking-widest text-xs">India HQ</span>
                                         </div>
                                     </div>
 
                                     {/* Orbiting Nodes (Exports) */}
-                                    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[300px] h-[300px] border border-white/5 rounded-full animate-[spin_15s_linear_infinite_reverse]">
-                                        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-4 h-4 bg-gray-800 border border-gold rounded-full flex items-center justify-center">
+                                    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[300px] h-[300px] border border-theme rounded-full animate-[spin_15s_linear_infinite_reverse]">
+                                        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-4 h-4 bg-card border border-gold rounded-full flex items-center justify-center">
                                             <div className="w-1.5 h-1.5 bg-gold rounded-full"></div>
                                         </div>
                                     </div>
@@ -142,12 +142,12 @@ const LandingPage = () => {
             </section>
 
             {/* Specialized Processes */}
-            <section className="py-32 bg-black">
+            <section className="py-32 bg-primary transition-colors duration-300">
                 <div className="container mx-auto px-6">
-                    <div className="flex flex-col md:flex-row justify-between items-end mb-20 border-b border-white/10 pb-8">
+                    <div className="flex flex-col md:flex-row justify-between items-end mb-20 border-b border-theme pb-8">
                         <div>
                             <span className="text-gold uppercase tracking-widest text-sm font-bold">Our Expertise</span>
-                            <h2 className="text-4xl md:text-5xl font-serif text-white mt-4">Precision Manufacturing</h2>
+                            <h2 className="text-4xl md:text-5xl font-serif text-primary mt-4">Precision Manufacturing</h2>
                         </div>
                         <Link to="/about" className="text-white hover:text-gold transition-colors flex items-center gap-2 uppercase text-xs font-bold tracking-widest mt-6 md:mt-0">
                             View All Capabilities <ArrowRight size={16} />

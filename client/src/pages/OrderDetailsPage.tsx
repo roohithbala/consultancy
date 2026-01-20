@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import type { RootState } from '../store';
-import { CheckCircle, Truck, Printer } from 'lucide-react';
+import { CheckCircle, Truck, Printer, FileText, Save } from 'lucide-react';
 import { useReactToPrint } from 'react-to-print';
 import { COMPANY_DETAILS } from '../config/companyDetails';
 
@@ -11,6 +11,8 @@ const OrderDetailsPage = () => {
     const { user } = useSelector((state: RootState) => state.auth);
     const [order, setOrder] = useState<any>(null);
     const [loading, setLoading] = useState(true);
+    const [adminLoading, setAdminLoading] = useState(false);
+    const [invoiceForm, setInvoiceForm] = useState({ invoiceNumber: '', manualInvoiceUrl: '' });
     const componentRef = useRef<HTMLDivElement>(null);
 
     const handlePrint = useReactToPrint({
@@ -27,6 +29,10 @@ const OrderDetailsPage = () => {
                 });
                 const data = await res.json();
                 setOrder(data);
+                setInvoiceForm({
+                    invoiceNumber: data.invoiceNumber || '',
+                    manualInvoiceUrl: data.manualInvoiceUrl || ''
+                });
                 setLoading(false);
             } catch (error) {
                 console.error(error);
@@ -45,6 +51,37 @@ const OrderDetailsPage = () => {
     };
 
     const currentStep = getStatusStep(order.status);
+
+    const handleUpdateInvoice = async () => {
+        if (!(user as any)?.isAdmin) return;
+        setAdminLoading(true);
+        try {
+            const res = await fetch(`http://localhost:5000/api/orders/${order._id}/status`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${user?.token}`
+                },
+                body: JSON.stringify({
+                    status: order.status, // Keep existing status
+                    invoiceNumber: invoiceForm.invoiceNumber,
+                    manualInvoiceUrl: invoiceForm.manualInvoiceUrl
+                })
+            });
+            if (res.ok) {
+                const updatedOrder = await res.json();
+                setOrder(updatedOrder);
+                alert('Invoice details updated successfully');
+            } else {
+                alert('Failed to update invoice details');
+            }
+        } catch (error) {
+            console.error(error);
+            alert('Error updating invoice details');
+        } finally {
+            setAdminLoading(false);
+        }
+    };
 
     return (
         <div className="container mx-auto px-4 py-12 transition-colors duration-300">
@@ -65,6 +102,50 @@ const OrderDetailsPage = () => {
                     </Link>
                 </div>
             </div>
+
+            {/* Admin Controls */}
+            {(user as any)?.isAdmin && (
+                <div className="bg-card border border-gold/30 p-6 rounded-xl mb-8 no-print shadow-lg shadow-gold/5 relative overflow-hidden">
+                    <div className="absolute top-0 right-0 p-4 opacity-5">
+                        <FileText size={100} />
+                    </div>
+                    <h2 className="text-xl font-serif font-bold mb-4 flex items-center gap-2 text-primary">
+                        <FileText className="text-gold" /> Admin Invoice Management
+                    </h2>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label className="block text-sm font-bold text-secondary mb-2">Custom Invoice Number (Bill No)</label>
+                            <input
+                                type="text"
+                                value={invoiceForm.invoiceNumber}
+                                onChange={(e) => setInvoiceForm({ ...invoiceForm, invoiceNumber: e.target.value })}
+                                placeholder="e.g. INV-2024-001"
+                                className="w-full px-4 py-3 bg-secondary/10 border border-theme rounded-lg text-primary focus:border-gold focus:outline-none"
+                            />
+                        </div>
+                        <div>
+                            <label className="block text-sm font-bold text-secondary mb-2">Manual Invoice URL (Optional)</label>
+                            <input
+                                type="text"
+                                value={invoiceForm.manualInvoiceUrl}
+                                onChange={(e) => setInvoiceForm({ ...invoiceForm, manualInvoiceUrl: e.target.value })}
+                                placeholder="http://..."
+                                className="w-full px-4 py-3 bg-secondary/10 border border-theme rounded-lg text-primary focus:border-gold focus:outline-none"
+                            />
+                            <p className="text-[10px] text-secondary mt-1">Provide a direct link to a hosted PDF if bypassing auto-generation.</p>
+                        </div>
+                    </div>
+                    <div className="mt-6 flex justify-end">
+                        <button
+                            onClick={handleUpdateInvoice}
+                            disabled={adminLoading}
+                            className="bg-primary border border-gold text-gold hover:bg-gold hover:text-black px-6 py-2 rounded-lg font-bold transition-all flex items-center gap-2"
+                        >
+                            <Save size={18} /> {adminLoading ? 'Saving...' : 'Save Invoice Details'}
+                        </button>
+                    </div>
+                </div>
+            )}
 
             {/* Tracking Timeline (Screen Only) */}
             <div className="bg-card backdrop-blur-md p-8 rounded-xl border border-white/10 mb-8 no-print shadow-xl">
@@ -125,7 +206,7 @@ const OrderDetailsPage = () => {
                 <div className="flex justify-between items-start border-b border-gray-200 pb-8 mb-8">
                     <div>
                         <h1 className="text-4xl font-serif font-bold mb-2 tracking-tight">INVOICE</h1>
-                        <p className="text-sm text-gray-500 font-mono">#{order._id.substring(0, 8).toUpperCase()}</p>
+                        <p className="text-sm text-gray-500 font-mono">#{order.invoiceNumber || order._id.substring(0, 8).toUpperCase()}</p>
                         <p className="text-sm text-gray-500 mt-1">Date: {new Date(order.createdAt).toLocaleDateString()}</p>
                     </div>
                     <div className="text-right">

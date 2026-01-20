@@ -105,6 +105,9 @@ const orderSchema = new mongoose.Schema({
         default: 'Pending'
     },
     invoiceUrl: { type: String },
+    invoiceNumber: { type: String },
+    isManualInvoice: { type: Boolean, default: false },
+    manualInvoiceUrl: { type: String },
     invoiceDate: { type: Date }
 }, {
     timestamps: true,

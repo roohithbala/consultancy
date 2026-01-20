@@ -131,6 +131,16 @@ export const updateOrderStatus = async (req, res) => {
             order.deliveredAt = Date.now();
         }
 
+        // Manual Invoice / Bill Number Handling
+        if (req.body.invoiceNumber) {
+            order.invoiceNumber = req.body.invoiceNumber;
+        }
+        if (req.body.manualInvoiceUrl) {
+            order.manualInvoiceUrl = req.body.manualInvoiceUrl;
+            order.invoiceUrl = req.body.manualInvoiceUrl; // Override main URL for easy access
+            order.isManualInvoice = true;
+        }
+
         if (req.body.status === 'Shipped' && !order.invoiceUrl) {
             const invoiceName = `invoice-${order._id}.pdf`;
             const invoicePath = path.join(process.cwd(), 'uploads', 'invoices', invoiceName);
