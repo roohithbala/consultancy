@@ -67,14 +67,19 @@ const ProductsPage = () => {
     };
 
     return (
-        <div className="bg-black min-h-screen text-gray-200 font-sans selection:bg-gold selection:text-black">
+        <div className="bg-primary min-h-screen text-secondary font-sans selection:bg-gold selection:text-black transition-colors duration-300">
             {/* Header */}
             <div className="relative py-20 bg-secondary overflow-hidden">
-                <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-gray-800 via-black to-black opacity-60"></div>
+                <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-gray-800 via-black to-black opacity-60 dark:opacity-60 opacity-0"></div>
+                {/* Note: I removed opacity-60 for Light Mode by defaulting to opacity-0 if not dark, but wait, opacity-0 means no gradient. 
+                   Actually, let's just make the background `bg-secondary` (gray-100 in light) which is fine. 
+                   If we want the dark gradient only in drak mode: dark:block hidden? 
+                   Let's just settle on: bg-secondary for light mode is clean. 
+                */}
                 <div className="container mx-auto px-6 relative z-10 text-center">
                     <span className="text-gold text-xs font-bold tracking-[0.3em] uppercase mb-4 block animate-fade-in">Global Standard</span>
-                    <h1 className="text-4xl md:text-6xl font-bold font-serif text-white mb-6">Material Collection</h1>
-                    <p className="text-gray-400 max-w-2xl mx-auto text-lg font-light leading-relaxed">
+                    <h1 className="text-4xl md:text-6xl font-bold font-serif text-primary mb-6">Material Collection</h1>
+                    <p className="text-secondary max-w-2xl mx-auto text-lg font-light leading-relaxed">
                         Curated high-performance materials engineered for the world's finest footwear.
                     </p>
                 </div>
@@ -84,8 +89,8 @@ const ProductsPage = () => {
                 <div className="flex flex-col lg:flex-row gap-12">
                     {/* Filters Sidebar */}
                     <div className="w-full lg:w-72 flex-shrink-0">
-                        <div className="glass-dark rounded-xl p-8 sticky top-24">
-                            <div className="flex items-center justify-between font-bold mb-8 text-white border-b border-white/10 pb-4">
+                        <div className="bg-card border border-theme rounded-xl p-8 sticky top-24 shadow-sm">
+                            <div className="flex items-center justify-between font-bold mb-8 text-primary border-b border-theme pb-4">
                                 <div className="flex items-center gap-3">
                                     <Filter size={18} className="text-gold" />
                                     <span className="tracking-wide uppercase text-sm">Filters</span>
@@ -93,7 +98,7 @@ const ProductsPage = () => {
                                 {(selectedMaterials.length > 0 || priceRange < 5000) && (
                                     <button
                                         onClick={() => { setSelectedMaterials([]); setPriceRange(5000); }}
-                                        className="text-[10px] text-gray-400 hover:text-white flex items-center gap-1 transition-colors uppercase tracking-widest"
+                                        className="text-[10px] text-secondary hover:text-primary flex items-center gap-1 transition-colors uppercase tracking-widest"
                                     >
                                         <X size={12} /> Clear
                                     </button>
