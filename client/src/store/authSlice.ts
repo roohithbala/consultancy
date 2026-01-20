@@ -8,6 +8,7 @@ interface User {
     token: string;
     phone?: string;
     companyName?: string;
+    gstNumber?: string;
 }
 
 interface AuthState {

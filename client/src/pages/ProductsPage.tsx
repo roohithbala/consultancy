@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Filter } from 'lucide-react';
+import { Filter, X, Check } from 'lucide-react';
 
 interface Product {
     _id: string;
@@ -56,7 +56,6 @@ const ProductsPage = () => {
         } else if (sortBy === 'price-high') {
             result.sort((a, b) => b.pricePerMeter - a.pricePerMeter);
         }
-        // 'newest' uses default order (assuming DB returns newest first or we add created_at later)
 
         setFilteredProducts(result);
     }, [products, selectedMaterials, priceRange, sortBy]);
@@ -68,38 +67,43 @@ const ProductsPage = () => {
     };
 
     return (
-        <div className="bg-white min-h-screen">
+        <div className="bg-black min-h-screen text-gray-200 font-sans selection:bg-gold selection:text-black">
             {/* Header */}
-            <div className="bg-gray-100 py-12 text-center border-b border-gray-200">
-                <h1 className="text-4xl font-bold mb-4">Materials</h1>
-                <p className="text-gray-600 max-w-2xl mx-auto px-4">
-                    Explore our specialized range of high-performance materials for footwear manufacturing.
-                </p>
+            <div className="relative py-20 bg-secondary overflow-hidden">
+                <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-gray-800 via-black to-black opacity-60"></div>
+                <div className="container mx-auto px-6 relative z-10 text-center">
+                    <span className="text-gold text-xs font-bold tracking-[0.3em] uppercase mb-4 block animate-fade-in">Global Standard</span>
+                    <h1 className="text-4xl md:text-6xl font-bold font-serif text-white mb-6">Material Collection</h1>
+                    <p className="text-gray-400 max-w-2xl mx-auto text-lg font-light leading-relaxed">
+                        Curated high-performance materials engineered for the world's finest footwear.
+                    </p>
+                </div>
             </div>
 
-            <div className="container mx-auto px-4 py-8">
-                <div className="flex flex-col lg:flex-row gap-8">
+            <div className="container mx-auto px-6 py-12">
+                <div className="flex flex-col lg:flex-row gap-12">
                     {/* Filters Sidebar */}
-                    <div className="w-full lg:w-64 flex-shrink-0">
-                        <div className="border border-gray-200 rounded-lg p-6 sticky top-24 bg-white shadow-sm">
-                            <div className="flex items-center justify-between font-bold mb-6 text-lg border-b pb-4">
-                                <div className="flex items-center gap-2">
-                                    <Filter size={20} /> Filters
+                    <div className="w-full lg:w-72 flex-shrink-0">
+                        <div className="glass-dark rounded-xl p-8 sticky top-24">
+                            <div className="flex items-center justify-between font-bold mb-8 text-white border-b border-white/10 pb-4">
+                                <div className="flex items-center gap-3">
+                                    <Filter size={18} className="text-gold" />
+                                    <span className="tracking-wide uppercase text-sm">Filters</span>
                                 </div>
                                 {(selectedMaterials.length > 0 || priceRange < 5000) && (
                                     <button
                                         onClick={() => { setSelectedMaterials([]); setPriceRange(5000); }}
-                                        className="text-xs text-red-500 hover:underline font-normal"
+                                        className="text-[10px] text-gray-400 hover:text-white flex items-center gap-1 transition-colors uppercase tracking-widest"
                                     >
-                                        Clear All
+                                        <X size={12} /> Clear
                                     </button>
                                 )}
                             </div>
 
-                            <div className="space-y-8">
+                            <div className="space-y-10">
                                 <div>
-                                    <h3 className="font-semibold mb-3 text-sm uppercase tracking-wide text-gray-500">Material Type</h3>
-                                    <div className="space-y-2">
+                                    <h3 className="font-bold mb-4 text-xs uppercase tracking-widest text-gold">Material Type</h3>
+                                    <div className="space-y-3">
                                         {[
                                             'Vamp Lining',
                                             'Quarter Lining',
@@ -109,24 +113,24 @@ const ProductsPage = () => {
                                             'Mesh',
                                             'Microfiber'
                                         ].map((type) => (
-                                            <label key={type} className="flex items-center gap-2 cursor-pointer group">
-                                                <div className={`w-4 h-4 border rounded flex items-center justify-center transition-colors ${selectedMaterials.includes(type) ? 'bg-black border-black' : 'border-gray-300 group-hover:border-black'}`}>
-                                                    {selectedMaterials.includes(type) && <div className="w-2 h-2 bg-white rounded-sm" />}
+                                            <label key={type} className="flex items-center gap-3 cursor-pointer group">
+                                                <div className={`w-5 h-5 border rounded-sm flex items-center justify-center transition-all duration-300 ${selectedMaterials.includes(type) ? 'bg-gold border-gold' : 'border-gray-600 group-hover:border-gray-400 bg-transparent'}`}>
+                                                    {selectedMaterials.includes(type) && <Check size={12} className="text-black" />}
                                                 </div>
                                                 <input
                                                     type="checkbox"
-                                                    className="hidden" // Hiding default checkbox for custom style
+                                                    className="hidden"
                                                     checked={selectedMaterials.includes(type)}
                                                     onChange={() => toggleMaterial(type)}
                                                 />
-                                                <span className={`text-sm ${selectedMaterials.includes(type) ? 'font-bold text-black' : 'text-gray-600 group-hover:text-black'} transition-colors`}>{type}</span>
+                                                <span className={`text-sm tracking-wide ${selectedMaterials.includes(type) ? 'text-white font-bold' : 'text-gray-400 group-hover:text-gray-200'} transition-colors`}>{type}</span>
                                             </label>
                                         ))}
                                     </div>
                                 </div>
 
                                 <div>
-                                    <h3 className="font-semibold mb-3 text-sm uppercase tracking-wide text-gray-500">Max Price: ₹{priceRange}</h3>
+                                    <h3 className="font-bold mb-4 text-xs uppercase tracking-widest text-gold">Max Price: ₹{priceRange}</h3>
                                     <input
                                         type="range"
                                         min="100"
@@ -134,9 +138,9 @@ const ProductsPage = () => {
                                         step="100"
                                         value={priceRange}
                                         onChange={(e) => setPriceRange(Number(e.target.value))}
-                                        className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-black"
+                                        className="w-full h-1 bg-gray-700 rounded-lg appearance-none cursor-pointer accent-gold"
                                     />
-                                    <div className="flex justify-between text-xs text-gray-400 mt-2">
+                                    <div className="flex justify-between text-[10px] font-mono text-gray-500 mt-3">
                                         <span>₹100</span>
                                         <span>₹5000+</span>
                                     </div>
@@ -148,17 +152,17 @@ const ProductsPage = () => {
                     {/* Product Grid Area */}
                     <div className="flex-1">
                         {/* Results Header */}
-                        <div className="flex flex-col sm:flex-row justify-between items-center mb-6 pb-4 border-b border-gray-100 gap-4">
-                            <p className="text-gray-500 text-sm">
-                                Showing <span className="font-bold text-black">{filteredProducts.length}</span> results
+                        <div className="flex flex-col sm:flex-row justify-between items-center mb-8 pb-4 border-b border-white/5 gap-4">
+                            <p className="text-gray-400 text-sm tracking-widest uppercase">
+                                Showing <span className="font-bold text-white">{filteredProducts.length}</span> results
                             </p>
 
-                            <div className="flex items-center gap-2">
-                                <span className="text-sm text-gray-500">Sort by:</span>
+                            <div className="flex items-center gap-3">
+                                <span className="text-sm text-gray-500 uppercase tracking-wider text-[10px]">Sort by:</span>
                                 <select
                                     value={sortBy}
                                     onChange={(e) => setSortBy(e.target.value)}
-                                    className="border-none bg-gray-50 text-sm font-semibold focus:ring-0 cursor-pointer p-2 rounded hover:bg-gray-100 transition-colors"
+                                    className="bg-black border border-white/20 text-gray-200 text-sm focus:ring-1 focus:ring-gold focus:border-gold cursor-pointer py-2 px-4 rounded-none uppercase tracking-wide"
                                 >
                                     <option value="newest">Featured</option>
                                     <option value="price-low">Price: Low to High</option>
@@ -168,66 +172,69 @@ const ProductsPage = () => {
                         </div>
 
                         {loading ? (
-                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 animate-pulse">
+                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                                 {[1, 2, 3, 4, 5, 6].map(i => (
-                                    <div key={i} className="h-80 bg-gray-100 rounded-lg"></div>
+                                    <div key={i} className="h-96 bg-white/5 rounded-none animate-pulse"></div>
                                 ))}
                             </div>
                         ) : filteredProducts.length === 0 ? (
-                            <div className="text-center py-20 bg-gray-50 rounded-lg border border-dashed border-gray-300">
-                                <p className="text-gray-500 text-lg mb-2">No products match your filters.</p>
+                            <div className="text-center py-32 bg-white/5 border border-white/10 rounded-sm">
+                                <p className="text-gray-400 text-lg mb-4 font-serif italic">No materials found matching your criteria.</p>
                                 <button
                                     onClick={() => { setSelectedMaterials([]); setPriceRange(5000); }}
-                                    className="text-accent font-bold hover:underline"
+                                    className="text-gold font-bold uppercase tracking-widest text-xs hover:text-white transition-colors border-b border-gold hover:border-white pb-1"
                                 >
                                     Clear all filters
                                 </button>
                             </div>
                         ) : (
-                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                                 {filteredProducts.map((product) => (
                                     <Link key={product._id} to={`/products/${product._id}`} className="group block">
-                                        <div className="border border-gray-100 rounded-lg overflow-hidden transition-all hover:shadow-xl hover:-translate-y-1 bg-white h-full flex flex-col relative">
+                                        <div className="bg-secondary border border-white/5 overflow-hidden transition-all duration-500 hover:border-gold/50 group-hover:-translate-y-2 relative h-full flex flex-col">
 
                                             {/* Image container */}
-                                            <div className="relative aspect-[4/3] bg-gray-100 overflow-hidden">
+                                            <div className="relative aspect-[4/5] bg-gray-900 overflow-hidden">
                                                 {product.imageUrl ? (
                                                     <img
                                                         src={product.imageUrl}
                                                         alt={product.name}
-                                                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                                                        className="w-full h-full object-cover opacity-80 group-hover:opacity-100 group-hover:scale-110 transition-all duration-700"
                                                     />
                                                 ) : (
-                                                    <div className="w-full h-full flex items-center justify-center text-gray-400 bg-gray-50">
-                                                        No Image
+                                                    <div className="w-full h-full flex items-center justify-center text-gray-600 bg-gray-900 font-mono text-xs uppercase tracking-widest">
+                                                        No Preview
                                                     </div>
                                                 )}
 
+                                                <div className="absolute top-0 left-0 w-full h-full bg-black/20 group-hover:bg-transparent transition-colors"></div>
+
                                                 {/* Badge */}
-                                                <div className="absolute top-3 left-3">
-                                                    <span className="bg-white/90 backdrop-blur text-xs font-bold px-2 py-1 rounded shadow-sm">
+                                                <div className="absolute top-4 left-4">
+                                                    <span className="bg-black/80 backdrop-blur border border-white/10 text-gold text-[10px] font-bold px-3 py-1 uppercase tracking-widest">
                                                         {product.materialType}
                                                     </span>
                                                 </div>
 
-                                                {/* Quick Action Overlay (Amazon-like) */}
-                                                <div className="absolute inset-0 bg-black/5 opacity-0 group-hover:opacity-100 transition-opacity flex items-end justify-center pb-4">
-                                                    <button className="bg-white text-black font-bold py-2 px-6 rounded-full shadow-lg transform translate-y-4 group-hover:translate-y-0 transition-transform text-sm hover:bg-black hover:text-white">
+                                                {/* Overlay */}
+                                                <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-black/40">
+                                                    <span className="px-6 py-3 bg-gold text-black font-bold uppercase tracking-widest text-xs transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
                                                         View Details
-                                                    </button>
+                                                    </span>
                                                 </div>
                                             </div>
 
-                                            <div className="p-4 flex flex-col flex-1">
-                                                <h3 className="font-bold text-gray-900 mb-1 group-hover:text-accent transition-colors line-clamp-1">{product.name}</h3>
-                                                <p className="text-gray-500 text-xs mb-3 line-clamp-2 min-h-[2.5em]">{product.description}</p>
+                                            <div className="p-6 flex flex-col flex-1 border-t border-white/5 bg-gradient-to-b from-secondary to-black">
+                                                <h3 className="font-serif text-xl text-white mb-2 group-hover:text-gold transition-colors line-clamp-1">{product.name}</h3>
+                                                <p className="text-gray-500 text-xs mb-4 line-clamp-2 leading-relaxed h-8">{product.description}</p>
 
-                                                <div className="mt-auto pt-3 border-t border-gray-50 flex items-center justify-between">
-                                                    <div>
-                                                        <span className="text-xs text-gray-400 block mb-0.5">Price</span>
-                                                        <span className="text-lg font-bold text-gray-900">₹{product.pricePerMeter}</span>
+                                                <div className="mt-auto flex items-center justify-between pt-4 border-t border-white/5">
+                                                    <div className="flex flex-col">
+                                                        <span className="text-[10px] text-gray-500 uppercase tracking-widest mb-1">Price per Meter</span>
+                                                        <span className="text-lg font-bold text-white font-mono">₹{product.pricePerMeter}</span>
                                                     </div>
-                                                    <div className="text-xs text-green-600 font-bold bg-green-50 px-2 py-1 rounded">
+                                                    <div className="text-[10px] text-green-400 font-bold uppercase tracking-widest flex items-center gap-1">
+                                                        <div className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse"></div>
                                                         In Stock
                                                     </div>
                                                 </div>

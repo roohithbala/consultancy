@@ -8,6 +8,9 @@ interface CartItem {
     image: string;
     materialType: string;
     type?: 'regular' | 'sample';
+    customization?: string;
+    relatedSampleId?: string;
+    isRiskAccepted?: boolean;
 }
 
 interface CartState {
@@ -32,11 +35,16 @@ const cartSlice = createSlice({
     reducers: {
         addToCart: (state, action: PayloadAction<CartItem>) => {
             const item = action.payload;
-            const existItem = state.cartItems.find((x) => x.id === item.id && x.type === item.type);
+            const existItem = state.cartItems.find((x) =>
+                x.id === item.id &&
+                x.type === item.type &&
+                x.customization === item.customization &&
+                x.relatedSampleId === item.relatedSampleId
+            );
 
             if (existItem) {
                 state.cartItems = state.cartItems.map((x) =>
-                    x.id === existItem.id && x.type === existItem.type ? item : x
+                    x.id === existItem.id && x.type === existItem.type && x.customization === existItem.customization && x.relatedSampleId === existItem.relatedSampleId ? item : x
                 );
             } else {
                 state.cartItems = [...state.cartItems, item];

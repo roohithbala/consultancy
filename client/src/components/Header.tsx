@@ -3,6 +3,7 @@ import { Search, ShoppingBag, User, LogOut } from 'lucide-react';
 import { useSelector, useDispatch } from 'react-redux';
 import type { RootState } from '../store';
 import { logout } from '../store/authSlice';
+import ThemeToggle from './ThemeToggle';
 
 const Header = () => {
 
@@ -17,65 +18,70 @@ const Header = () => {
     };
 
     return (
-        <header className="sticky top-0 z-50 bg-white/90 backdrop-blur-md border-b border-gray-100">
-            <div className="container mx-auto px-4 py-3 flex items-center justify-between">
+        <header className="sticky top-0 z-50 bg-black/80 backdrop-blur-md border-b border-white/10 transition-all duration-300">
+            <div className="container mx-auto px-6 py-4 flex items-center justify-between">
                 {/* Logo */}
-                <Link to={user ? "/products" : "/"} className="text-2xl font-bold tracking-tighter text-gray-900">
-                    ZAIN <span className="text-accent">FABRICS</span>
+                <Link to={user ? "/products" : "/"} className="text-2xl font-bold tracking-widest text-white uppercase font-serif">
+                    ZAIN <span className="text-gold">FABRICS</span>
                 </Link>
 
                 {/* Desktop Navigation */}
-                <nav className="hidden md:flex items-center space-x-8">
+                <nav className="hidden md:flex items-center space-x-10">
                     {user ? (
                         <>
-                            <Link to="/products" className="text-sm font-medium hover:text-accent transition-colors">SHOP ALL</Link>
-                            <Link to="/products?category=inlines" className="text-sm font-medium hover:text-accent transition-colors">INLINES</Link>
+                            <Link to="/products" className="text-xs font-bold tracking-[0.2em] text-gray-300 hover:text-gold transition-colors uppercase">Collection</Link>
+                            <Link to="/orders" className="text-xs font-bold tracking-[0.2em] text-gray-300 hover:text-gold transition-colors uppercase">My Orders</Link>
                             {user.role === 'admin' && (
-                                <Link to="/admin" className="text-sm font-medium hover:text-accent transition-colors">ADMIN DASHBOARD</Link>
+                                <Link to="/admin" className="text-xs font-bold tracking-[0.2em] text-gold hover:text-white transition-colors uppercase">Admin</Link>
                             )}
                         </>
                     ) : (
                         <>
-                            <Link to="/" className="text-sm font-medium hover:text-accent transition-colors">HOME</Link>
-                            <Link to="/products" className="text-sm font-medium hover:text-accent transition-colors">COLLECTIONS</Link>
-                            <Link to="/about" className="text-sm font-medium hover:text-accent transition-colors">ABOUT</Link>
-                            <Link to="/contact" className="text-sm font-medium hover:text-accent transition-colors">CONTACT</Link>
-                            <button onClick={() => alert("Simra Fabrics website is coming soon!")} className="text-sm font-medium hover:text-accent transition-colors text-gray-500">SIMRA FABRICS</button>
+                            <Link to="/" className="text-xs font-bold tracking-[0.2em] text-gray-300 hover:text-gold transition-colors uppercase">Home</Link>
+                            <Link to="/products" className="text-xs font-bold tracking-[0.2em] text-gray-300 hover:text-gold transition-colors uppercase">Collections</Link>
+                            <Link to="/about" className="text-xs font-bold tracking-[0.2em] text-gray-300 hover:text-gold transition-colors uppercase">About</Link>
+                            <Link to="/contact" className="text-xs font-bold tracking-[0.2em] text-gray-300 hover:text-gold transition-colors uppercase">Contact</Link>
                         </>
                     )}
                 </nav>
 
-                {/* Icons */}
-                <div className="flex items-center space-x-6">
-                    <div className="hidden md:flex items-center space-x-6">
-                        <div className="relative group">
-                            <button className="hover:text-accent transition-colors">
-                                <Search size={20} />
-                            </button>
-                        </div>
+                <div className="flex items-center space-x-6 text-white">
+                    <ThemeToggle />
 
-                        <Link to="/cart" className="relative hover:text-accent transition-colors">
-                            <ShoppingBag size={20} />
-                            {cartItems.length > 0 && (
-                                <span className="absolute -top-2 -right-2 bg-accent text-white text-[10px] w-4 h-4 flex items-center justify-center rounded-full">
-                                    {cartItems.length}
-                                </span>
-                            )}
-                        </Link>
+                    <button className="hover:text-gold transition-colors">
+                        <Search size={20} strokeWidth={1.5} />
+                    </button>
 
-                        {user ? (
-                            <div className="flex items-center gap-4">
-                                <span className="text-sm font-medium">Hello, {user.name}</span>
-                                <button onClick={handleLogout} className="hover:text-red-500 transition-colors" title="Logout">
-                                    <LogOut size={20} />
+                    <Link to="/cart" className="relative hover:text-gold transition-colors">
+                        <ShoppingBag size={20} strokeWidth={1.5} />
+                        {cartItems.length > 0 && (
+                            <span className="absolute -top-2 -right-2 bg-gold text-black text-[10px] w-4 h-4 flex items-center justify-center rounded-full font-bold">
+                                {cartItems.length}
+                            </span>
+                        )}
+                    </Link>
+
+                    {user ? (
+                        <div className="flex items-center gap-6 pl-6 border-l border-white/10">
+                            <Link to="/orders" className="hidden lg:block text-xs font-bold tracking-widest hover:text-gold transition-colors uppercase">
+                                Orders
+                            </Link>
+                            <div className="flex items-center gap-2 group cursor-pointer relative">
+                                <Link to="/profile" className="flex items-center gap-2 group-hover:text-gold transition-colors">
+                                    <User size={20} strokeWidth={1.5} />
+                                    <span className="text-xs font-medium hidden lg:block tracking-wide">{user.name.split(' ')[0]}</span>
+                                </Link>
+
+                                <button onClick={handleLogout} className="ml-4 text-gray-400 hover:text-red-500 transition-colors" title="Logout">
+                                    <LogOut size={18} strokeWidth={1.5} />
                                 </button>
                             </div>
-                        ) : (
-                            <Link to="/login" className="hover:text-accent transition-colors">
-                                <User size={20} />
-                            </Link>
-                        )}
-                    </div>
+                        </div>
+                    ) : (
+                        <Link to="/login" className="hover:text-gold transition-colors">
+                            <User size={20} strokeWidth={1.5} />
+                        </Link>
+                    )}
                 </div>
             </div>
         </header>

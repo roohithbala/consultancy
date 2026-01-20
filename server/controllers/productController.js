@@ -36,8 +36,10 @@ export const createProduct = async (req, res) => {
         width,
         gsm,
         documents,
-        samplePrice
+        samplePrice,
+        coatings
     } = req.body;
+
 
     const product = new Product({
         name,
@@ -51,6 +53,7 @@ export const createProduct = async (req, res) => {
         gsm,
         documents,
         samplePrice,
+        coatings,
         user: req.user._id
     });
 
@@ -86,8 +89,10 @@ export const updateProduct = async (req, res) => {
         width,
         gsm,
         documents,
-        samplePrice
+        samplePrice,
+        coatings
     } = req.body;
+
 
     const product = await Product.findById(req.params.id);
 
@@ -103,6 +108,7 @@ export const updateProduct = async (req, res) => {
         product.gsm = gsm || product.gsm;
         product.documents = documents || product.documents;
         product.samplePrice = samplePrice || product.samplePrice;
+        product.coatings = coatings || product.coatings;
 
         const updatedProduct = await product.save();
         res.json(updatedProduct);

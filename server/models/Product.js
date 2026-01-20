@@ -42,6 +42,10 @@ const productSchema = new mongoose.Schema({
             url: { type: String, required: true },
         }
     ],
+    coatings: {
+        type: [String],
+        default: [],
+    },
     samplePrice: {
         type: Number,
         default: 0, // 0 means free sample, or set a price

@@ -20,7 +20,8 @@ const AddProductPage = () => {
         textureUrl: '',
         normalMapUrl: '',
         roughnessMapUrl: '',
-        samplePrice: 0
+        samplePrice: 0,
+        coatings: ''
     });
 
     const [documents, setDocuments] = useState<{ name: string, url: string }[]>([]);
@@ -91,6 +92,7 @@ const AddProductPage = () => {
 
         const productData = {
             ...formData,
+            coatings: formData.coatings.split(',').map(c => c.trim()).filter(Boolean),
             documents,
             textureMaps: {
                 map: formData.textureUrl,
@@ -138,10 +140,21 @@ const AddProductPage = () => {
                             <option value="Counter Lining">Counter Lining</option>
                             <option value="Strobel">Strobel</option>
                             <option value="Non-Woven">Non-Woven</option>
-                            <option value="Mesh">Mesh</option>
                             <option value="Microfiber">Microfiber</option>
                         </select>
                     </div>
+                </div>
+
+                <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Available Coatings (Comma separated)</label>
+                    <input
+                        type="text"
+                        name="coatings"
+                        value={formData.coatings}
+                        onChange={handleInputChange}
+                        placeholder="e.g. TPU, EVA, PU, Hotmelt"
+                        className="w-full px-4 py-2 border rounded-lg"
+                    />
                 </div>
 
                 <div>

@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { setCredentials } from '../store/authSlice';
+import { User, Mail, Lock, ArrowRight } from 'lucide-react';
 
 const RegisterPage = () => {
     const [name, setName] = useState('');
@@ -51,61 +52,68 @@ const RegisterPage = () => {
     };
 
     return (
-        <div className="flex items-center justify-center min-h-[80vh] bg-gray-50">
-            <div className="w-full max-w-md p-8 bg-white rounded-lg shadow-md border border-gray-100">
-                <h2 className="text-3xl font-bold text-center mb-6 text-gray-900">Create Account</h2>
+        <div className="flex items-center justify-center min-h-screen bg-black relative overflow-hidden">
+            {/* Background Effects */}
+            <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(ellipse_at_bottom,_var(--tw-gradient-stops))] from-gray-900 via-black to-black z-0"></div>
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-gold/5 rounded-full blur-[100px] pointer-events-none"></div>
+
+            <div className="w-full max-w-md p-10 bg-white/5 backdrop-blur-xl border border-white/10 relative z-10 shadow-2xl">
+                <div className="text-center mb-10">
+                    <span className="text-gold uppercase tracking-[0.3em] text-xs font-bold">Join Us</span>
+                    <h2 className="text-4xl font-serif font-bold text-white mt-4">Create Account</h2>
+                </div>
 
                 {error && (
-                    <div className="bg-red-50 text-red-500 p-3 rounded mb-4 text-sm text-center">
+                    <div className="bg-red-500/10 border border-red-500/20 text-red-500 p-4 mb-6 text-sm text-center">
                         {error}
                     </div>
                 )}
 
                 <form onSubmit={handleRegister} className="space-y-6">
-                    <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">Full Name</label>
+                    <div className="relative group">
+                        <User className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 group-focus-within:text-gold transition-colors" size={20} />
                         <input
                             type="text"
                             value={name}
                             onChange={(e) => setName(e.target.value)}
-                            className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-accent focus:border-accent outline-none"
-                            placeholder="John Doe"
+                            className="w-full bg-black/40 border border-white/10 text-white pl-12 pr-4 py-4 focus:border-gold focus:outline-none transition-all placeholder:text-gray-600"
+                            placeholder="Full Name"
                             required
                         />
                     </div>
 
-                    <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">Email Address</label>
+                    <div className="relative group">
+                        <Mail className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 group-focus-within:text-gold transition-colors" size={20} />
                         <input
                             type="email"
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
-                            className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-accent focus:border-accent outline-none"
-                            placeholder="you@example.com"
+                            className="w-full bg-black/40 border border-white/10 text-white pl-12 pr-4 py-4 focus:border-gold focus:outline-none transition-all placeholder:text-gray-600"
+                            placeholder="Email Address"
                             required
                         />
                     </div>
 
-                    <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">Password</label>
+                    <div className="relative group">
+                        <Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 group-focus-within:text-gold transition-colors" size={20} />
                         <input
                             type="password"
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
-                            className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-accent focus:border-accent outline-none"
-                            placeholder="••••••••"
+                            className="w-full bg-black/40 border border-white/10 text-white pl-12 pr-4 py-4 focus:border-gold focus:outline-none transition-all placeholder:text-gray-600"
+                            placeholder="Password"
                             required
                         />
                     </div>
 
-                    <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">Confirm Password</label>
+                    <div className="relative group">
+                        <Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 group-focus-within:text-gold transition-colors" size={20} />
                         <input
                             type="password"
                             value={confirmPassword}
                             onChange={(e) => setConfirmPassword(e.target.value)}
-                            className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-accent focus:border-accent outline-none"
-                            placeholder="••••••••"
+                            className="w-full bg-black/40 border border-white/10 text-white pl-12 pr-4 py-4 focus:border-gold focus:outline-none transition-all placeholder:text-gray-600"
+                            placeholder="Confirm Password"
                             required
                         />
                     </div>
@@ -113,14 +121,15 @@ const RegisterPage = () => {
                     <button
                         type="submit"
                         disabled={isLoading}
-                        className="w-full bg-black text-white py-3 rounded-md font-semibold hover:bg-gray-800 transition-colors disabled:opacity-50"
+                        className="w-full bg-gold text-black py-4 font-bold uppercase tracking-widest hover:bg-white transition-all disabled:opacity-50 flex items-center justify-center gap-2 group"
                     >
                         {isLoading ? 'Creating Account...' : 'Sign Up'}
+                        {!isLoading && <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />}
                     </button>
                 </form>
 
-                <p className="mt-6 text-center text-sm text-gray-500">
-                    Already have an account? <Link to="/login" className="text-accent hover:underline">Sign in</Link>
+                <p className="mt-8 text-center text-sm text-gray-500">
+                    Already a member? <Link to="/login" className="text-white hover:text-gold transition-colors font-bold ml-2">Sign In</Link>
                 </p>
             </div>
         </div>

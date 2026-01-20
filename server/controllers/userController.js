@@ -13,6 +13,7 @@ export const getUserProfile = async (req, res) => {
             email: user.email,
             role: user.role,
             companyName: user.companyName,
+            gstNumber: user.gstNumber,
             phone: user.phone,
             addresses: user.addresses,
         });
@@ -31,6 +32,7 @@ export const updateUserProfile = async (req, res) => {
         user.name = req.body.name || user.name;
         user.email = req.body.email || user.email;
         user.companyName = req.body.companyName || user.companyName;
+        user.gstNumber = req.body.gstNumber || user.gstNumber;
         user.phone = req.body.phone || user.phone;
 
         if (req.body.password) {
@@ -45,6 +47,7 @@ export const updateUserProfile = async (req, res) => {
             email: updatedUser.email,
             role: updatedUser.role,
             companyName: updatedUser.companyName,
+            gstNumber: updatedUser.gstNumber,
             phone: updatedUser.phone,
             addresses: updatedUser.addresses,
             token: req.user.token, // Assuming we want to keep the same token or token logic handles it elsewhere

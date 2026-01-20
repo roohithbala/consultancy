@@ -18,7 +18,10 @@ const orderSchema = new mongoose.Schema({
                 ref: 'Product',
             },
             materialType: { type: String },
-            type: { type: String, required: true } // 'regular' or 'sample'
+            type: { type: String, required: true }, // 'regular' or 'sample'
+            customization: { type: String },
+            relatedSampleId: { type: mongoose.Schema.Types.ObjectId, ref: 'Order' },
+            isRiskAccepted: { type: Boolean, default: false }
         },
     ],
     shippingAddress: {
@@ -44,6 +47,15 @@ const orderSchema = new mongoose.Schema({
     paymentMethod: {
         type: String,
         required: true,
+    },
+    deliveryMethod: {
+        type: String, // 'Courier' or 'Pickup'
+        required: true,
+        default: 'Courier'
+    },
+    trackingDetails: {
+        provider: { type: String }, // e.g., 'FedEx', 'DTDC'
+        trackingNumber: { type: String }
     },
     paymentResult: {
         id: { type: String },
@@ -91,7 +103,9 @@ const orderSchema = new mongoose.Schema({
         type: String,
         enum: ['Pending', 'Processing', 'Shipped', 'OutForDelivery', 'Delivered', 'Cancelled'],
         default: 'Pending'
-    }
+    },
+    invoiceUrl: { type: String },
+    invoiceDate: { type: Date }
 }, {
     timestamps: true,
 });

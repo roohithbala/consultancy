@@ -1,100 +1,91 @@
 import { Mail, Phone, MapPin, Send } from 'lucide-react';
+import { COMPANY_DETAILS } from '../config/companyDetails';
 
 const ContactPage = () => {
     return (
-        <div className="bg-white min-h-screen">
-            <div className="bg-gray-100 py-12 text-center">
-                <h1 className="text-4xl font-bold mb-4">Get in Touch</h1>
-                <p className="text-gray-600 max-w-2xl mx-auto px-4">
-                    Have a question about our fabrics or need a custom quote? We'd love to hear from you.
-                </p>
-            </div>
+        <div className="bg-black text-gray-200 font-sans min-h-screen pt-20 pb-20">
+            <div className="max-w-7xl mx-auto px-6">
 
-            <div className="container mx-auto px-4 py-12">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
-                    {/* Contact Info */}
-                    <div>
-                        <h2 className="text-2xl font-bold mb-8">Contact Information</h2>
+                {/* Header */}
+                <div className="text-center mb-16">
+                    <h1 className="text-5xl font-serif font-bold text-white mb-4">
+                        Get in <span className="text-gold">Touch</span>
+                    </h1>
+                    <p className="text-gray-400 max-w-2xl mx-auto font-light">
+                        Ideally positioned to serve the global footwear industry. Visit our headquarters or reach out directly.
+                    </p>
+                </div>
 
-                        <div className="space-y-6">
-                            <div className="flex items-start gap-4">
-                                <div className="bg-accent/10 p-3 rounded-lg text-accent">
-                                    <MapPin size={24} />
-                                </div>
-                                <div>
-                                    <h3 className="font-bold text-lg">Headquarters</h3>
-                                    <p className="text-gray-600">
-                                        123 Textile Avenue, Industrial Estate<br />
-                                        Perundurai, Tamil Nadu 638052<br />
-                                        India
-                                    </p>
-                                </div>
-                            </div>
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-24">
 
-                            <div className="flex items-start gap-4">
-                                <div className="bg-accent/10 p-3 rounded-lg text-accent">
-                                    <Phone size={24} />
+                    {/* Contact Form */}
+                    <div className="space-y-8">
+                        <div className="bg-white/5 backdrop-blur-md p-8 rounded-2xl border border-white/10 shadow-2xl">
+                            <h3 className="text-2xl font-serif font-medium text-white mb-6">Send us a Message</h3>
+                            <form className="space-y-6">
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                    <div className="space-y-2">
+                                        <label className="text-xs uppercase tracking-widest text-gray-500 font-bold">Name</label>
+                                        <input type="text" className="w-full bg-black/20 border border-white/10 rounded-lg px-4 py-3 text-white focus:border-gold focus:outline-none transition-colors" placeholder="John Doe" />
+                                    </div>
+                                    <div className="space-y-2">
+                                        <label className="text-xs uppercase tracking-widest text-gray-500 font-bold">Email</label>
+                                        <input type="email" className="w-full bg-black/20 border border-white/10 rounded-lg px-4 py-3 text-white focus:border-gold focus:outline-none transition-colors" placeholder="john@example.com" />
+                                    </div>
                                 </div>
-                                <div>
-                                    <h3 className="font-bold text-lg">Phone</h3>
-                                    <p className="text-gray-600">+91 98765 43210</p>
-                                    <p className="text-gray-500 text-sm">Mon-Sat 9am to 6pm</p>
+                                <div className="space-y-2">
+                                    <label className="text-xs uppercase tracking-widest text-gray-500 font-bold">Subject</label>
+                                    <input type="text" className="w-full bg-black/20 border border-white/10 rounded-lg px-4 py-3 text-white focus:border-gold focus:outline-none transition-colors" placeholder="Inquiry about..." />
                                 </div>
-                            </div>
-
-                            <div className="flex items-start gap-4">
-                                <div className="bg-accent/10 p-3 rounded-lg text-accent">
-                                    <Mail size={24} />
+                                <div className="space-y-2">
+                                    <label className="text-xs uppercase tracking-widest text-gray-500 font-bold">Message</label>
+                                    <textarea rows={4} className="w-full bg-black/20 border border-white/10 rounded-lg px-4 py-3 text-white focus:border-gold focus:outline-none transition-colors" placeholder="How can we help you?"></textarea>
                                 </div>
-                                <div>
-                                    <h3 className="font-bold text-lg">Email</h3>
-                                    <p className="text-gray-600">info@zainfabrics.com</p>
-                                    <p className="text-gray-600">sales@zainfabrics.com</p>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div className="mt-12">
-                            <iframe
-                                title="Google Map"
-                                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3896.347348734!2d78.7!3d12.8!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMTLCsDQ4JzAwLjAiTiA3OMKwNDInMDAuMCJF!5e0!3m2!1sen!2sin!4v1625000000000!5m2!1sen!2sin"
-                                width="100%"
-                                height="300"
-                                style={{ border: 0, borderRadius: '0.5rem' }}
-                                loading="lazy">
-                            </iframe>
+                                <button type="submit" className="w-full bg-gold text-black font-bold uppercase tracking-widest py-4 rounded-lg hover:bg-white transition-all flex items-center justify-center gap-2">
+                                    <Send size={18} /> Send Message
+                                </button>
+                            </form>
                         </div>
                     </div>
 
-                    {/* Contact Form */}
-                    <div className="bg-white p-8 rounded-lg border border-gray-100 shadow-lg shadow-gray-100">
-                        <h2 className="text-2xl font-bold mb-6">Send us a Message</h2>
-                        <form className="space-y-6">
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-2">Name</label>
-                                    <input type="text" className="w-full px-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-accent focus:border-transparent outline-none transition-all" placeholder="John Doe" />
-                                </div>
-                                <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-2">Phone</label>
-                                    <input type="tel" className="w-full px-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-accent focus:border-transparent outline-none transition-all" placeholder="+91..." />
-                                </div>
-                            </div>
+                    {/* Info & Map */}
+                    <div className="space-y-12">
 
-                            <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-2">Email</label>
-                                <input type="email" className="w-full px-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-accent focus:border-transparent outline-none transition-all" placeholder="john@example.com" />
+                        {/* Info Cards */}
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                            <div className="bg-white/5 p-6 rounded-xl border border-white/10 hover:border-gold/50 transition-colors">
+                                <Phone className="text-gold mb-4" size={24} />
+                                <h4 className="text-white font-bold mb-2">Phone</h4>
+                                <p className="text-gray-400 text-sm">{COMPANY_DETAILS.phone}</p>
+                                <p className="text-gray-500 text-xs mt-1">Mon-Fri, 9am - 6pm</p>
                             </div>
-
-                            <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-2">Message</label>
-                                <textarea className="w-full px-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-accent focus:border-transparent outline-none transition-all h-32" placeholder="Tell us about your requirements..."></textarea>
+                            <div className="bg-white/5 p-6 rounded-xl border border-white/10 hover:border-gold/50 transition-colors">
+                                <Mail className="text-gold mb-4" size={24} />
+                                <h4 className="text-white font-bold mb-2">Email</h4>
+                                <p className="text-gray-400 text-sm">{COMPANY_DETAILS.email}</p>
+                                <p className="text-gray-500 text-xs mt-1">24/7 Support</p>
                             </div>
+                            <div className="bg-white/5 p-6 rounded-xl border border-white/10 hover:border-gold/50 transition-colors sm:col-span-2">
+                                <MapPin className="text-gold mb-4" size={24} />
+                                <h4 className="text-white font-bold mb-2">Headquarters</h4>
+                                <p className="text-gray-400 text-sm">{COMPANY_DETAILS.address[0]}, {COMPANY_DETAILS.address[1]}, {COMPANY_DETAILS.address[2]}</p>
+                            </div>
+                        </div>
 
-                            <button type="submit" className="w-full bg-black text-white py-4 rounded-lg font-bold flex items-center justify-center gap-2 hover:bg-gray-800 transition-all">
-                                <Send size={18} /> Send Message
-                            </button>
-                        </form>
+                        {/* Map */}
+                        <div className="w-full h-64 rounded-xl overflow-hidden border border-white/10 grayscale hover:grayscale-0 transition-all duration-700 relative group">
+                            <iframe
+                                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d15643.5186789!2d77.58913!3d11.314269!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMTHCsDE4JzUxLjQiTiA3N8KwMzUnMjAuOSJF!5e0!3m2!1sen!2sin!4v1689765432109!5m2!1sen!2sin"
+                                width="100%"
+                                height="100%"
+                                style={{ border: 0 }}
+                                allowFullScreen
+                                loading="lazy"
+                                referrerPolicy="no-referrer-when-downgrade"
+                            ></iframe>
+                            <div className="absolute inset-0 bg-black/20 group-hover:bg-transparent pointer-events-none transition-colors"></div>
+                        </div>
+
                     </div>
                 </div>
             </div>
