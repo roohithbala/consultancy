@@ -17,12 +17,13 @@ jobs:
       - name: Install and Build
         run: |
           cd client
-          npm ci
+          npm install
           npm run build
         env:
-          VITE_API_URL: https://zain-fabrics-api.onrender.com # Example - needs actual Prod URL
+          VITE_API_URL: ${{ secrets.VITE_API_URL || 'https://api.example.com' }} # REMINDER: Set VITE_API_URL in GitHub Repository Secrets
 
       - name: Deploy
         uses: JamesIves/github-pages-deploy-action@v4
         with:
           folder: client/dist
+          token: ${{ secrets.GITHUB_TOKEN }}
