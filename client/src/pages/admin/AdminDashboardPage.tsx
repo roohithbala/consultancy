@@ -53,6 +53,7 @@ const AdminDashboardPage = () => {
                     }
                 });
                 const data = await res.json();
+                console.log("Admin Dashboard Stats Received:", data);
                 setStats(data);
                 setLoading(false);
             } catch (error) {

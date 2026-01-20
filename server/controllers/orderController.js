@@ -198,6 +198,13 @@ export const getAdminStats = async (req, res) => {
             .sort({ createdAt: -1 })
             .limit(5);
 
+        console.log("Admin Stats Debug:");
+        console.log("Total Orders Found:", orders.length);
+        console.log("Recent Orders Found:", recentOrders.length);
+        if (recentOrders.length > 0) {
+            console.log("First Recent Order:", JSON.stringify(recentOrders[0], null, 2));
+        }
+
         res.json({
             totalSales,
             activeOrders: activeOrdersCount,
