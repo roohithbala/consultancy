@@ -20,6 +20,7 @@ const orderSchema = new mongoose.Schema({
             materialType: { type: String },
             type: { type: String, required: true }, // 'regular' or 'sample'
             customization: { type: String },
+            color: { type: String },
             relatedSampleId: { type: mongoose.Schema.Types.ObjectId, ref: 'Order' },
             isRiskAccepted: { type: Boolean, default: false }
         },

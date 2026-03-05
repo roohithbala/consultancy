@@ -22,3 +22,8 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Assets
+*.png
+3dmodel/
+public/3dmodel/

@@ -25,6 +25,14 @@ const LandingPage = () => {
     ];
 
     const processes = [
+        'COATINGS',
+        'INTERLININGS',
+        'RAISING',
+        'DRILL',
+        'JERSEY',
+        'CANVAS',
+        'BONDING',
+        'FOAM LAMINATIONS',
         'Advanced Fusing',
         'Polyester Printing',
         'Precision Sizing',
@@ -35,7 +43,7 @@ const LandingPage = () => {
     ];
 
     return (
-        <div className="bg-primary text-secondary font-sans selection:bg-gold selection:text-black scroll-smooth transition-colors duration-300">
+        <div className="bg-primary text-primary font-sans selection:bg-gold selection:text-black scroll-smooth transition-colors duration-300">
             {/* Hero Section - Video Background */}
             <section className="relative h-screen flex items-center justify-center overflow-hidden bg-black text-white">
                 <div className="absolute inset-0 z-0">
@@ -46,26 +54,26 @@ const LandingPage = () => {
                 </div>
 
                 <div className="relative z-20 text-center px-4 max-w-6xl mx-auto">
-                    <div className="inline-flex items-center gap-2 border border-white/20 px-4 py-2 rounded-full mb-8 backdrop-blur-md animate-fade-in-up">
-                        <span className="w-2 h-2 bg-gold rounded-full animate-ping"></span>
-                        <span className="text-xs uppercase tracking-widest text-white font-bold">Global Manufacturing • Est. 2024</span>
+                    <div className="inline-flex items-center gap-2 border border-white/10 px-5 py-2.5 rounded-full mb-8 glass animate-fade-in">
+                        <span className="w-1.5 h-1.5 bg-[#c29b28] rounded-full animate-pulse"></span>
+                        <span className="text-[10px] uppercase tracking-[0.3em] text-white/80 font-bold">Global Manufacturing • Est. 2024</span>
                     </div>
 
-                    <h1 className="text-6xl md:text-8xl lg:text-9xl font-bold font-serif mb-8 leading-tight tracking-tight text-white mix-blend-screen animate-fade-in">
-                        Material <br /> <span className="text-transparent bg-clip-text bg-gradient-to-r from-gold via-yellow-200 to-gold italic">Excellence</span>
+                    <h1 className="text-7xl md:text-9xl font-extrabold mb-10 leading-[0.9] tracking-tighter text-white animate-fade-in">
+                        Material <br /> <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#c29b28] via-[#fcd34d] to-[#c29b28] italic font-normal">Excellence</span>
                     </h1>
 
                     <p className="text-xl md:text-2xl mb-12 text-gray-300 max-w-3xl mx-auto leading-relaxed font-light animate-fade-in delay-100">
                         Engineered shoe materials for the world's leading brands. <br />
-                        Defining quality from <span className="text-white font-bold border-b border-gold">Ambur</span> to the <span className="text-white font-bold border-b border-gold">Global Stage</span>.
+                        Defining quality on the <span className="text-white font-bold border-b border-[#c29b28]">Global Stage</span>.
                     </p>
 
                     <div className="flex flex-col md:flex-row items-center justify-center gap-6 animate-fade-in delay-200">
-                        <Link to="/products" className="group relative px-10 py-5 bg-gold text-black font-bold uppercase tracking-widest overflow-hidden shadow-[0_0_20px_rgba(212,175,55,0.4)] hover:shadow-[0_0_40px_rgba(212,175,55,0.6)] transition-shadow">
-                            <span className="relative z-10 flex items-center gap-3 group-hover:gap-5 transition-all">
-                                Explore Collection <ArrowRight size={20} />
+                        <Link to="/products" className="group relative px-12 py-5 bg-[#c29b28] text-black font-bold uppercase tracking-[0.2em] text-xs overflow-hidden transition-all hover:scale-105 active:scale-95">
+                            <span className="relative z-10 flex items-center gap-3">
+                                Explore Collection <ArrowRight size={18} />
                             </span>
-                            <div className="absolute inset-0 bg-white transform -translate-x-full group-hover:translate-x-0 transition-transform duration-300 origin-left"></div>
+                            <div className="absolute inset-0 bg-white/20 transform -translate-x-full group-hover:translate-x-0 transition-transform duration-500 origin-left"></div>
                         </Link>
 
                         <Link to="/contact" className="group px-10 py-5 border border-white/20 text-white font-bold uppercase tracking-widest hover:border-gold hover:text-gold transition-colors flex items-center gap-3">
@@ -112,26 +120,26 @@ const LandingPage = () => {
 
                         <div className="lg:w-1/2 relative">
                             {/* Abstract Map using CSS/SVG */}
-                            <div className="aspect-square bg-card rounded-full border border-theme relative p-12 flex items-center justify-center shadow-2xl">
-                                <div className="absolute inset-0 bg-gold/5 rounded-full blur-3xl"></div>
-
+                            <div className="aspect-square rounded-[2rem] border border-theme glass-card relative p-12 flex items-center justify-center shadow-2xl">
+                                <div className="absolute inset-0 bg-[#c29b28]/5 rounded-[2rem] blur-3xl"></div>
+ 
                                 {/* Central Hub */}
                                 <div className="relative z-10">
-                                    <div className="w-40 h-40 rounded-full border border-gold/30 flex items-center justify-center relative animate-[spin_10s_linear_infinite]">
-                                        <div className="w-2 h-2 bg-gold rounded-full absolute top-0 -translate-y-1/2"></div>
-                                        <div className="w-2 h-2 bg-gold rounded-full absolute bottom-0 translate-y-1/2"></div>
+                                    <div className="w-48 h-48 rounded-full border border-[#c29b28]/20 flex items-center justify-center relative animate-[spin_20s_linear_infinite]">
+                                        <div className="w-1.5 h-1.5 bg-[#c29b28] rounded-full absolute top-0 -translate-y-1/2"></div>
+                                        <div className="w-1.5 h-1.5 bg-[#c29b28] rounded-full absolute bottom-0 translate-y-1/2"></div>
                                     </div>
                                     <div className="absolute inset-0 flex items-center justify-center">
                                         <div className="text-center">
-                                            <Globe size={48} className="text-gold mx-auto mb-2 opacity-80" strokeWidth={1} />
-                                            <span className="text-primary font-bold uppercase tracking-widest text-xs">India HQ</span>
+                                            <Globe size={56} className="text-[#c29b28] mx-auto mb-3 opacity-60" strokeWidth={0.5} />
+                                            <span className="text-primary font-bold uppercase tracking-[0.3em] text-[10px]">India Hub</span>
                                         </div>
                                     </div>
-
+ 
                                     {/* Orbiting Nodes (Exports) */}
-                                    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[300px] h-[300px] border border-theme rounded-full animate-[spin_15s_linear_infinite_reverse]">
-                                        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-4 h-4 bg-card border border-gold rounded-full flex items-center justify-center">
-                                            <div className="w-1.5 h-1.5 bg-gold rounded-full"></div>
+                                    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[340px] h-[340px] border border-theme/30 rounded-full animate-[spin_30s_linear_infinite_reverse]">
+                                        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-3 h-3 glass border border-[#c29b28]/30 rounded-full flex items-center justify-center">
+                                            <div className="w-1 h-1 bg-[#c29b28] rounded-full"></div>
                                         </div>
                                     </div>
                                 </div>

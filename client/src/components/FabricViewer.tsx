@@ -1,15 +1,17 @@
 import { Canvas } from '@react-three/fiber';
 import { OrbitControls, Stage, useTexture } from '@react-three/drei';
 import { Suspense, useRef } from 'react';
-import { RepeatWrapping } from 'three';
+import { RepeatWrapping, DoubleSide } from 'three';
+import ThreeErrorBoundary from './ThreeErrorBoundary';
 
 interface FabricSceneProps {
     textureUrl: string;
+    color?: string;
     normalMapUrl?: string;
     roughnessMapUrl?: string;
 }
 
-const FabricScene = ({ textureUrl, normalMapUrl, roughnessMapUrl }: FabricSceneProps) => {
+const FabricScene = ({ textureUrl, color = '#ffffff', normalMapUrl, roughnessMapUrl }: FabricSceneProps) => {
     const props = useTexture({
         map: textureUrl,
         ...(normalMapUrl && { normalMap: normalMapUrl }),
@@ -29,7 +31,8 @@ const FabricScene = ({ textureUrl, normalMapUrl, roughnessMapUrl }: FabricSceneP
             <planeGeometry args={[2, 2, 128, 128]} />
             <meshStandardMaterial
                 {...props}
-                side={2} // Double side
+                color={color}
+                side={DoubleSide}
                 roughness={0.8}
             />
         </mesh>
@@ -38,11 +41,12 @@ const FabricScene = ({ textureUrl, normalMapUrl, roughnessMapUrl }: FabricSceneP
 
 interface FabricViewerProps {
     textureUrl: string;
+    color?: string;
     normalMapUrl?: string;
     roughnessMapUrl?: string;
 }
 
-const FabricViewer = ({ textureUrl, normalMapUrl, roughnessMapUrl }: FabricViewerProps) => {
+const FabricViewer = ({ textureUrl, color = '#ffffff', normalMapUrl, roughnessMapUrl }: FabricViewerProps) => {
     const controlsRef = useRef<any>(null);
 
     const handleReset = () => {
@@ -57,18 +61,21 @@ const FabricViewer = ({ textureUrl, normalMapUrl, roughnessMapUrl }: FabricViewe
                 <span>Interactive 3D Preview</span>
                 <button onClick={handleReset} className="text-accent hover:underline font-bold">Reset View</button>
             </div>
-            <Canvas shadows dpr={[1, 2]} camera={{ fov: 45 }}>
-                <Suspense fallback={null}>
-                    <Stage environment="city" intensity={0.5}>
-                        <FabricScene
-                            textureUrl={textureUrl}
-                            normalMapUrl={normalMapUrl}
-                            roughnessMapUrl={roughnessMapUrl}
-                        />
-                    </Stage>
-                </Suspense>
-                <OrbitControls ref={controlsRef} autoRotate autoRotateSpeed={0.5} />
-            </Canvas>
+            <ThreeErrorBoundary>
+                <Canvas shadows dpr={[1, 2]} camera={{ fov: 45 }}>
+                    <Suspense fallback={null}>
+                        <Stage environment="city" intensity={0.5}>
+                            <FabricScene
+                                textureUrl={textureUrl || "/3dmodel/cotton_texture.png"}
+                                color={color}
+                                normalMapUrl={normalMapUrl}
+                                roughnessMapUrl={roughnessMapUrl}
+                            />
+                        </Stage>
+                    </Suspense>
+                    <OrbitControls ref={controlsRef} autoRotate autoRotateSpeed={0.5} />
+                </Canvas>
+            </ThreeErrorBoundary>
         </div>
     );
 };

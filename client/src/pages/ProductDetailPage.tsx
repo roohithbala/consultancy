@@ -2,8 +2,11 @@ import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { ShoppingBag, Truck, ShieldCheck, FileText, Download, AlertTriangle, Check, Layers, ArrowRight } from 'lucide-react';
 import FabricViewer from '../components/FabricViewer';
+import FootwearConfigurator from '../components/FootwearConfigurator';
+import ThreeErrorBoundary from '../components/ThreeErrorBoundary';
 import { useDispatch, useSelector } from 'react-redux';
 import { addToCart } from '../store/cartSlice';
+import ColorTools from '../components/ColorTools';
 import type { RootState } from '../store';
 
 interface Product {
@@ -35,6 +38,7 @@ const ProductDetailPage = () => {
     const [loading, setLoading] = useState(true);
     const [quantity, setQuantity] = useState(5);
     const [customization, setCustomization] = useState('');
+    const [selectedColor, setSelectedColor] = useState('#ffffff');
 
     // Strict Ordering State
     const [verifiedSamples, setVerifiedSamples] = useState<any[]>([]);
@@ -100,6 +104,7 @@ const ProductDetailPage = () => {
             materialType: product.materialType,
             type: type,
             customization: customization,
+            color: selectedColor,
             relatedSampleId: selectedSampleId || manualSampleId,
             isRiskAccepted: riskAccepted
         }));
@@ -114,32 +119,46 @@ const ProductDetailPage = () => {
     if (!product) return <div className="min-h-screen bg-primary flex items-center justify-center text-primary">Product not found</div>;
 
     return (
-        <div className="bg-primary min-h-screen pb-20 text-secondary font-sans selection:bg-gold selection:text-black transition-colors duration-300">
+        <div className="bg-primary min-h-screen pb-20 text-primary font-sans selection:bg-gold selection:text-black transition-colors duration-300">
             <div className="container mx-auto px-6 py-12">
                 <div className="flex flex-col lg:flex-row gap-16">
                     {/* Left Column - Visuals */}
                     <div className="lg:w-2/3">
-                        <div className="relative h-[600px] bg-card border border-theme overflow-hidden shadow-2xl mb-8 group">
+                        <div className="relative h-[650px] glass-card rounded-[2.5rem] overflow-hidden shadow-[0_32px_64px_-16px_rgba(0,0,0,0.5)] mb-10 group border-white/5">
                             {/* 3D Fabric Viewer or Image */}
                             <div className="absolute inset-0 z-0">
-                                <FabricViewer
-                                    textureUrl={product.textureMaps?.map || "https://media.istockphoto.com/id/1198271727/photo/dark-black-fabric-texture-background-linen.jpg?s=612x612&w=0&k=20&c=d3J_Pds_OaYn3kRzB_C2wB4c7Kz_C4d8y5y_Z8x_Z8x="}
-                                    normalMapUrl={product.textureMaps?.normalMap}
-                                    roughnessMapUrl={product.textureMaps?.roughnessMap}
-                                />
+                                <ThreeErrorBoundary>
+                                    {product.materialType === 'INTERLININGS' ? (
+                                        <FootwearConfigurator color={selectedColor} />
+                                    ) : (
+                                        <FabricViewer
+                                            textureUrl={product.textureMaps?.map || "/3dmodel/cotton_texture.png"}
+                                            color={selectedColor}
+                                            normalMapUrl={product.textureMaps?.normalMap}
+                                            roughnessMapUrl={product.textureMaps?.roughnessMap}
+                                        />
+                                    )}
+                                </ThreeErrorBoundary>
                             </div>
-
-                            <div className="absolute top-6 left-6 z-10">
-                                <span className="bg-gold text-black px-4 py-1 text-xs font-bold uppercase tracking-widest">
-                                    Interactive 3D
+ 
+                            <div className="absolute top-8 left-8 z-10">
+                                <span className="glass text-[#c29b28] px-5 py-2 text-[10px] font-black uppercase tracking-[0.3em] rounded-full border-[#c29b28]/20">
+                                    Spatial Preview 4K
                                 </span>
                             </div>
-
-                            <div className="absolute bottom-0 left-0 w-full p-6 bg-gradient-to-t from-black/80 to-transparent">
-                                <p className="text-sm text-gray-300 flex items-center gap-2">
-                                    <Layers size={16} className="text-gold" />
-                                    Drag to rotate • Scroll to zoom
-                                </p>
+ 
+                            <div className="absolute bottom-0 left-0 w-full p-8 bg-gradient-to-t from-[#020617] via-[#020617]/40 to-transparent">
+                                <div className="flex items-center justify-between">
+                                    <p className="text-[11px] text-white/50 flex items-center gap-3 uppercase tracking-[0.1em] font-medium">
+                                        <Layers size={16} className="text-[#c29b28]" strokeWidth={2} />
+                                        Interactive 3D Render • Optimized for Zenith
+                                    </p>
+                                    <div className="flex gap-2">
+                                        <div className="w-1.5 h-1.5 rounded-full bg-white/20"></div>
+                                        <div className="w-1.5 h-1.5 rounded-full bg-white/20"></div>
+                                        <div className="w-1.5 h-1.5 rounded-full bg-[#c29b28]"></div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
 
@@ -186,19 +205,23 @@ const ProductDetailPage = () => {
 
                     {/* Right Column - Actions */}
                     <div className="lg:w-1/3">
-                        <div className="sticky top-24 bg-card/80 backdrop-blur-md border border-theme p-8 shadow-lg">
-                            <div className="mb-4">
-                                <span className="text-gold font-bold tracking-[0.2em] uppercase text-xs">{product.materialType}</span>
+                        <div className="sticky top-24 glass-card p-10 rounded-[2.5rem] shadow-2xl animate-fade-in">
+                            <div className="mb-6 flex items-center gap-3">
+                                <span className="text-[#c29b28] font-black tracking-[0.3em] uppercase text-[10px] px-3 py-1 glass rounded-full">{product.materialType}</span>
+                                <div className="h-px flex-1 bg-theme/50"></div>
                             </div>
-                            <h1 className="text-4xl md:text-5xl font-serif font-bold mb-6 text-primary leading-tight">{product.name}</h1>
-                            <div className="flex items-baseline mb-8 pb-8 border-b border-theme">
-                                <span className="text-4xl font-bold text-primary">₹{product.pricePerMeter}</span>
-                                <span className="text-secondary ml-2 text-sm uppercase tracking-widest">/ meter</span>
+                            <h1 className="text-5xl md:text-6xl font-extrabold mb-8 text-primary leading-[0.9] tracking-tighter break-words">{product.name}</h1>
+                            <div className="flex items-baseline mb-10 pb-10 border-b border-theme/50">
+                                <span className="text-5xl font-black text-primary tracking-tighter italic">₹{product.pricePerMeter}</span>
+                                <span className="text-secondary ml-3 text-[10px] uppercase font-black tracking-[0.2em] opacity-60">per linear meter</span>
                             </div>
 
+                             {/* Color Customization */}
+                            <ColorTools color={selectedColor} onChange={setSelectedColor} />
+
                             {/* Customization */}
-                            <div className="mb-8">
-                                <label className="block text-xs font-bold text-secondary uppercase tracking-widest mb-3">Customization Notes</label>
+                            <div className="mt-8 mb-8">
+                                <label className="block text-xs font-bold text-secondary uppercase tracking-widest mb-3">Additional Notes</label>
                                 <textarea
                                     className="w-full bg-secondary/10 border border-theme text-primary p-4 focus:border-gold focus:outline-none transition-colors text-sm placeholder:text-secondary/50"
                                     rows={2}
@@ -276,15 +299,15 @@ const ProductDetailPage = () => {
                             <div className="space-y-4">
                                 <button
                                     onClick={() => addToCartHandler('regular')}
-                                    className="w-full bg-gold text-black py-4 font-bold uppercase tracking-widest hover:bg-white transition-all transform active:scale-[0.98] flex items-center justify-center gap-2"
+                                    className="w-full bg-[#c29b28] text-black py-5 font-black uppercase tracking-[0.2em] text-[10px] rounded-full hover:bg-white transition-all transform active:scale-[0.98] flex items-center justify-center gap-3 shadow-[0_10px_20px_-10px_rgba(194,155,40,0.5)] group"
                                 >
-                                    <ShoppingBag size={18} /> Add to Quote
+                                    <ShoppingBag size={16} className="group-hover:scale-110 transition-transform" /> Add to Collection
                                 </button>
                                 <button
                                     onClick={() => addToCartHandler('sample')}
-                                    className="w-full bg-transparent border border-white/30 text-white py-3 font-bold uppercase tracking-widest hover:border-gold hover:text-gold transition-colors text-xs"
+                                    className="w-full glass border border-white/10 text-primary py-4 font-black uppercase tracking-[0.2em] text-[9px] rounded-full hover:border-[#c29b28]/50 hover:text-[#c29b28] transition-all"
                                 >
-                                    Request Sample Only ({product.samplePrice ? `₹${product.samplePrice}` : 'Free'})
+                                    Secure Verification Sample ({product.samplePrice ? `₹${product.samplePrice}` : 'Comp'})
                                 </button>
                             </div>
 

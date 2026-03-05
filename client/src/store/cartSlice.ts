@@ -9,6 +9,7 @@ interface CartItem {
     materialType: string;
     type?: 'regular' | 'sample';
     customization?: string;
+    color?: string;
     relatedSampleId?: string;
     isRiskAccepted?: boolean;
 }

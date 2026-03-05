@@ -67,20 +67,15 @@ const ProductsPage = () => {
     };
 
     return (
-        <div className="bg-primary min-h-screen text-secondary font-sans selection:bg-gold selection:text-black transition-colors duration-300">
+        <div className="bg-primary min-h-screen text-primary font-sans selection:bg-gold selection:text-black transition-colors duration-300">
             {/* Header */}
-            <div className="relative py-20 bg-secondary overflow-hidden">
-                <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-gray-800 via-black to-black opacity-60 dark:opacity-60 opacity-0"></div>
-                {/* Note: I removed opacity-60 for Light Mode by defaulting to opacity-0 if not dark, but wait, opacity-0 means no gradient. 
-                   Actually, let's just make the background `bg-secondary` (gray-100 in light) which is fine. 
-                   If we want the dark gradient only in drak mode: dark:block hidden? 
-                   Let's just settle on: bg-secondary for light mode is clean. 
-                */}
+            <div className="relative py-28 bg-secondary overflow-hidden transition-colors duration-500">
+                <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,_var(--tw-gradient-stops))] from-[#c29b28]/10 via-transparent to-transparent opacity-0 dark:opacity-40 transition-opacity duration-500"></div>
                 <div className="container mx-auto px-6 relative z-10 text-center">
-                    <span className="text-gold text-xs font-bold tracking-[0.3em] uppercase mb-4 block animate-fade-in">Global Standard</span>
-                    <h1 className="text-4xl md:text-6xl font-bold font-serif text-primary mb-6">Material Collection</h1>
-                    <p className="text-secondary max-w-2xl mx-auto text-lg font-light leading-relaxed">
-                        Curated high-performance materials engineered for the world's finest footwear.
+                    <span className="text-[#c29b28] text-[10px] font-bold tracking-[0.4em] uppercase mb-5 block animate-fade-in">Excellence in Every Thread</span>
+                    <h1 className="text-5xl md:text-7xl font-extrabold mb-8 leading-tight tracking-tighter">Material <span className="italic font-normal opacity-80">Collection</span></h1>
+                    <p className="text-secondary max-w-2xl mx-auto text-lg font-light leading-relaxed animate-fade-in delay-100">
+                        Curated high-performance materials engineered for the world's finest footwear brands.
                     </p>
                 </div>
             </div>
@@ -88,39 +83,40 @@ const ProductsPage = () => {
             <div className="container mx-auto px-6 py-12">
                 <div className="flex flex-col lg:flex-row gap-12">
                     {/* Filters Sidebar */}
-                    <div className="w-full lg:w-72 flex-shrink-0">
-                        <div className="bg-card border border-theme rounded-xl p-8 sticky top-24 shadow-sm">
-                            <div className="flex items-center justify-between font-bold mb-8 text-primary border-b border-theme pb-4">
+                    <div className="w-full lg:w-80 flex-shrink-0">
+                        <div className="glass-card rounded-[1.5rem] p-8 sticky top-24">
+                            <div className="flex items-center justify-between font-bold mb-8 text-primary border-b border-theme pb-5">
                                 <div className="flex items-center gap-3">
-                                    <Filter size={18} className="text-gold" />
-                                    <span className="tracking-wide uppercase text-sm">Filters</span>
+                                    <Filter size={18} className="text-[#c29b28]" />
+                                    <span className="tracking-[0.1em] uppercase text-[10px] font-extrabold">Filter Selection</span>
                                 </div>
                                 {(selectedMaterials.length > 0 || priceRange < 5000) && (
                                     <button
                                         onClick={() => { setSelectedMaterials([]); setPriceRange(5000); }}
-                                        className="text-[10px] text-secondary hover:text-primary flex items-center gap-1 transition-colors uppercase tracking-widest"
+                                        className="text-[9px] text-secondary hover:text-[#c29b28] flex items-center gap-1 transition-colors uppercase tracking-[0.15em] font-bold"
                                     >
-                                        <X size={12} /> Clear
+                                        <X size={10} /> Reset All
                                     </button>
                                 )}
                             </div>
-
-                            <div className="space-y-10">
+ 
+                            <div className="space-y-12">
                                 <div>
-                                    <h3 className="font-bold mb-4 text-xs uppercase tracking-widest text-gold">Material Type</h3>
-                                    <div className="space-y-3">
+                                    <h3 className="font-extrabold mb-5 text-[9px] uppercase tracking-[0.2em] text-[#c29b28]/80">Material Grade</h3>
+                                    <div className="space-y-4">
                                         {[
-                                            'Vamp Lining',
-                                            'Quarter Lining',
-                                            'Counter Lining',
-                                            'Strobel',
-                                            'Non-Woven',
-                                            'Mesh',
-                                            'Microfiber'
+                                            'INTERLININGS',
+                                            'COATINGS',
+                                            'RAISING',
+                                            'DRILL',
+                                            'JERSEY',
+                                            'CANVAS',
+                                            'BONDING',
+                                            'FOAM LAMINATIONS'
                                         ].map((type) => (
-                                            <label key={type} className="flex items-center gap-3 cursor-pointer group">
-                                                <div className={`w-5 h-5 border rounded-sm flex items-center justify-center transition-all duration-300 ${selectedMaterials.includes(type) ? 'bg-gold border-gold' : 'border-gray-600 group-hover:border-gray-400 bg-transparent'}`}>
-                                                    {selectedMaterials.includes(type) && <Check size={12} className="text-black" />}
+                                            <label key={type} className="flex items-center gap-4 cursor-pointer group">
+                                                <div className={`w-4 h-4 border rounded-none flex items-center justify-center transition-all duration-300 ${selectedMaterials.includes(type) ? 'bg-[#c29b28] border-[#c29b28]' : 'border-slate-500/50 group-hover:border-[#c29b28] bg-transparent'}`}>
+                                                    {selectedMaterials.includes(type) && <Check size={10} className="text-black font-black" />}
                                                 </div>
                                                 <input
                                                     type="checkbox"
@@ -128,14 +124,14 @@ const ProductsPage = () => {
                                                     checked={selectedMaterials.includes(type)}
                                                     onChange={() => toggleMaterial(type)}
                                                 />
-                                                <span className={`text-sm tracking-wide ${selectedMaterials.includes(type) ? 'text-white font-bold' : 'text-gray-400 group-hover:text-gray-200'} transition-colors`}>{type}</span>
+                                                <span className={`text-[11px] tracking-widest uppercase font-medium ${selectedMaterials.includes(type) ? 'text-primary font-black' : 'text-secondary group-hover:text-primary'} transition-colors`}>{type}</span>
                                             </label>
                                         ))}
                                     </div>
                                 </div>
-
+ 
                                 <div>
-                                    <h3 className="font-bold mb-4 text-xs uppercase tracking-widest text-gold">Max Price: ₹{priceRange}</h3>
+                                    <h3 className="font-extrabold mb-5 text-[9px] uppercase tracking-[0.2em] text-[#c29b28]/80">Investment Range: ₹{priceRange}</h3>
                                     <input
                                         type="range"
                                         min="100"
@@ -143,9 +139,9 @@ const ProductsPage = () => {
                                         step="100"
                                         value={priceRange}
                                         onChange={(e) => setPriceRange(Number(e.target.value))}
-                                        className="w-full h-1 bg-gray-700 rounded-lg appearance-none cursor-pointer accent-gold"
+                                        className="w-full h-1 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-[#c29b28]"
                                     />
-                                    <div className="flex justify-between text-[10px] font-mono text-gray-500 mt-3">
+                                    <div className="flex justify-between text-[9px] font-bold tracking-tighter text-slate-500 mt-4">
                                         <span>₹100</span>
                                         <span>₹5000+</span>
                                     </div>
@@ -193,53 +189,53 @@ const ProductsPage = () => {
                                 </button>
                             </div>
                         ) : (
-                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
                                 {filteredProducts.map((product) => (
                                     <Link key={product._id} to={`/products/${product._id}`} className="group block">
-                                        <div className="bg-secondary border border-white/5 overflow-hidden transition-all duration-500 hover:border-gold/50 group-hover:-translate-y-2 relative h-full flex flex-col">
-
+                                        <div className="glass-card rounded-[2rem] overflow-hidden transition-all duration-700 hover:border-[#c29b28]/30 group-hover:-translate-y-3 relative h-full flex flex-col border border-white/5">
+ 
                                             {/* Image container */}
-                                            <div className="relative aspect-[4/5] bg-gray-900 overflow-hidden">
+                                            <div className="relative aspect-[4/5] bg-[#020617] overflow-hidden">
                                                 {product.imageUrl ? (
                                                     <img
                                                         src={product.imageUrl}
                                                         alt={product.name}
-                                                        className="w-full h-full object-cover opacity-80 group-hover:opacity-100 group-hover:scale-110 transition-all duration-700"
+                                                        className="w-full h-full object-cover opacity-60 group-hover:opacity-100 group-hover:scale-105 transition-all duration-1000"
                                                     />
                                                 ) : (
-                                                    <div className="w-full h-full flex items-center justify-center text-gray-600 bg-gray-900 font-mono text-xs uppercase tracking-widest">
-                                                        No Preview
+                                                    <div className="w-full h-full flex items-center justify-center text-slate-700 bg-[#020617] font-bold text-[10px] uppercase tracking-[0.3em]">
+                                                        Asset Missing
                                                     </div>
                                                 )}
-
-                                                <div className="absolute top-0 left-0 w-full h-full bg-black/20 group-hover:bg-transparent transition-colors"></div>
-
+ 
+                                                <div className="absolute inset-0 bg-gradient-to-t from-[#020617] via-transparent to-transparent opacity-60"></div>
+ 
                                                 {/* Badge */}
-                                                <div className="absolute top-4 left-4">
-                                                    <span className="bg-black/80 backdrop-blur border border-white/10 text-gold text-[10px] font-bold px-3 py-1 uppercase tracking-widest">
+                                                <div className="absolute top-6 left-6">
+                                                    <span className="glass px-4 py-1.5 text-[#c29b28] text-[9px] font-black uppercase tracking-[0.2em] rounded-full">
                                                         {product.materialType}
                                                     </span>
                                                 </div>
-
+ 
                                                 {/* Overlay */}
-                                                <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-black/40">
-                                                    <span className="px-6 py-3 bg-gold text-black font-bold uppercase tracking-widest text-xs transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
-                                                        View Details
+                                                <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-500 bg-[#020617]/40 backdrop-blur-[2px]">
+                                                    <span className="px-8 py-3 bg-[#c29b28] text-black font-black uppercase tracking-[0.2em] text-[10px] rounded-full transform translate-y-8 group-hover:translate-y-0 transition-all duration-500">
+                                                        Inspect Details
                                                     </span>
                                                 </div>
                                             </div>
-
-                                            <div className="p-6 flex flex-col flex-1 border-t border-white/5 bg-gradient-to-b from-secondary to-black">
-                                                <h3 className="font-serif text-xl text-white mb-2 group-hover:text-gold transition-colors line-clamp-1">{product.name}</h3>
-                                                <p className="text-gray-500 text-xs mb-4 line-clamp-2 leading-relaxed h-8">{product.description}</p>
-
-                                                <div className="mt-auto flex items-center justify-between pt-4 border-t border-white/5">
+ 
+                                            <div className="p-8 flex flex-col flex-1 relative z-10">
+                                                <h3 className="font-extrabold text-2xl text-primary mb-3 group-hover:text-[#c29b28] transition-colors line-clamp-1 leading-tight">{product.name}</h3>
+                                                <p className="text-secondary text-[11px] mb-6 line-clamp-2 leading-relaxed h-8 font-medium">{product.description}</p>
+ 
+                                                <div className="mt-auto flex items-center justify-between pt-6 border-t border-theme">
                                                     <div className="flex flex-col">
-                                                        <span className="text-[10px] text-gray-500 uppercase tracking-widest mb-1">Price per Meter</span>
-                                                        <span className="text-lg font-bold text-white font-mono">₹{product.pricePerMeter}</span>
+                                                        <span className="text-[9px] text-secondary uppercase tracking-[0.2em] font-bold mb-1">Price / M</span>
+                                                        <span className="text-xl font-black text-primary tracking-tighter italic">₹{product.pricePerMeter}</span>
                                                     </div>
-                                                    <div className="text-[10px] text-green-400 font-bold uppercase tracking-widest flex items-center gap-1">
-                                                        <div className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse"></div>
+                                                    <div className="text-[9px] text-emerald-400 font-black uppercase tracking-[0.2em] flex items-center gap-2 px-3 py-1.5 glass rounded-full">
+                                                        <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></div>
                                                         In Stock
                                                     </div>
                                                 </div>

@@ -32,3 +32,10 @@ yarn-error.log*
 *.njsproj
 *.sln
 *.sw?
+
+# Assets
+*.png
+3dmodel/
+public/3dmodel/
+client/3dmodel/
+client/public/3dmodel/

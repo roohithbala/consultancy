@@ -12,7 +12,7 @@ const CheckoutPage = () => {
     const navigate = useNavigate();
     const [step, setStep] = useState(1);
     const [loading, setLoading] = useState(false);
-    const [paymentMethod, setPaymentMethod] = useState('BillDesk'); // Default
+    const [paymentMethod, setPaymentMethod] = useState('Razorpay'); // Default
     const [deliveryMethod, setDeliveryMethod] = useState<'Courier' | 'Pickup'>('Courier'); // Default
     const [showAddressModal, setShowAddressModal] = useState(false);
     const [savedAddresses, setSavedAddresses] = useState<any[]>([]);
@@ -64,6 +64,108 @@ const CheckoutPage = () => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
 
+    const handleRazorpayPayment = async (orderData: any) => {
+        setLoading(true);
+        try {
+            // 1. Create PRELIMINARY Unpaid Order in Database
+            const createOrderRes = await fetch('http://localhost:5000/api/orders', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${user?.token}`,
+                },
+                body: JSON.stringify({
+                    ...orderData,
+                    isPaid: false,
+                    paymentMethod: 'Razorpay'
+                }),
+            });
+
+            if (!createOrderRes.ok) {
+                const errorData = await createOrderRes.json();
+                throw new Error(errorData.message || 'Failed to create initial order');
+            }
+            const localOrder = await createOrderRes.json();
+
+            // 2. Create Razorpay Order on Server
+            const rzpOrderRes = await fetch('http://localhost:5000/api/payment/create-order', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${user?.token}`,
+                },
+                body: JSON.stringify({
+                    amount: orderData.totalPrice,
+                    currency: 'INR',
+                    receipt: `receipt_${localOrder._id.substring(0, 10)}`
+                }),
+            });
+
+            if (!rzpOrderRes.ok) {
+                const rzpError = await rzpOrderRes.json();
+                throw new Error(rzpError.message || 'Failed to create Razorpay secure order');
+            }
+            const rzpOrder = await rzpOrderRes.json();
+
+            const options = {
+                key: 'rzp_test_SNdsdABBAFJsIo',
+                amount: rzpOrder.amount,
+                currency: rzpOrder.currency,
+                name: 'Zain Fabrics',
+                description: `Order ID: ${localOrder._id}`,
+                order_id: rzpOrder.id,
+                handler: async (response: any) => {
+                    setLoading(true);
+                    // 3. Verify Payment
+                    const verifyRes = await fetch('http://localhost:5000/api/payment/verify-payment', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            Authorization: `Bearer ${user?.token}`,
+                        },
+                        body: JSON.stringify({
+                            razorpay_order_id: response.razorpay_order_id,
+                            razorpay_payment_id: response.razorpay_payment_id,
+                            razorpay_signature: response.razorpay_signature,
+                            order_id: localOrder._id
+                        }),
+                    });
+
+                    if (verifyRes.ok) {
+                        setOrderId(localOrder._id);
+                        dispatch(clearCart());
+                        setStep(2);
+                    } else {
+                        const error = await verifyRes.json();
+                        alert('Payment verification failed, please contact support with Order ID: ' + localOrder._id);
+                    }
+                    setLoading(false);
+                },
+                prefill: {
+                    name: formData.name,
+                    email: formData.email,
+                    contact: formData.phone
+                },
+                theme: {
+                    color: '#D4AF37'
+                },
+                modal: {
+                    ondismiss: () => {
+                        setLoading(false);
+                        // Optional: show a message about the pending unpaid order
+                    }
+                }
+            };
+
+            const rzp = new (window as any).Razorpay(options);
+            rzp.open();
+        } catch (error: any) {
+            console.error(error);
+            alert(error.message || 'Razorpay payment failed to initiate');
+            setLoading(false);
+        }
+    };
+
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
 
@@ -78,8 +180,6 @@ const CheckoutPage = () => {
             return;
         }
 
-        setLoading(true);
-
         const orderData = {
             orderItems: cartItems.map(item => ({
                 name: item.name,
@@ -90,7 +190,7 @@ const CheckoutPage = () => {
                 materialType: item.materialType,
                 type: item.type,
                 customization: item.customization,
-                ...(item.relatedSampleId && { relatedSampleId: item.relatedSampleId }), // Only include if not empty
+                ...(item.relatedSampleId && { relatedSampleId: item.relatedSampleId }),
                 isRiskAccepted: item.isRiskAccepted
             })),
             shippingAddress: {
@@ -103,32 +203,34 @@ const CheckoutPage = () => {
             paymentMethod: paymentMethod,
             deliveryMethod: deliveryMethod,
             itemsPrice: totalAmount,
-            shippingPrice: deliveryMethod === 'Pickup' ? 0 : 0,
+            shippingPrice: 0,
             taxPrice: Math.round(totalAmount * 0.18),
-            totalPrice: Math.round(totalAmount * 1.18),
-            isPaid: paymentMethod === 'BillDesk',
-            paidAt: paymentMethod === 'BillDesk' ? new Date() : undefined,
-            paymentResult: paymentMethod === 'BankTransfer' ? {
-                id: utrNumber,
-                status: 'Pending Verification',
-                update_time: new Date().toISOString()
-            } : {}
+            totalPrice: Math.round(totalAmount * 1.18)
         };
 
-        try {
-            // 1. Simulate Payment Delay if BillDesk
-            if (paymentMethod === 'BillDesk') {
-                await new Promise(resolve => setTimeout(resolve, 2000)); // Simulate Redirect
-            }
+        if (paymentMethod === 'Razorpay') {
+            await handleRazorpayPayment(orderData);
+            return;
+        }
 
-            // 2. Create Order
+        setLoading(true);
+        try {
             const res = await fetch('http://localhost:5000/api/orders', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                     Authorization: `Bearer ${user.token}`,
                 },
-                body: JSON.stringify(orderData),
+                body: JSON.stringify({
+                    ...orderData,
+                    isPaid: paymentMethod === 'COD', // COD is considered paid on delivery
+                    paidAt: paymentMethod === 'COD' ? new Date() : undefined,
+                    paymentResult: paymentMethod === 'BankTransfer' ? {
+                        id: utrNumber,
+                        status: 'Pending Verification',
+                        update_time: new Date().toISOString()
+                    } : {}
+                }),
             });
 
             if (res.ok) {
@@ -137,8 +239,7 @@ const CheckoutPage = () => {
                 dispatch(clearCart());
                 setStep(2);
             } else {
-                const error = await res.json();
-                alert(error.message || 'Order failed');
+                alert('Order placement failed');
             }
         } catch (error) {
             console.error(error);
@@ -170,7 +271,7 @@ const CheckoutPage = () => {
                     {orderId && <p className="text-sm font-bold text-secondary mb-2">Order ID: {orderId}</p>}
                     <p className="text-secondary mb-6">
                         Thank you, {formData.name}. Your order has been placed. We have sent a confirmation email to <b>{formData.email}</b>.
-                        {paymentMethod === 'BillDesk' && ' Payment was successful.'}
+                        {paymentMethod === 'Razorpay' && ' Payment was successful via Razorpay Secure.'}
                     </p>
 
                     {paymentMethod === 'BankTransfer' && (
@@ -300,7 +401,7 @@ const CheckoutPage = () => {
                                     <h2 className="text-xl font-bold mb-4 text-primary font-serif">Payment Method</h2>
                                     <div className="space-y-3">
                                         {[
-                                            { id: 'BillDesk', label: 'BillDesk (Credit/Debit/NetBanking)' },
+                                            { id: 'Razorpay', label: 'Razorpay (Credit/Debit/UPI/NetBanking)' },
                                             { id: 'BankTransfer', label: 'Direct Bank Transfer (Manual)' }
                                         ].map((method) => (
                                             <div key={method.id} className={`border rounded-lg transition-colors ${paymentMethod === method.id ? 'border-gold bg-secondary/50' : 'border-theme hover:border-gold/50'}`}>

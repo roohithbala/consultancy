@@ -664,12 +664,20 @@ const OrderDetailsPage = () => {
                                 <td className="py-4 px-4">
                                     <p className="font-bold text-gray-900">{item.name}</p>
                                     <p className="text-xs text-gray-500">{item.materialType}</p>
-                                    {(item.customization || (item.relatedSampleId && item.type === 'regular')) && (
-                                        <div className="mt-1 text-[10px] text-gray-400 bg-gray-50 p-1 rounded inline-block">
-                                            {item.customization && <p>Note: {item.customization}</p>}
-                                            {item.relatedSampleId && <p>Sample Ref: {item.relatedSampleId.substring(0, 8)}</p>}
-                                        </div>
-                                    )}
+                                    <div className="mt-2 flex flex-wrap gap-2">
+                                        {item.color && (
+                                            <div className="flex items-center gap-1.5 bg-gray-100 px-2 py-1 rounded border border-gray-200">
+                                                <div className="w-3 h-3 rounded-full border border-gray-300" style={{ backgroundColor: item.color }}></div>
+                                                <span className="text-[10px] font-mono font-bold text-gray-600 uppercase">{item.color}</span>
+                                            </div>
+                                        )}
+                                        {(item.customization || (item.relatedSampleId && item.type === 'regular')) && (
+                                            <div className="text-[10px] text-gray-400 bg-gray-50 px-2 py-1 rounded border border-gray-100">
+                                                {item.customization && <p>Note: {item.customization}</p>}
+                                                {item.relatedSampleId && <p>Sample Ref: {item.relatedSampleId.substring(0, 8)}</p>}
+                                            </div>
+                                        )}
+                                    </div>
                                 </td>
                                 <td className="py-4 px-4 text-center text-xs font-medium uppercase text-gray-500">{item.type}</td>
                                 <td className="py-4 px-4 text-right text-sm font-mono">{item.quantity}</td>
