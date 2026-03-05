@@ -6,7 +6,7 @@ import type { RootState } from '../store';
 
 const OrderHistoryPage = () => {
     const { user } = useSelector((state: RootState) => state.auth);
-    const [orders, setOrders] = useState([]);
+    const [orders, setOrders] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
@@ -17,7 +17,11 @@ const OrderHistoryPage = () => {
                     headers: { Authorization: `Bearer ${user.token}` }
                 });
                 const data = await res.json();
-                setOrders(data);
+                if (Array.isArray(data)) {
+                    setOrders(data);
+                } else {
+                    setOrders([]);
+                }
                 setLoading(false);
             } catch (error) {
                 console.error("Error fetching orders", error);
@@ -79,7 +83,7 @@ const OrderHistoryPage = () => {
                     </div>
                 ) : (
                     <div className="space-y-6">
-                        {orders.map((order: any) => (
+                        {(Array.isArray(orders) ? orders : []).map((order: any) => (
                             <div key={order._id} className="group bg-card border border-theme p-8 hover:border-gold/30 transition-all duration-300 relative overflow-hidden shadow-md">
                                 {/* Hover Effect Line */}
                                 <div className="absolute left-0 top-0 h-full w-1 bg-gold transform scale-y-0 group-hover:scale-y-100 transition-transform duration-300 origin-top"></div>

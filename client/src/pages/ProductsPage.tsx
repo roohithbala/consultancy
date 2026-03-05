@@ -9,6 +9,7 @@ interface Product {
     pricePerMeter: number;
     imageUrl: string;
     materialType: string;
+    isAvailable: boolean;
 }
 
 const ProductsPage = () => {
@@ -40,7 +41,7 @@ const ProductsPage = () => {
 
     // Apply Filters & Sort
     useEffect(() => {
-        let result = [...products];
+        let result = products.filter(p => p.isAvailable === true);
 
         // 1. Filter by Material
         if (selectedMaterials.length > 0) {

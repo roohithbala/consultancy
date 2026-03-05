@@ -36,7 +36,12 @@ const OrderListPage = () => {
                     },
                 });
                 const data = await res.json();
-                setOrders(data);
+                if (Array.isArray(data)) {
+                    setOrders(data);
+                } else {
+                    console.error("Orders data is not an array:", data);
+                    setOrders([]);
+                }
                 setLoading(false);
             } catch (error) {
                 console.error(error);
@@ -63,7 +68,7 @@ const OrderListPage = () => {
             });
 
             if (res.ok) {
-                setOrders(orders.map(order =>
+                setOrders(prev => (Array.isArray(prev) ? prev : []).map(order =>
                     order._id === id ? { ...order, status: status, isDelivered: status === 'Delivered' } : order
                 ));
             }
@@ -83,7 +88,7 @@ const OrderListPage = () => {
         }
     };
 
-    const filteredOrders = orders.filter(o =>
+    const filteredOrders = (Array.isArray(orders) ? orders : []).filter(o =>
         o._id.toLowerCase().includes(searchTerm.toLowerCase()) ||
         o.user?.name.toLowerCase().includes(searchTerm.toLowerCase())
     );

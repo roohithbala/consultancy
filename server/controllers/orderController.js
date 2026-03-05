@@ -378,8 +378,12 @@ export const updatePaymentStatus = async (req, res) => {
 
     if (order) {
         order.isPaid = isPaid;
-        if (isPaid && !order.paidAt) {
-            order.paidAt = Date.now();
+        if (isPaid) {
+            order.status = 'Processing';
+            if (!order.paidAt) order.paidAt = Date.now();
+            if (order.paymentResult) {
+                order.paymentResult.status = 'COMPLETED';
+            }
         }
         if (!isPaid) {
             order.paidAt = undefined;

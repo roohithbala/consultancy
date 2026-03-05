@@ -23,7 +23,7 @@ export const updateSettings = async (req, res) => {
         settings = await Settings.create({});
     }
 
-    settings.billDesk = req.body.billDesk !== undefined ? req.body.billDesk : settings.billDesk;
+    settings.razorpay = req.body.razorpay !== undefined ? req.body.razorpay : settings.razorpay;
     settings.bankTransfer = req.body.bankTransfer !== undefined ? req.body.bankTransfer : settings.bankTransfer;
     settings.emailNotifications = req.body.emailNotifications !== undefined ? req.body.emailNotifications : settings.emailNotifications;
     settings.smsNotifications = req.body.smsNotifications !== undefined ? req.body.smsNotifications : settings.smsNotifications;

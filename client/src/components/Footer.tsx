@@ -39,20 +39,6 @@ const Footer = () => {
                     </ul>
                 </div>
 
-                <div>
-                    <h4 className="font-bold text-sm tracking-widest uppercase mb-6 text-gold">Newsletter</h4>
-                    <p className="text-gray-400 text-sm mb-4">Subscribe for exclusive updates on new collections.</p>
-                    <div className="space-y-3">
-                        <input
-                            type="email"
-                            placeholder="Your email address"
-                            className="w-full bg-white/5 border border-white/10 px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-gold transition-colors text-sm"
-                        />
-                        <button className="w-full bg-gold text-black py-3 text-sm font-bold tracking-widest uppercase hover:bg-white transition-colors duration-300">
-                            Subscribe
-                        </button>
-                    </div>
-                </div>
             </div>
 
             <div className="container mx-auto px-6 mt-16 pt-8 border-t border-white/10 flex flex-col md:flex-row justify-between items-center gap-4">

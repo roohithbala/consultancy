@@ -102,3 +102,30 @@ export const deleteAddress = async (req, res) => {
         res.status(404).json({ message: 'User not found' });
     }
 };
+// @desc    Get all users
+// @route   GET /api/users
+// @access  Private/Admin
+export const getUsers = async (req, res) => {
+    const users = await User.find({}).select('-password').sort({ createdAt: -1 });
+    res.json(users);
+};
+
+// @desc    Send email to user
+// @route   POST /api/users/:id/email
+// @access  Private/Admin
+export const sendUserEmail = async (req, res) => {
+    const user = await User.findById(req.params.id);
+    const { subject, message } = req.body;
+
+    if (user) {
+        try {
+            const { sendEmail } = await import('../utils/sendEmail.js');
+            await sendEmail(user.email, subject, message);
+            res.json({ message: 'Email sent successfully' });
+        } catch (error) {
+            res.status(500).json({ message: 'Error sending email', error: error.message });
+        }
+    } else {
+        res.status(404).json({ message: 'User not found' });
+    }
+};

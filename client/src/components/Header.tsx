@@ -33,6 +33,7 @@ const Header = () => {
                                 <>
                                     <Link to="/admin" className="text-xs font-bold tracking-[0.2em] text-gold hover:text-primary transition-colors uppercase">Dashboard</Link>
                                     <Link to="/admin/orders" className="text-xs font-bold tracking-[0.2em] text-secondary hover:text-gold transition-colors uppercase">All Orders</Link>
+                                    <Link to="/admin/customers" className="text-xs font-bold tracking-[0.2em] text-secondary hover:text-gold transition-colors uppercase">Customers</Link>
                                     <Link to="/admin/products" className="text-xs font-bold tracking-[0.2em] text-secondary hover:text-gold transition-colors uppercase">Products</Link>
                                 </>
                             ) : (

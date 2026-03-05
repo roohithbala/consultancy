@@ -21,7 +21,8 @@ const EditProductPage = () => {
         textureUrl: '',
         normalMapUrl: '',
         roughnessMapUrl: '',
-        samplePrice: 0
+        samplePrice: 0,
+        isAvailable: true
     });
 
     const [documents, setDocuments] = useState<{ name: string, url: string }[]>([]);
@@ -46,7 +47,8 @@ const EditProductPage = () => {
                     textureUrl: data.textureMaps?.map || '',
                     normalMapUrl: data.textureMaps?.normalMap || '',
                     roughnessMapUrl: data.textureMaps?.roughnessMap || '',
-                    samplePrice: data.samplePrice || 0
+                    samplePrice: data.samplePrice || 0,
+                    isAvailable: data.isAvailable !== undefined ? data.isAvailable : true
                 });
 
                 if (data.documents) {
@@ -176,6 +178,20 @@ const EditProductPage = () => {
                             <option value="Microfiber">Microfiber</option>
                         </select>
                     </div>
+                </div>
+
+                <div className="flex items-center gap-4 bg-secondary/5 p-4 rounded-lg border border-theme">
+                    <label className="flex items-center cursor-pointer relative">
+                        <input 
+                            type="checkbox" 
+                            name="isAvailable" 
+                            checked={formData.isAvailable} 
+                            onChange={(e) => setFormData(prev => ({ ...prev, isAvailable: e.target.checked }))} 
+                            className="sr-only peer" 
+                        />
+                        <div className="w-11 h-6 bg-gray-600 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-700 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-gold"></div>
+                        <span className="ml-3 text-sm font-bold text-secondary uppercase tracking-wider">Product Available in Catalog</span>
+                    </label>
                 </div>
 
                 <div>

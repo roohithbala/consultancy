@@ -29,6 +29,7 @@ import AddressBookPage from './pages/AddressBookPage';
 import OrderDetailsPage from './pages/OrderDetailsPage';
 import OrderHistoryPage from './pages/OrderHistoryPage';
 import ProfilePage from './pages/ProfilePage';
+import CustomerListPage from './pages/admin/CustomerListPage';
 
 // ScrollToTop component
 const ScrollToTop = () => {
@@ -75,6 +76,7 @@ function App() {
                 <Route path="products/add" element={<AddProductPage />} />
                 <Route path="products/:id/edit" element={<EditProductPage />} />
                 <Route path="orders" element={<OrderListPage />} />
+                <Route path="customers" element={<CustomerListPage />} />
               </Route>
             </Route>
           </Routes>

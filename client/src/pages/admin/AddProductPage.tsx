@@ -21,7 +21,8 @@ const AddProductPage = () => {
         normalMapUrl: '',
         roughnessMapUrl: '',
         samplePrice: 0,
-        coatings: ''
+        coatings: '',
+        isAvailable: true
     });
 
     const [documents, setDocuments] = useState<{ name: string, url: string }[]>([]);
@@ -143,6 +144,20 @@ const AddProductPage = () => {
                             <option value="Microfiber">Microfiber</option>
                         </select>
                     </div>
+                </div>
+
+                <div className="flex items-center gap-4 bg-gray-50 p-4 rounded-lg border border-gray-100">
+                    <label className="flex items-center cursor-pointer relative">
+                        <input 
+                            type="checkbox" 
+                            name="isAvailable" 
+                            checked={formData.isAvailable} 
+                            onChange={(e) => setFormData(prev => ({ ...prev, isAvailable: e.target.checked }))} 
+                            className="sr-only peer" 
+                        />
+                        <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-gold"></div>
+                        <span className="ml-3 text-sm font-bold text-gray-700 uppercase tracking-wider">Product Available in Catalog</span>
+                    </label>
                 </div>
 
                 <div>

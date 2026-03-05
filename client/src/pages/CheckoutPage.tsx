@@ -136,7 +136,7 @@ const CheckoutPage = () => {
                         dispatch(clearCart());
                         setStep(2);
                     } else {
-                        const error = await verifyRes.json();
+                        await verifyRes.json();
                         alert('Payment verification failed, please contact support with Order ID: ' + localOrder._id);
                     }
                     setLoading(false);
@@ -181,16 +181,17 @@ const CheckoutPage = () => {
         }
 
         const orderData = {
-            orderItems: cartItems.map(item => ({
+            orderItems: cartItems.map((item: any) => ({
                 name: item.name,
                 quantity: item.quantity,
                 image: item.image,
                 price: item.price,
                 product: item.id,
                 materialType: item.materialType,
-                type: item.type,
+                type: item.type || 'regular',
                 customization: item.customization,
-                ...(item.relatedSampleId && { relatedSampleId: item.relatedSampleId }),
+                color: item.color,
+                relatedSampleId: item.relatedSampleId || undefined,
                 isRiskAccepted: item.isRiskAccepted
             })),
             shippingAddress: {
@@ -522,8 +523,8 @@ const CheckoutPage = () => {
                             <button onClick={() => setShowAddressModal(false)} className="text-secondary hover:text-primary">Close</button>
                         </div>
                         <div className="space-y-4">
-                            {savedAddresses.length > 0 ? (
-                                savedAddresses.map((addr, idx) => (
+                            {(Array.isArray(savedAddresses) ? savedAddresses : []).length > 0 ? (
+                                (Array.isArray(savedAddresses) ? savedAddresses : []).map((addr, idx) => (
                                     <div key={idx} onClick={() => selectAddress(addr)} className="border border-theme p-4 rounded-lg cursor-pointer hover:border-gold transition-colors bg-secondary/20">
                                         <div className="flex items-center gap-2 mb-1">
                                             <span className="font-bold text-primary">{addr.addressType}</span>

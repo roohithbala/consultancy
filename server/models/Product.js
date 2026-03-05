@@ -58,6 +58,10 @@ const productSchema = new mongoose.Schema({
     imageUrl: {
         type: String,
         required: true,
+    },
+    isAvailable: {
+        type: Boolean,
+        default: true,
     }
 }, {
     timestamps: true,

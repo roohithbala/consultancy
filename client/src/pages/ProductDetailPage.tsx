@@ -46,8 +46,18 @@ const ProductDetailPage = () => {
     const [manualSampleId, setManualSampleId] = useState('');
     const [showRiskModal, setShowRiskModal] = useState(false);
     const [riskAccepted, setRiskAccepted] = useState(false);
+    const [isReadOnly, setIsReadOnly] = useState(false);
 
     useEffect(() => {
+        const queryParams = new URLSearchParams(window.location.search);
+        const urlColor = queryParams.get('color');
+        const urlCustomization = queryParams.get('customization');
+        const isReadOnlyMode = queryParams.get('readonly') === 'true';
+        setIsReadOnly(isReadOnlyMode);
+
+        if (urlColor) setSelectedColor(urlColor);
+        if (urlCustomization) setCustomization(urlCustomization);
+
         const fetchProduct = async () => {
             try {
                 const res = await fetch(`http://localhost:5000/api/products/${id}`);
@@ -61,7 +71,7 @@ const ProductDetailPage = () => {
         };
 
         const fetchSamples = async () => {
-            if (user && id) {
+            if (user && id && !isReadOnly) {
                 try {
                     const res = await fetch(`http://localhost:5000/api/orders/samples/${id}`, {
                         headers: { Authorization: `Bearer ${user.token}` }
@@ -130,13 +140,27 @@ const ProductDetailPage = () => {
                                 <ThreeErrorBoundary>
                                     {product.materialType === 'INTERLININGS' ? (
                                         <FootwearConfigurator color={selectedColor} />
-                                    ) : (
+                                    ) : product.textureMaps?.map ? (
                                         <FabricViewer
-                                            textureUrl={product.textureMaps?.map || "/3dmodel/cotton_texture.png"}
+                                            textureUrl={product.textureMaps.map}
                                             color={selectedColor}
-                                            normalMapUrl={product.textureMaps?.normalMap}
-                                            roughnessMapUrl={product.textureMaps?.roughnessMap}
+                                            normalMapUrl={product.textureMaps.normalMap}
+                                            roughnessMapUrl={product.textureMaps.roughnessMap}
                                         />
+                                    ) : (
+                                        <div className="w-full h-full flex flex-col items-center justify-center bg-[#020617] p-12 text-center">
+                                            <div className="w-32 h-32 mb-8 relative">
+                                                <div className="absolute inset-0 bg-gold/20 rounded-full animate-ping"></div>
+                                                <div className="relative bg-gold/10 border border-gold/30 w-full h-full rounded-full flex items-center justify-center">
+                                                    <Layers size={48} className="text-gold opacity-50" />
+                                                </div>
+                                            </div>
+                                            <h3 className="text-2xl font-serif font-bold text-white mb-4">3D Material Not Available</h3>
+                                            <p className="text-gray-400 text-sm max-w-sm mx-auto leading-relaxed">
+                                                This specific material grade is currently being digitized. 
+                                                Please refer to the high-resolution gallery and technical specifications below.
+                                            </p>
+                                        </div>
                                     )}
                                 </ThreeErrorBoundary>
                             </div>
@@ -210,22 +234,26 @@ const ProductDetailPage = () => {
                                 <span className="text-[#c29b28] font-black tracking-[0.3em] uppercase text-[10px] px-3 py-1 glass rounded-full">{product.materialType}</span>
                                 <div className="h-px flex-1 bg-theme/50"></div>
                             </div>
-                            <h1 className="text-5xl md:text-6xl font-extrabold mb-8 text-primary leading-[0.9] tracking-tighter break-words">{product.name}</h1>
+                            <h1 className="text-3xl md:text-5xl font-bold mb-8 text-primary leading-tight tracking-tight break-words">{product.name}</h1>
                             <div className="flex items-baseline mb-10 pb-10 border-b border-theme/50">
                                 <span className="text-5xl font-black text-primary tracking-tighter italic">₹{product.pricePerMeter}</span>
                                 <span className="text-secondary ml-3 text-[10px] uppercase font-black tracking-[0.2em] opacity-60">per linear meter</span>
                             </div>
 
-                             {/* Color Customization */}
-                            <ColorTools color={selectedColor} onChange={setSelectedColor} />
+                             {/* Color Customization - Only show if 3D is available */}
+                            {(product.materialType === 'INTERLININGS' || product.textureMaps?.map) && (
+                                <div className={isReadOnly ? 'pointer-events-none opacity-80' : ''}>
+                                    <ColorTools color={selectedColor} onChange={setSelectedColor} />
+                                </div>
+                            )}
 
                             {/* Customization */}
                             <div className="mt-8 mb-8">
                                 <label className="block text-xs font-bold text-secondary uppercase tracking-widest mb-3">Additional Notes</label>
                                 <textarea
                                     className="w-full bg-secondary/10 border border-theme text-primary p-4 focus:border-gold focus:outline-none transition-colors text-sm placeholder:text-secondary/50"
-                                    rows={2}
-                                    placeholder="Specific requirements (e.g. stiffer feel, darker shade)..."
+                                    readOnly={isReadOnly}
+                                    placeholder={isReadOnly ? "No additional notes." : "Specific requirements (e.g. stiffer feel, darker shade)..."}
                                     value={customization}
                                     onChange={(e) => setCustomization(e.target.value)}
                                 ></textarea>
@@ -296,20 +324,37 @@ const ProductDetailPage = () => {
                                 )}
                             </div>
 
-                            <div className="space-y-4">
-                                <button
-                                    onClick={() => addToCartHandler('regular')}
-                                    className="w-full bg-[#c29b28] text-black py-5 font-black uppercase tracking-[0.2em] text-[10px] rounded-full hover:bg-white transition-all transform active:scale-[0.98] flex items-center justify-center gap-3 shadow-[0_10px_20px_-10px_rgba(194,155,40,0.5)] group"
-                                >
-                                    <ShoppingBag size={16} className="group-hover:scale-110 transition-transform" /> Add to Collection
-                                </button>
-                                <button
-                                    onClick={() => addToCartHandler('sample')}
-                                    className="w-full glass border border-white/10 text-primary py-4 font-black uppercase tracking-[0.2em] text-[9px] rounded-full hover:border-[#c29b28]/50 hover:text-[#c29b28] transition-all"
-                                >
-                                    Secure Verification Sample ({product.samplePrice ? `₹${product.samplePrice}` : 'Comp'})
-                                </button>
-                            </div>
+                            {!isReadOnly ? (
+                                <div className="space-y-4">
+                                    <button
+                                        onClick={() => addToCartHandler('regular')}
+                                        className="w-full bg-[#c29b28] text-black py-5 font-black uppercase tracking-[0.2em] text-[10px] rounded-full hover:bg-white transition-all transform active:scale-[0.98] flex items-center justify-center gap-3 shadow-[0_10px_20px_-10px_rgba(194,155,40,0.5)] group"
+                                    >
+                                        <ShoppingBag size={16} className="group-hover:scale-110 transition-transform" /> Add to Order Collection
+                                    </button>
+                                    <button
+                                        onClick={() => addToCartHandler('sample')}
+                                        className="w-full glass border border-white/10 text-primary py-4 font-black uppercase tracking-[0.2em] text-[9px] rounded-full hover:border-[#c29b28]/50 hover:text-[#c29b28] transition-all"
+                                    >
+                                        Secure Verification Sample ({product.samplePrice ? `₹${product.samplePrice}` : 'Comp'})
+                                    </button>
+                                </div>
+                            ) : (
+                                user?.role === 'admin' && (
+                                    <div className="space-y-4">
+                                        <button 
+                                            onClick={() => window.history.back()}
+                                            className="w-full bg-gold/10 border border-gold/30 text-gold py-5 font-black uppercase tracking-[0.2em] text-[10px] rounded-full hover:bg-gold/20 transition-all flex items-center justify-center gap-3"
+                                        >
+                                            <ArrowRight size={16} className="rotate-180" /> Back to Order Page
+                                        </button>
+                                        <div className="p-4 bg-blue-500/10 border border-blue-500/20 rounded-xl text-center">
+                                            <p className="text-[10px] font-bold text-blue-400 uppercase tracking-widest">Mirror Mode Active</p>
+                                            <p className="text-[9px] text-gray-500 mt-1">Viewing specifications as seen by the customer.</p>
+                                        </div>
+                                    </div>
+                                )
+                            )}
 
                             {/* Trust Badges */}
                             <div className="mt-8 pt-8 border-t border-white/10 space-y-3">

@@ -171,7 +171,7 @@ const CartPage = () => {
                             <div className="mt-8 space-y-4">
                                 <div className="flex items-center gap-3 text-gray-500 text-xs">
                                     <ShieldCheck size={16} className="text-gold" />
-                                    <span>Secure checkout powered by BillDesk</span>
+                    <span>Secure checkout powered by Razorpay</span>
                                 </div>
                                 <div className="flex items-center gap-3 text-gray-500 text-xs">
                                     <CreditCard size={16} className="text-gold" />

@@ -10,6 +10,7 @@ interface Product {
     materialType: string;
     pricePerMeter: number;
     inStock: number;
+    isAvailable: boolean;
 }
 
 const ProductListPage = () => {
@@ -52,6 +53,25 @@ const ProductListPage = () => {
         }
     };
 
+    const toggleAvailability = async (id: string, current: boolean) => {
+        try {
+            const res = await fetch(`http://localhost:5000/api/products/${id}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${user?.token}`,
+                },
+                body: JSON.stringify({ isAvailable: !current }),
+            });
+
+            if (res.ok) {
+                setProducts(products.map(p => p._id === id ? { ...p, isAvailable: !current } : p));
+            }
+        } catch (error) {
+            console.error(error);
+        }
+    };
+
     const filteredProducts = products.filter(p => p.name.toLowerCase().includes(searchTerm.toLowerCase()));
 
     return (
@@ -89,6 +109,7 @@ const ProductListPage = () => {
                                 <th className="px-6 py-4">Material Type</th>
                                 <th className="px-6 py-4">Price / Meter</th>
                                 <th className="px-6 py-4 text-center">Stock</th>
+                                <th className="px-6 py-4 text-center">Availability</th>
                                 <th className="px-6 py-4 text-right">Actions</th>
                             </tr>
                         </thead>
@@ -107,6 +128,14 @@ const ProductListPage = () => {
                                             <div className={`w-2 h-2 rounded-full ${product.inStock > 0 ? 'bg-green-500 animate-pulse' : 'bg-red-500'}`}></div>
                                             <span className="text-gray-300 font-mono">{product.inStock}</span>
                                         </div>
+                                    </td>
+                                    <td className="px-6 py-4 text-center">
+                                        <button 
+                                            onClick={() => toggleAvailability(product._id, product.isAvailable)}
+                                            className={`px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider transition-all ${product.isAvailable ? 'bg-green-500/10 text-green-500 border border-green-500/20' : 'bg-red-500/10 text-red-500 border border-red-500/20'}`}
+                                        >
+                                            {product.isAvailable ? 'Available' : 'Unavailable'}
+                                        </button>
                                     </td>
                                     <td className="px-6 py-4 text-right">
                                         <div className="flex items-center justify-end gap-3 opacity-60 group-hover:opacity-100 transition-opacity">

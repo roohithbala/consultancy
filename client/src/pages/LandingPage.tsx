@@ -12,16 +12,16 @@ const LandingPage = () => {
     }
 
     const exports = [
-        { name: 'KH Shoes', location: 'Ranipet' },
-        { name: 'NMZ Shoes', location: 'Ambur' },
-        { name: 'NMH Shoes', location: 'Ambur' },
-        { name: 'ISPL', location: 'Chennai' },
-        { name: 'Kenmore Shoes', location: 'Chennai' },
-        { name: 'Excellent Shoes', location: 'Ambur' },
-        { name: 'Mohib Shoes', location: 'Ambur' },
-        { name: 'Calidas', location: 'Ambur' },
-        { name: 'Gobi Shoes', location: 'Ambur' },
-        { name: 'SNS Clothing', location: 'Ambur' },
+        { name: 'KH Shoes', location: 'Strategic Hub' },
+        { name: 'NMZ Shoes', location: 'Global Export' },
+        { name: 'NMH Shoes', location: 'Premium Line' },
+        { name: 'ISPL', location: 'Distribution' },
+        { name: 'Kenmore Shoes', location: 'Design Center' },
+        { name: 'Excellent Shoes', location: 'Global Export' },
+        { name: 'Mohib Shoes', location: 'Strategic Hub' },
+        { name: 'Calidas', location: 'Premium Line' },
+        { name: 'Gobi Shoes', location: 'Design Center' },
+        { name: 'SNS Clothing', location: 'Global Export' },
     ];
 
     const processes = [
@@ -59,8 +59,8 @@ const LandingPage = () => {
                         <span className="text-[10px] uppercase tracking-[0.3em] text-white/80 font-bold">Global Manufacturing • Est. 2024</span>
                     </div>
 
-                    <h1 className="text-7xl md:text-9xl font-extrabold mb-10 leading-[0.9] tracking-tighter text-white animate-fade-in">
-                        Material <br /> <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#c29b28] via-[#fcd34d] to-[#c29b28] italic font-normal">Excellence</span>
+                    <h1 className="text-7xl md:text-9xl font-extrabold mb-10 leading-tight tracking-tighter text-white animate-fade-in">
+                        Material <br /> <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#c29b28] via-[#fcd34d] to-[#c29b28] italic font-normal pr-4">Excellence</span>
                     </h1>
 
                     <p className="text-xl md:text-2xl mb-12 text-gray-300 max-w-3xl mx-auto leading-relaxed font-light animate-fade-in delay-100">
@@ -104,16 +104,11 @@ const LandingPage = () => {
                                 with international standards, supplying critical components to manufacturers who craft for the world.
                             </p>
 
-                            <div className="grid grid-cols-2 gap-8 border-t border-theme pt-8">
+                            <div className="border-t border-theme pt-8">
                                 <div>
                                     <h3 className="text-5xl font-bold text-primary mb-2">3</h3>
                                     <p className="text-gold uppercase text-xs tracking-widest">Key Manufacturing Hubs</p>
-                                    <p className="text-secondary text-xs mt-1">Ranipet • Ambur • Chennai</p>
-                                </div>
-                                <div>
-                                    <h3 className="text-5xl font-bold text-primary mb-2">10+</h3>
-                                    <p className="text-gold uppercase text-xs tracking-widest">International Partners</p>
-                                    <p className="text-secondary text-xs mt-1">Exporting Excellence</p>
+                                    <p className="text-secondary text-xs mt-1">Ranipet • Global Stage • Chennai</p>
                                 </div>
                             </div>
                         </div>
