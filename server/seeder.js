@@ -18,17 +18,23 @@ connectDB();
 
 const importData = async () => {
     try {
-        await User.deleteMany();
-        await Product.deleteMany();
-
-        await User.create({
-            name: 'Admin User',
-            email: 'admin@zain.com',
-            password: 'password123',
-            role: 'admin',
-            phone: '9999999999',
-            companyName: 'Zain Fabrics Internal'
-        });
+        // We are NOT deleting existing data as requested
+        
+        // Create Admin if not exists
+        const adminExists = await User.findOne({ email: 'admin@zain.com' });
+        if (!adminExists) {
+            await User.create({
+                name: 'Admin User',
+                email: 'admin@zain.com',
+                password: 'password123',
+                role: 'admin',
+                phone: '9999999999',
+                companyName: 'Zain Fabrics Internal'
+            });
+            console.log('Admin User Created'.green.dim);
+        } else {
+            console.log('Admin User Already Exists'.yellow.dim);
+        }
 
         const products = [
             {
@@ -43,6 +49,7 @@ const importData = async () => {
                 textureMaps: {
                     map: '/3dmodel/cotton_texture.png'
                 },
+                samplePrice: 50,
                 isAvailable: true
             },
             {
@@ -54,6 +61,7 @@ const importData = async () => {
                 gsm: 200,
                 inStock: 2500,
                 imageUrl: '/products/coating.png',
+                samplePrice: 50,
                 isAvailable: true
             },
             {
@@ -65,6 +73,7 @@ const importData = async () => {
                 gsm: 180,
                 inStock: 1500,
                 imageUrl: '/products/raising.png',
+                samplePrice: 50,
                 isAvailable: true
             },
             {
@@ -76,6 +85,7 @@ const importData = async () => {
                 gsm: 240,
                 inStock: 3000,
                 imageUrl: '/products/drill.png',
+                samplePrice: 50,
                 isAvailable: true
             },
             {
@@ -90,6 +100,7 @@ const importData = async () => {
                 textureMaps: {
                     map: '/3dmodel/jersey_texture.png'
                 },
+                samplePrice: 50,
                 isAvailable: true
             },
             {
@@ -101,6 +112,7 @@ const importData = async () => {
                 gsm: 310,
                 inStock: 1200,
                 imageUrl: '/products/canvas.png',
+                samplePrice: 50,
                 isAvailable: true
             },
             {
@@ -115,24 +127,33 @@ const importData = async () => {
                 textureMaps: {
                     map: '/3dmodel/foam_texture.png'
                 },
+                samplePrice: 50,
                 isAvailable: true
             },
             {
                 name: 'Heat Bonded Adhesive Film',
-                description: 'Strong thermoplastic bonding film for seamless construction.',
+                description: 'Heat bonded adhesive film with strong thermoplastic properties.',
                 materialType: 'BONDING',
                 pricePerMeter: 150,
                 width: '48 inches',
                 gsm: 80,
                 inStock: 10000,
                 imageUrl: '/products/bonding.png',
+                samplePrice: 50,
                 isAvailable: true
             }
         ];
 
-        await Product.insertMany(products);
+        // Insert Products using updateOne with upsert to avoid duplicates while preventing deletion
+        for (const product of products) {
+            await Product.updateOne(
+                { name: product.name },
+                { $set: product },
+                { upsert: true }
+            );
+        }
 
-        console.log('Data Imported Successfully!'.green.inverse);
+        console.log('Data Merged Successfully!'.green.inverse);
         process.exit();
     } catch (error) {
         console.error(`${error}`.red.inverse);

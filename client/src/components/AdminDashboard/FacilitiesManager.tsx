@@ -20,9 +20,9 @@ const FacilitiesManager = ({ facilities, toggleFacility }: FacilitiesManagerProp
                         </span>
                         <button
                             onClick={() => toggleFacility(key)}
-                            className={`w-10 h-5 rounded-full relative transition-colors duration-300 ${value ? 'bg-gold' : 'bg-gray-700'}`}
+                            className={`w-12 h-6 rounded-full relative transition-all duration-500 ${value ? 'bg-brand shadow-[0_0_15px_rgba(16,185,129,0.3)]' : 'bg-white/5 border border-white/10'}`}
                         >
-                            <span className={`absolute top-1 left-1 bg-white w-3 h-3 rounded-full transition-transform duration-300 ${value ? 'translate-x-5' : 'translate-x-0'}`} />
+                            <span className={`absolute top-1 left-1 bg-white w-4 h-4 rounded-full transition-all duration-500 shadow-lg ${value ? 'translate-x-6' : 'translate-x-0'}`} />
                         </button>
                     </div>
                 ))}

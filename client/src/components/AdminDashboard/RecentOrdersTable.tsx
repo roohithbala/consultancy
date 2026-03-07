@@ -8,15 +8,15 @@ interface RecentOrdersTableProps {
 
 const RecentOrdersTable = ({ orders, handleVerifyPayment }: RecentOrdersTableProps) => {
     return (
-        <div className="bg-white/5 backdrop-blur-md rounded-xl border border-white/10 overflow-hidden shadow-sm">
-            <div className="p-6 border-b border-white/10 flex justify-between items-center">
-                <h3 className="text-lg font-bold text-white font-serif tracking-wide">Recent Orders</h3>
+        <div className="glass-card rounded-[2.5rem] border border-white/5 overflow-hidden shadow-2xl">
+            <div className="p-8 border-b border-white/5 flex justify-between items-center group">
+                <h3 className="text-2xl font-serif font-black text-white tracking-widest uppercase">Live <span className="text-brand italic font-normal">Directives</span></h3>
                 <div className="relative w-64">
-                    <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500" />
+                    <Search size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-brand opacity-40" />
                     <input
                         type="text"
-                        placeholder="Search order ID..."
-                        className="w-full pl-10 pr-4 py-2 bg-black/20 border border-white/10 rounded text-sm text-gray-300 focus:outline-none focus:border-gold transition-colors placeholder-gray-600"
+                        placeholder="Scan Order Registry..."
+                        className="w-full pl-12 pr-6 py-3 bg-primary/20 border border-white/5 rounded-2xl text-[10px] font-black uppercase tracking-widest text-white focus:outline-none focus:border-brand/40 transition-all placeholder-white/20"
                     />
                 </div>
             </div>
@@ -66,8 +66,8 @@ const RecentOrdersTable = ({ orders, handleVerifyPayment }: RecentOrdersTablePro
                                                 Verify
                                             </button>
                                         )}
-                                        <Link to={`/order/${order._id}`} className="text-[10px] font-bold text-gold hover:text-white uppercase tracking-wider transition-colors">
-                                            Details
+                                         <Link to={`/order/${order._id}`} className="px-5 py-2 bg-white/5 border border-white/10 rounded-lg text-[9px] font-black text-brand hover:bg-brand hover:text-black uppercase tracking-widest transition-all">
+                                            Intelligence Detail
                                         </Link>
                                     </td>
                                 </tr>

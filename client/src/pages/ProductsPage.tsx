@@ -68,14 +68,15 @@ const ProductsPage = () => {
     };
 
     return (
-        <div className="bg-primary min-h-screen text-primary font-sans selection:bg-gold selection:text-black transition-colors duration-300">
+        <div className="bg-bg-main min-h-screen text-primary-text font-sans selection:bg-brand/30 selection:text-brand transition-colors duration-300">
             {/* Header */}
-            <div className="relative py-28 bg-secondary overflow-hidden transition-colors duration-500">
-                <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,_var(--tw-gradient-stops))] from-[#c29b28]/10 via-transparent to-transparent opacity-0 dark:opacity-40 transition-opacity duration-500"></div>
+            <div className="relative py-28 bg-bg-alt overflow-hidden transition-colors duration-500">
+                <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,_var(--tw-gradient-stops))] from-brand/5 via-transparent to-transparent opacity-60"></div>
+                <div className="absolute bottom-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-border/10 to-transparent"></div>
                 <div className="container mx-auto px-6 relative z-10 text-center">
-                    <span className="text-[#c29b28] text-[10px] font-bold tracking-[0.4em] uppercase mb-5 block animate-fade-in">Excellence in Every Thread</span>
-                    <h1 className="text-5xl md:text-7xl font-extrabold mb-8 leading-tight tracking-tighter">Material <span className="italic font-normal opacity-80">Collection</span></h1>
-                    <p className="text-secondary max-w-2xl mx-auto text-lg font-light leading-relaxed animate-fade-in delay-100">
+                    <span className="text-brand text-[10px] font-black tracking-[0.4em] uppercase mb-5 block animate-fade-in shadow-brand/10">Excellence in Every Thread</span>
+                    <h1 className="text-5xl md:text-7xl font-extrabold mb-8 leading-tight tracking-tighter text-primary-text">Material <span className="italic font-normal opacity-80">Collection</span></h1>
+                    <p className="text-secondary-text max-w-2xl mx-auto text-lg font-light leading-relaxed animate-fade-in delay-100">
                         Curated high-performance materials engineered for the world's finest footwear brands.
                     </p>
                 </div>
@@ -83,18 +84,17 @@ const ProductsPage = () => {
 
             <div className="container mx-auto px-6 py-12">
                 <div className="flex flex-col lg:flex-row gap-12">
-                    {/* Filters Sidebar */}
                     <div className="w-full lg:w-80 flex-shrink-0">
-                        <div className="glass-card rounded-[1.5rem] p-8 sticky top-24">
-                            <div className="flex items-center justify-between font-bold mb-8 text-primary border-b border-theme pb-5">
+                        <div className="bg-bg-main border border-border/10 rounded-[2.5rem] p-10 sticky top-24">
+                            <div className="flex items-center justify-between font-bold mb-8 text-primary-text border-b border-border/10 pb-5">
                                 <div className="flex items-center gap-3">
-                                    <Filter size={18} className="text-[#c29b28]" />
-                                    <span className="tracking-[0.1em] uppercase text-[10px] font-extrabold">Filter Selection</span>
+                                    <Filter size={18} className="text-brand" />
+                                    <span className="tracking-[0.1em] uppercase text-[10px] font-extrabold">Filters</span>
                                 </div>
                                 {(selectedMaterials.length > 0 || priceRange < 5000) && (
                                     <button
                                         onClick={() => { setSelectedMaterials([]); setPriceRange(5000); }}
-                                        className="text-[9px] text-secondary hover:text-[#c29b28] flex items-center gap-1 transition-colors uppercase tracking-[0.15em] font-bold"
+                                        className="text-[9px] text-secondary-text hover:text-brand flex items-center gap-1 transition-colors uppercase tracking-[0.15em] font-bold"
                                     >
                                         <X size={10} /> Reset All
                                     </button>
@@ -103,7 +103,7 @@ const ProductsPage = () => {
  
                             <div className="space-y-12">
                                 <div>
-                                    <h3 className="font-extrabold mb-5 text-[9px] uppercase tracking-[0.2em] text-[#c29b28]/80">Material Grade</h3>
+                                    <h3 className="font-extrabold mb-5 text-[9px] uppercase tracking-[0.2em] text-brand/80">Category</h3>
                                     <div className="space-y-4">
                                         {[
                                             'INTERLININGS',
@@ -116,7 +116,7 @@ const ProductsPage = () => {
                                             'FOAM LAMINATIONS'
                                         ].map((type) => (
                                             <label key={type} className="flex items-center gap-4 cursor-pointer group">
-                                                <div className={`w-4 h-4 border rounded-none flex items-center justify-center transition-all duration-300 ${selectedMaterials.includes(type) ? 'bg-[#c29b28] border-[#c29b28]' : 'border-slate-500/50 group-hover:border-[#c29b28] bg-transparent'}`}>
+                                                <div className={`w-4 h-4 border rounded-none flex items-center justify-center transition-all duration-300 ${selectedMaterials.includes(type) ? 'bg-brand border-brand' : 'border-slate-500/50 group-hover:border-brand bg-transparent'}`}>
                                                     {selectedMaterials.includes(type) && <Check size={10} className="text-black font-black" />}
                                                 </div>
                                                 <input
@@ -125,14 +125,17 @@ const ProductsPage = () => {
                                                     checked={selectedMaterials.includes(type)}
                                                     onChange={() => toggleMaterial(type)}
                                                 />
-                                                <span className={`text-[11px] tracking-widest uppercase font-medium ${selectedMaterials.includes(type) ? 'text-primary font-black' : 'text-secondary group-hover:text-primary'} transition-colors`}>{type}</span>
+                                                <span className={`text-[11px] tracking-widest uppercase font-medium ${selectedMaterials.includes(type) ? 'text-primary-text font-black' : 'text-secondary-text group-hover:text-primary-text'} transition-colors`}>{type}</span>
                                             </label>
                                         ))}
                                     </div>
                                 </div>
  
-                                <div>
-                                    <h3 className="font-extrabold mb-5 text-[9px] uppercase tracking-[0.2em] text-[#c29b28]/80">Investment Range: ₹{priceRange}</h3>
+                                 <div>
+                                    <div className="flex justify-between items-end mb-5">
+                                        <h3 className="font-extrabold text-[9px] uppercase tracking-[0.2em] text-brand/80">Price Range</h3>
+                                        <span className="text-[10px] font-black text-primary-text italic">₹{priceRange}</span>
+                                    </div>
                                     <input
                                         type="range"
                                         min="100"
@@ -140,9 +143,9 @@ const ProductsPage = () => {
                                         step="100"
                                         value={priceRange}
                                         onChange={(e) => setPriceRange(Number(e.target.value))}
-                                        className="w-full h-1 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-[#c29b28]"
+                                        className="w-full h-1 bg-white/5 rounded-lg appearance-none cursor-pointer accent-brand"
                                     />
-                                    <div className="flex justify-between text-[9px] font-bold tracking-tighter text-slate-500 mt-4">
+                                    <div className="flex justify-between text-[9px] font-bold tracking-tighter text-secondary-text mt-4">
                                         <span>₹100</span>
                                         <span>₹5000+</span>
                                     </div>
@@ -154,17 +157,17 @@ const ProductsPage = () => {
                     {/* Product Grid Area */}
                     <div className="flex-1">
                         {/* Results Header */}
-                        <div className="flex flex-col sm:flex-row justify-between items-center mb-8 pb-4 border-b border-white/5 gap-4">
-                            <p className="text-gray-400 text-sm tracking-widest uppercase">
-                                Showing <span className="font-bold text-white">{filteredProducts.length}</span> results
+                        <div className="flex flex-col sm:flex-row justify-between items-center mb-8 pb-4 border-b border-border/10 gap-4">
+                            <p className="text-secondary-text/60 text-sm tracking-widest uppercase font-bold">
+                                Showing <span className="font-extrabold text-primary-text">{filteredProducts.length}</span> results
                             </p>
 
                             <div className="flex items-center gap-3">
-                                <span className="text-sm text-gray-500 uppercase tracking-wider text-[10px]">Sort by:</span>
-                                <select
+                                <span className="text-secondary-text uppercase tracking-wider text-[10px]">Sort by:</span>
+                                 <select
                                     value={sortBy}
                                     onChange={(e) => setSortBy(e.target.value)}
-                                    className="bg-black border border-white/20 text-gray-200 text-sm focus:ring-1 focus:ring-gold focus:border-gold cursor-pointer py-2 px-4 rounded-none uppercase tracking-wide"
+                                    className="bg-secondary border border-theme text-primary-text text-[10px] font-black focus:ring-1 focus:ring-brand focus:border-brand cursor-pointer py-2.5 px-6 rounded-full uppercase tracking-widest outline-none"
                                 >
                                     <option value="newest">Featured</option>
                                     <option value="price-low">Price: Low to High</option>
@@ -176,15 +179,15 @@ const ProductsPage = () => {
                         {loading ? (
                             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                                 {[1, 2, 3, 4, 5, 6].map(i => (
-                                    <div key={i} className="h-96 bg-white/5 rounded-none animate-pulse"></div>
+                                    <div key={i} className="h-96 bg-secondary/50 rounded-none animate-pulse"></div>
                                 ))}
                             </div>
                         ) : filteredProducts.length === 0 ? (
-                            <div className="text-center py-32 bg-white/5 border border-white/10 rounded-sm">
+                            <div className="text-center py-32 bg-secondary/20 border border-theme rounded-sm">
                                 <p className="text-gray-400 text-lg mb-4 font-serif italic">No materials found matching your criteria.</p>
                                 <button
                                     onClick={() => { setSelectedMaterials([]); setPriceRange(5000); }}
-                                    className="text-gold font-bold uppercase tracking-widest text-xs hover:text-white transition-colors border-b border-gold hover:border-white pb-1"
+                                    className="text-brand font-bold uppercase tracking-widest text-xs hover:text-white transition-colors border-b border-brand hover:border-white pb-1"
                                 >
                                     Clear all filters
                                 </button>
@@ -193,49 +196,49 @@ const ProductsPage = () => {
                             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
                                 {filteredProducts.map((product) => (
                                     <Link key={product._id} to={`/products/${product._id}`} className="group block">
-                                        <div className="glass-card rounded-[2rem] overflow-hidden transition-all duration-700 hover:border-[#c29b28]/30 group-hover:-translate-y-3 relative h-full flex flex-col border border-white/5">
+                                        <div className="bg-bg-main border border-border/10 rounded-[2rem] overflow-hidden transition-all duration-700 hover:border-brand/30 group-hover:-translate-y-3 relative h-full flex flex-col">
  
-                                            {/* Image container */}
-                                            <div className="relative aspect-[4/5] bg-[#020617] overflow-hidden">
+                                             {/* Image container */}
+                                            <div className="relative aspect-[4/5] bg-accent-dark overflow-hidden border-b border-border/10">
                                                 {product.imageUrl ? (
                                                     <img
                                                         src={product.imageUrl}
                                                         alt={product.name}
-                                                        className="w-full h-full object-cover opacity-60 group-hover:opacity-100 group-hover:scale-105 transition-all duration-1000"
+                                                        className="w-full h-full object-cover opacity-80 group-hover:opacity-100 group-hover:scale-105 transition-all duration-1000"
                                                     />
                                                 ) : (
-                                                    <div className="w-full h-full flex items-center justify-center text-slate-700 bg-[#020617] font-bold text-[10px] uppercase tracking-[0.3em]">
-                                                        Asset Missing
+                                                    <div className="w-full h-full flex items-center justify-center text-secondary-text/20 bg-bg-alt/5 font-black text-[10px] uppercase tracking-[0.4em]">
+                                                        Missing Asset
                                                     </div>
                                                 )}
  
-                                                <div className="absolute inset-0 bg-gradient-to-t from-[#020617] via-transparent to-transparent opacity-60"></div>
+                                                <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-60"></div>
  
                                                 {/* Badge */}
                                                 <div className="absolute top-6 left-6">
-                                                    <span className="glass px-4 py-1.5 text-[#c29b28] text-[9px] font-black uppercase tracking-[0.2em] rounded-full">
+                                                    <span className="bg-bg-main/20 backdrop-blur-md px-4 py-1.5 text-brand text-[9px] font-black uppercase tracking-[0.2em] rounded-full border border-theme">
                                                         {product.materialType}
                                                     </span>
                                                 </div>
  
-                                                {/* Overlay */}
-                                                <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-500 bg-[#020617]/40 backdrop-blur-[2px]">
-                                                    <span className="px-8 py-3 bg-[#c29b28] text-black font-black uppercase tracking-[0.2em] text-[10px] rounded-full transform translate-y-8 group-hover:translate-y-0 transition-all duration-500">
-                                                        Inspect Details
+                                                 {/* Overlay */}
+                                                <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-500 bg-black/40 backdrop-blur-[2px]">
+                                                     <span className="px-10 py-4 bg-brand text-black font-black uppercase tracking-[0.2em] text-[10px] rounded-full transform translate-y-8 group-hover:translate-y-0 transition-all duration-500 shadow-[0_10px_30px_rgba(16,185,129,0.3)]">
+                                                        View Details
                                                     </span>
                                                 </div>
                                             </div>
  
                                             <div className="p-8 flex flex-col flex-1 relative z-10">
-                                                <h3 className="font-extrabold text-2xl text-primary mb-3 group-hover:text-[#c29b28] transition-colors line-clamp-1 leading-tight">{product.name}</h3>
-                                                <p className="text-secondary text-[11px] mb-6 line-clamp-2 leading-relaxed h-8 font-medium">{product.description}</p>
+                                                <h3 className="font-extrabold text-2xl text-primary-text mb-3 group-hover:text-brand transition-colors line-clamp-1 leading-tight">{product.name}</h3>
+                                                <p className="text-secondary-text text-[11px] mb-6 line-clamp-2 leading-relaxed h-8 font-medium">{product.description}</p>
  
-                                                <div className="mt-auto flex items-center justify-between pt-6 border-t border-theme">
+                                                <div className="mt-auto flex items-center justify-between pt-6 border-t border-border/10 text-primary-text">
                                                     <div className="flex flex-col">
-                                                        <span className="text-[9px] text-secondary uppercase tracking-[0.2em] font-bold mb-1">Price / M</span>
-                                                        <span className="text-xl font-black text-primary tracking-tighter italic">₹{product.pricePerMeter}</span>
+                                                        <span className="text-[9px] text-secondary-text/60 uppercase tracking-[0.2em] font-bold mb-1">Price per Meter</span>
+                                                        <span className="text-xl font-black tracking-tighter italic">₹{product.pricePerMeter}</span>
                                                     </div>
-                                                    <div className="text-[9px] text-emerald-400 font-black uppercase tracking-[0.2em] flex items-center gap-2 px-3 py-1.5 glass rounded-full">
+                                                    <div className="text-[9px] text-emerald-400 font-black uppercase tracking-[0.2em] flex items-center gap-2 px-3 py-1.5 bg-emerald-500/10 rounded-full border border-emerald-500/20">
                                                         <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></div>
                                                         In Stock
                                                     </div>

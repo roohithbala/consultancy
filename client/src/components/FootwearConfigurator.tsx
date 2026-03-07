@@ -1,5 +1,5 @@
 import { Canvas } from '@react-three/fiber';
-import { OrbitControls, Stage, useFBX, useTexture } from '@react-three/drei';
+import { OrbitControls, Stage, useFBX, useTexture, Html } from '@react-three/drei';
 import { Suspense, useState, useLayoutEffect } from 'react';
 import * as THREE from 'three';
 import ThreeErrorBoundary from './ThreeErrorBoundary';
@@ -33,9 +33,8 @@ const ShoeModel = ({ modelUrl, color, textureUrl }: ModelProps) => {
                         const threeColor = new THREE.Color(color);
                         m.color.copy(threeColor);
                         
-                        if (texture) {
-                            m.map = texture;
-                        }
+                        // Clear existing map if we should show pure color or specific texture
+                        m.map = texture || null;
                         
                         m.side = THREE.DoubleSide;
                         
@@ -59,63 +58,119 @@ const ShoeModel = ({ modelUrl, color, textureUrl }: ModelProps) => {
 
 interface FootwearConfiguratorProps {
     color?: string;
+    modelUrl?: string;
+    fallbackImage?: string;
 }
 
-const FootwearConfigurator = ({ color: externalColor }: FootwearConfiguratorProps) => {
-    const color = externalColor || '#d4af37';
+const FootwearConfigurator = ({ color: externalColor, modelUrl }: FootwearConfiguratorProps) => {
+    const color = externalColor || '#10b981';
     
-    const [materialType, setMaterialType] = useState('Cotton');
+    // Map materialType from product to the internal 3D material state
+    const getInitialMaterial = () => {
+        return 'Original';
+    };
 
-    const textures: Record<string, string> = {
-        'Cotton': '/3dmodel/cotton_texture.png', // Assuming these exist in public/3dmodel
+    const [materialType, setMaterialType] = useState(getInitialMaterial());
+
+    const textures: Record<string, string | null> = {
+        'Original': null,
+        'Cotton': '/3dmodel/cotton_texture.png',
         'Polyester': '/3dmodel/polyester_texture.png',
         'Foam': '/3dmodel/foam_texture.png',
+        'Jersey': '/3dmodel/jersey_texture.png',
     };
 
     return (
         <div className="flex flex-col lg:flex-row gap-8 bg-card border border-theme p-4 rounded-xl shadow-2xl">
-            {/* 3D Canvas Area */}
-            <div className="flex-1 h-[500px] bg-secondary/5 rounded-lg relative overflow-hidden">
-                <ThreeErrorBoundary>
-                    <Canvas shadows dpr={[1, 2]} camera={{ position: [0, 0, 5], fov: 45 }}>
-                        <Suspense fallback={null}>
-                            <Stage environment="city" intensity={1.5} adjustCamera={1.2}>
-                                <ShoeModel 
-                                    modelUrl="/3dmodel/t13.fbx" 
-                                    color={color} 
-                                    textureUrl={textures[materialType]}
-                                />
-                            </Stage>
-                        </Suspense>
-                        <OrbitControls makeDefault />
-                    </Canvas>
-                </ThreeErrorBoundary>
-                
-                <div className="absolute top-4 left-4 z-10 px-3 py-1 bg-black/60 backdrop-blur-md rounded border border-white/10 text-[10px] text-gold uppercase tracking-widest font-bold">
-                    Interactive 3D Preview
-                </div>
+            {/* 3D Canvas or Static Image Area */}
+            <div className="flex-1 h-[500px] bg-secondary/5 rounded-lg relative overflow-hidden flex items-center justify-center">
+                {materialType === 'Original' ? (
+                    <div className="relative w-full h-full p-8 animate-fade-in flex items-center justify-center bg-accent-dark/40 backdrop-blur-sm rounded-lg overflow-hidden">
+                        <img 
+                            src="/3dmodel/t13.png" 
+                            alt="Original Material View" 
+                            className="max-w-full max-h-full object-contain drop-shadow-[0_20px_50px_rgba(0,0,0,0.5)] transform hover:scale-105 transition-transform duration-700"
+                        />
+                         <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent"></div>
+                        <div className="absolute top-4 left-4 z-10 px-3 py-1 bg-brand/90 backdrop-blur-md rounded border border-white/10 text-[10px] text-black uppercase tracking-widest font-black">
+                            Finished Surface View
+                        </div>
+                    </div>
+                ) : (
+                    <>
+                        <ThreeErrorBoundary>
+                            <Canvas shadows dpr={[1, 2]} camera={{ position: [0, 0, 5], fov: 45 }}>
+                                <Suspense fallback={
+                                    <Html center>
+                                        <div className="w-64 h-64 flex flex-col items-center justify-center text-brand">
+                                            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-brand mb-4"></div>
+                                            <p className="text-[10px] uppercase tracking-widest font-black">Loading 3D...</p>
+                                        </div>
+                                    </Html>
+                                }>
+                                    <Stage environment="city" intensity={1.5} adjustCamera={1.2}>
+                                        <ShoeModel 
+                                            modelUrl={modelUrl || "/3dmodel/t13.fbx"} 
+                                            color={color} 
+                                            textureUrl={textures[materialType] || undefined}
+                                        />
+                                    </Stage>
+                                </Suspense>
+                                <OrbitControls makeDefault />
+                            </Canvas>
+                        </ThreeErrorBoundary>
+                        
+                        <div className="absolute top-4 left-4 z-10 px-3 py-1 bg-black/60 backdrop-blur-md rounded border border-white/10 text-[10px] text-brand uppercase tracking-widest font-bold">
+                            Interactive View
+                        </div>
+                    </>
+                )}
             </div>
 
             {/* UI Control Panel */}
             <div className="lg:w-72 flex flex-col gap-8 p-4">
-                <div>
-                    <h3 className="text-xs font-bold text-secondary uppercase tracking-[0.2em] mb-4">Interlining Material</h3>
-                    <div className="grid grid-cols-1 gap-2">
-                        {['Cotton', 'Polyester', 'Foam'].map((type) => (
-                            <button
-                                key={type}
-                                onClick={() => setMaterialType(type)}
-                                className={`px-4 py-3 text-xs font-bold uppercase tracking-widest border transition-all duration-300 rounded-lg ${materialType === type ? 'bg-gold text-black border-gold shadow-lg shadow-gold/20 scale-[1.02]' : 'bg-transparent text-secondary border-theme hover:border-gold/50'}`}
-                            >
-                                {type}
-                            </button>
-                        ))}
+                <div className="flex flex-col gap-6">
+                    <div>
+                        <h3 className="text-xs font-black text-brand uppercase tracking-[0.3em] mb-4">Original Material</h3>
+                        <button
+                            onClick={() => setMaterialType('Original' as any)}
+                            className={`w-full px-6 py-4 rounded-xl uppercase text-[10px] font-black tracking-[0.2em] transition-all border ${
+                                materialType === 'Original' 
+                                ? 'bg-brand text-black border-brand shadow-[0_0_20px_rgba(16,185,129,0.3)] scale-[1.02]' 
+                                : 'bg-white/5 text-primary-text border-white/5 hover:border-brand/30'
+                            }`}
+                        >
+                            Finished Surface
+                        </button>
+                    </div>
+
+                    <div>
+                        <h3 className="text-xs font-black text-brand uppercase tracking-[0.3em] mb-4">Cross Section Views</h3>
+                        <div className="grid grid-cols-2 gap-3">
+                            {Object.keys(textures).filter(k => k !== 'Original').map((type, idx) => (
+                                <button
+                                    key={type}
+                                    onClick={() => setMaterialType(type as any)}
+                                    className={`px-3 py-3 rounded-xl uppercase text-[9px] font-black tracking-[0.15em] transition-all border ${
+                                        materialType === type 
+                                        ? 'bg-brand text-black border-brand shadow-[0_0_15px_rgba(16,185,129,0.2)]' 
+                                        : 'bg-white/5 text-primary-text border-white/5 hover:border-brand/30'
+                                    }`}
+                                >
+                                    View {idx + 1}
+                                </button>
+                            ))}
+                        </div>
                     </div>
                 </div>
 
-                <div className="mt-auto">
-                    <p className="text-[10px] text-secondary/60 italic leading-relaxed">
-                        Select material type here. Use the global color tools to customize the appearance.
+                <div className="mt-8 pt-8 border-t border-border/10">
+                    <p className="text-[11px] text-secondary-text leading-relaxed font-medium">
+                        {materialType === 'Original' ? (
+                            "Viewing the complete material surfacing as utilized in final manufacturing. Precision-engineered for durability and aesthetic excellence."
+                        ) : (
+                            "Visualizing the internal architecture and material layering. Use these cross-sections to inspect the technical bond and fiber density of the chosen footwear component."
+                        )}
                     </p>
                 </div>
             </div>

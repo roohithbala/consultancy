@@ -30,6 +30,8 @@ import OrderDetailsPage from './pages/OrderDetailsPage';
 import OrderHistoryPage from './pages/OrderHistoryPage';
 import ProfilePage from './pages/ProfilePage';
 import CustomerListPage from './pages/admin/CustomerListPage';
+import PrivacyPage from './pages/PrivacyPage';
+import TermsPage from './pages/TermsPage';
 
 // ScrollToTop component
 const ScrollToTop = () => {
@@ -61,6 +63,8 @@ function App() {
               <Route path="profile/addresses" element={<AddressBookPage />} />
               <Route path="order/:id" element={<OrderDetailsPage />} />
               <Route path="orders" element={<OrderHistoryPage />} />
+              <Route path="privacy" element={<PrivacyPage />} />
+              <Route path="terms" element={<TermsPage />} />
             </Route>
 
             {/* Focus Layout for Product Details */}

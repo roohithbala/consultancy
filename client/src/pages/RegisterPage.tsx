@@ -52,15 +52,15 @@ const RegisterPage = () => {
     };
 
     return (
-        <div className="flex items-center justify-center min-h-screen bg-black relative overflow-hidden">
+        <div className="flex items-center justify-center min-h-screen bg-bg-main relative overflow-hidden">
             {/* Background Effects */}
-            <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(ellipse_at_bottom,_var(--tw-gradient-stops))] from-gray-900 via-black to-black z-0"></div>
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-gold/5 rounded-full blur-[100px] pointer-events-none"></div>
+            <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-secondary via-bg-main to-bg-main z-0"></div>
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-brand/5 rounded-full blur-[100px] pointer-events-none"></div>
 
-            <div className="w-full max-w-md p-10 bg-white/5 backdrop-blur-xl border border-white/10 relative z-10 shadow-2xl">
+            <div className="w-full max-w-md p-10 bg-bg-main/40 backdrop-blur-xl border border-theme relative z-10 shadow-2xl">
                 <div className="text-center mb-10">
-                    <span className="text-gold uppercase tracking-[0.3em] text-xs font-bold">Join Us</span>
-                    <h2 className="text-4xl font-serif font-bold text-white mt-4">Create Account</h2>
+                    <span className="text-brand uppercase tracking-[0.3em] text-xs font-bold">Join Us</span>
+                    <h2 className="text-4xl font-serif font-bold text-primary-text mt-4">Register</h2>
                 </div>
 
                 {error && (
@@ -71,48 +71,48 @@ const RegisterPage = () => {
 
                 <form onSubmit={handleRegister} className="space-y-6">
                     <div className="relative group">
-                        <User className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 group-focus-within:text-gold transition-colors" size={20} />
+                        <User className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 group-focus-within:text-brand transition-colors" size={20} />
                         <input
                             type="text"
                             value={name}
                             onChange={(e) => setName(e.target.value)}
-                            className="w-full bg-black/40 border border-white/10 text-white pl-12 pr-4 py-4 focus:border-gold focus:outline-none transition-all placeholder:text-gray-600"
-                            placeholder="Full Name"
+                            className="w-full bg-secondary border border-theme text-primary-text pl-12 pr-4 py-4 focus:border-brand focus:outline-none transition-all placeholder:text-gray-500"
+                            placeholder="Name"
                             required
                         />
                     </div>
 
                     <div className="relative group">
-                        <Mail className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 group-focus-within:text-gold transition-colors" size={20} />
+                        <Mail className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 group-focus-within:text-brand transition-colors" size={20} />
                         <input
                             type="email"
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
-                            className="w-full bg-black/40 border border-white/10 text-white pl-12 pr-4 py-4 focus:border-gold focus:outline-none transition-all placeholder:text-gray-600"
-                            placeholder="Email Address"
+                            className="w-full bg-secondary border border-theme text-primary-text pl-12 pr-4 py-4 focus:border-brand focus:outline-none transition-all placeholder:text-gray-500"
+                            placeholder="Email"
                             required
                         />
                     </div>
 
                     <div className="relative group">
-                        <Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 group-focus-within:text-gold transition-colors" size={20} />
+                        <Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 group-focus-within:text-brand transition-colors" size={20} />
                         <input
                             type="password"
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
-                            className="w-full bg-black/40 border border-white/10 text-white pl-12 pr-4 py-4 focus:border-gold focus:outline-none transition-all placeholder:text-gray-600"
+                            className="w-full bg-secondary border border-theme text-primary-text pl-12 pr-4 py-4 focus:border-brand focus:outline-none transition-all placeholder:text-gray-500"
                             placeholder="Password"
                             required
                         />
                     </div>
 
                     <div className="relative group">
-                        <Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 group-focus-within:text-gold transition-colors" size={20} />
+                        <Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 group-focus-within:text-brand transition-colors" size={20} />
                         <input
                             type="password"
                             value={confirmPassword}
                             onChange={(e) => setConfirmPassword(e.target.value)}
-                            className="w-full bg-black/40 border border-white/10 text-white pl-12 pr-4 py-4 focus:border-gold focus:outline-none transition-all placeholder:text-gray-600"
+                            className="w-full bg-secondary border border-theme text-primary-text pl-12 pr-4 py-4 focus:border-brand focus:outline-none transition-all placeholder:text-gray-500"
                             placeholder="Confirm Password"
                             required
                         />
@@ -121,15 +121,15 @@ const RegisterPage = () => {
                     <button
                         type="submit"
                         disabled={isLoading}
-                        className="w-full bg-gold text-black py-4 font-bold uppercase tracking-widest hover:bg-white transition-all disabled:opacity-50 flex items-center justify-center gap-2 group"
+                        className="w-full bg-brand text-black py-4 font-bold uppercase tracking-widest hover:bg-brand/80 transition-all disabled:opacity-50 flex items-center justify-center gap-2 group"
                     >
-                        {isLoading ? 'Creating Account...' : 'Sign Up'}
+                        {isLoading ? 'Wait...' : 'Join'}
                         {!isLoading && <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />}
                     </button>
                 </form>
 
-                <p className="mt-8 text-center text-sm text-gray-500">
-                    Already a member? <Link to="/login" className="text-white hover:text-gold transition-colors font-bold ml-2">Sign In</Link>
+                <p className="mt-8 text-center text-sm text-secondary-text">
+                    Joined? <Link to="/login" className="text-primary-text hover:text-brand transition-colors font-bold ml-2">Login</Link>
                 </p>
             </div>
         </div>

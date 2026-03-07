@@ -15,17 +15,26 @@ const createRazorpayOrder = async (req, res) => {
     try {
         const { amount, currency = 'INR', receipt } = req.body;
 
+        if (amount === undefined || amount === null) {
+            return res.status(400).json({ message: 'Amount is required' });
+        }
+
         const options = {
-            amount: amount * 100, // Amount in smallest currency unit (paise)
+            amount: Math.round(Number(amount) * 100), // Ensure it's an integer in paise
             currency,
             receipt,
         };
 
+        console.log('Creating Razorpay Order with options:', options);
+
         const order = await razorpay.orders.create(options);
         res.json(order);
     } catch (error) {
-        console.error(error);
-        res.status(500).json({ message: 'Error creating Razorpay order' });
+        console.error('Razorpay Order Error:', error);
+        res.status(500).json({ 
+            message: 'Error creating Razorpay order', 
+            error: error.error ? error.error.description : error.message 
+        });
     }
 };
 

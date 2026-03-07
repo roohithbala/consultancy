@@ -289,12 +289,19 @@ const CheckoutPage = () => {
                         </div>
                     )}
 
-                    <div className="flex flex-col gap-3">
-                        <button onClick={() => window.print()} className="w-full border border-theme text-primary py-3 rounded-lg font-bold hover:bg-secondary transition-colors">
-                            Print Order Summary
+                    <div className="flex flex-col gap-4">
+                        <button 
+                            onClick={() => window.print()} 
+                            className="w-full border-2 border-theme text-primary-text py-4 rounded-full font-black uppercase tracking-[0.2em] text-[10px] hover:bg-secondary hover:border-brand/30 transition-all duration-300 flex items-center justify-center gap-2"
+                        >
+                            <span className="opacity-70">Print Order Summary</span>
                         </button>
-                        <button onClick={() => navigate('/')} className="w-full bg-gold text-black py-3 rounded-lg font-bold hover:bg-yellow-500 transition-colors">
-                            Return to Home
+                        <button 
+                            onClick={() => navigate('/')} 
+                            className="w-full bg-brand text-black py-4 rounded-full font-black uppercase tracking-[0.2em] text-[10px] shadow-xl shadow-brand/20 hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 relative overflow-hidden group"
+                        >
+                            <div className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300"></div>
+                            <span className="relative z-10">Return to Home</span>
                         </button>
                     </div>
                 </div>
@@ -368,30 +375,34 @@ const CheckoutPage = () => {
                                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                         <div
                                             onClick={() => setDeliveryMethod('Courier')}
-                                            className={`border rounded-lg p-4 cursor-pointer transition-all ${deliveryMethod === 'Courier' ? 'border-primary bg-secondary ring-1 ring-gold/50' : 'border-theme hover:border-gold/50'}`}
+                                            className={`border rounded-2xl p-6 cursor-pointer transition-all duration-300 ${deliveryMethod === 'Courier' ? 'border-brand bg-brand/5 shadow-md shadow-brand/5' : 'border-theme hover:border-brand/30 bg-secondary/30'}`}
                                         >
-                                            <div className="flex items-center gap-3">
-                                                <div className={`w-5 h-5 rounded-full border flex items-center justify-center ${deliveryMethod === 'Courier' ? 'border-gold' : 'border-secondary'}`}>
-                                                    {deliveryMethod === 'Courier' && <div className="w-2.5 h-2.5 bg-gold rounded-full"></div>}
+                                            <div className="flex items-center gap-4">
+                                                <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center transition-all duration-300 ${deliveryMethod === 'Courier' ? 'border-brand bg-brand/10' : 'border-theme'}`}>
+                                                    {deliveryMethod === 'Courier' && <div className="w-2.5 h-2.5 bg-brand rounded-full animate-scale-in"></div>}
                                                 </div>
                                                 <div>
-                                                    <p className="font-bold flex items-center gap-2 text-primary"><Truck size={16} /> Courier Delivery</p>
-                                                    <p className="text-xs text-secondary">Standard shipping rates apply</p>
+                                                    <p className={`font-black uppercase tracking-[0.1em] text-xs flex items-center gap-2 transition-colors ${deliveryMethod === 'Courier' ? 'text-primary-text' : 'text-secondary-text'}`}>
+                                                        <Truck size={16} strokeWidth={2.5} className="text-brand" /> Courier Delivery
+                                                    </p>
+                                                    <p className="text-[10px] font-bold text-secondary-text/60 mt-1">Standard shipping rates apply</p>
                                                 </div>
                                             </div>
                                         </div>
 
                                         <div
                                             onClick={() => setDeliveryMethod('Pickup')}
-                                            className={`border rounded-lg p-4 cursor-pointer transition-all ${deliveryMethod === 'Pickup' ? 'border-primary bg-secondary ring-1 ring-gold/50' : 'border-theme hover:border-gold/50'}`}
+                                            className={`border rounded-2xl p-6 cursor-pointer transition-all duration-300 ${deliveryMethod === 'Pickup' ? 'border-brand bg-brand/5 shadow-md shadow-brand/5' : 'border-theme hover:border-brand/30 bg-secondary/30'}`}
                                         >
-                                            <div className="flex items-center gap-3">
-                                                <div className={`w-5 h-5 rounded-full border flex items-center justify-center ${deliveryMethod === 'Pickup' ? 'border-gold' : 'border-secondary'}`}>
-                                                    {deliveryMethod === 'Pickup' && <div className="w-2.5 h-2.5 bg-gold rounded-full"></div>}
+                                            <div className="flex items-center gap-4">
+                                                <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center transition-all duration-300 ${deliveryMethod === 'Pickup' ? 'border-brand bg-brand/10' : 'border-theme'}`}>
+                                                    {deliveryMethod === 'Pickup' && <div className="w-2.5 h-2.5 bg-brand rounded-full animate-scale-in"></div>}
                                                 </div>
                                                 <div>
-                                                    <p className="font-bold flex items-center gap-2 text-primary"><MapPin size={16} /> Self Pickup</p>
-                                                    <p className="text-xs text-secondary">Collect from our factory</p>
+                                                    <p className={`font-black uppercase tracking-[0.1em] text-xs flex items-center gap-2 transition-colors ${deliveryMethod === 'Pickup' ? 'text-primary-text' : 'text-secondary-text'}`}>
+                                                        <MapPin size={16} strokeWidth={2.5} className="text-brand" /> Self Pickup
+                                                    </p>
+                                                    <p className="text-[10px] font-bold text-secondary-text/60 mt-1">Collect from our factory</p>
                                                 </div>
                                             </div>
                                         </div>
@@ -451,9 +462,16 @@ const CheckoutPage = () => {
                                     </div>
                                 </div>
 
-                                <div className="pt-6">
-                                    <button type="submit" disabled={loading} className="w-full bg-gold text-black py-4 rounded-lg font-bold hover:bg-yellow-500 transition-colors disabled:opacity-50">
-                                        {loading ? 'Processing Order...' : 'Place Order'}
+                                <div className="pt-8">
+                                    <button 
+                                        type="submit" 
+                                        disabled={loading} 
+                                        className="w-full bg-brand text-black py-5 rounded-full font-black uppercase tracking-[0.2em] text-xs shadow-xl shadow-brand/20 hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 disabled:opacity-50 relative overflow-hidden group"
+                                    >
+                                        <div className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300"></div>
+                                        <span className="relative z-10 flex items-center justify-center gap-2">
+                                            {loading ? 'Processing Order...' : 'Place Order'}
+                                        </span>
                                     </button>
                                 </div>
                             </form>
@@ -472,7 +490,15 @@ const CheckoutPage = () => {
                                         </div>
                                         <div className="flex-1">
                                             <h4 className="font-bold text-sm text-primary">{item.name}</h4>
-                                            <p className="text-xs text-secondary capitalize">{item.materialType}</p>
+                                            <div className="flex items-center gap-2 mt-0.5">
+                                                <p className="text-[10px] text-secondary capitalize">{item.materialType}</p>
+                                                {item.color && (
+                                                    <div className="flex items-center gap-1.5 ml-2 border-l border-white/10 pl-2">
+                                                        <div className="w-2.5 h-2.5 rounded-full border border-white/20" style={{ backgroundColor: item.color }}></div>
+                                                        <span className="text-[9px] font-mono text-white/40 uppercase tracking-tighter">{item.color}</span>
+                                                    </div>
+                                                )}
+                                            </div>
                                             <div className="flex items-center justify-between mt-1">
                                                 <span className="text-xs bg-secondary px-2 py-0.5 rounded text-secondary capitalize border border-theme">{item.type}</span>
                                                 <span className="text-sm font-medium text-primary">Qty: {item.quantity}</span>
