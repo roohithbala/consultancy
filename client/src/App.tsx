@@ -1,7 +1,6 @@
 import { useEffect } from 'react';
-import { Provider } from 'react-redux';
 import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
-import { store } from './store';
+import { GoogleOAuthProvider } from '@react-oauth/google';
 import { ThemeProvider } from './context/ThemeContext';
 
 // Components
@@ -43,8 +42,10 @@ const ScrollToTop = () => {
 };
 
 function App() {
+  const googleClientId = "317892299815-2cl6141mpcdnj82s1ebhls7pdpdjk7kh.apps.googleusercontent.com";
+
   return (
-    <Provider store={store}>
+    <GoogleOAuthProvider clientId={googleClientId}>
       <ThemeProvider>
         <Router>
           <ScrollToTop />
@@ -86,7 +87,7 @@ function App() {
           </Routes>
         </Router>
       </ThemeProvider>
-    </Provider>
+    </GoogleOAuthProvider>
   );
 }
 

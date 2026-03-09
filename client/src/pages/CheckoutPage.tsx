@@ -327,7 +327,7 @@ const CheckoutPage = () => {
                             <form onSubmit={handleSubmit} className="space-y-6">
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                     <div>
-                                        <label className="block text-sm font-medium text-secondary mb-2">Full Name</label>
+                                        <label className="block text-sm font-medium text-secondary mb-2">Full Name <span className="text-red-500">*</span></label>
                                         <input type="text" name="name" value={formData.name} onChange={handleInputChange} className="w-full px-4 py-3 bg-secondary border border-theme rounded-lg text-primary focus:border-gold focus:outline-none" required />
                                     </div>
                                     <div>
@@ -338,17 +338,17 @@ const CheckoutPage = () => {
 
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                     <div>
-                                        <label className="block text-sm font-medium text-secondary mb-2">Email</label>
+                                        <label className="block text-sm font-medium text-secondary mb-2">Email <span className="text-red-500">*</span></label>
                                         <input type="email" name="email" value={formData.email} onChange={handleInputChange} className="w-full px-4 py-3 bg-secondary border border-theme rounded-lg text-primary focus:border-gold focus:outline-none" required />
                                     </div>
                                     <div>
-                                        <label className="block text-sm font-medium text-secondary mb-2">Phone</label>
+                                        <label className="block text-sm font-medium text-secondary mb-2">Phone <span className="text-red-500">*</span></label>
                                         <input type="tel" name="phone" value={formData.phone} onChange={handleInputChange} className="w-full px-4 py-3 bg-secondary border border-theme rounded-lg text-primary focus:border-gold focus:outline-none" required />
                                     </div>
                                 </div>
 
                                 <div>
-                                    <label className="block text-sm font-medium text-secondary mb-2">Address</label>
+                                    <label className="block text-sm font-medium text-secondary mb-2">Address <span className="text-red-500">*</span></label>
                                     <textarea name="address" value={formData.address} onChange={handleInputChange} rows={3} className="w-full px-4 py-3 bg-secondary border border-theme rounded-lg text-primary focus:border-gold focus:outline-none" required></textarea>
                                 </div>
 
@@ -361,11 +361,11 @@ const CheckoutPage = () => {
                                         </select>
                                     </div>
                                     <div className="md:col-span-1">
-                                        <label className="block text-sm font-medium text-secondary mb-2">City</label>
+                                        <label className="block text-sm font-medium text-secondary mb-2">City <span className="text-red-500">*</span></label>
                                         <input type="text" name="city" value={formData.city} onChange={handleInputChange} className="w-full px-4 py-3 bg-secondary border border-theme rounded-lg text-primary focus:border-gold focus:outline-none" required />
                                     </div>
                                     <div>
-                                        <label className="block text-sm font-medium text-secondary mb-2">ZIP Code</label>
+                                        <label className="block text-sm font-medium text-secondary mb-2">ZIP Code <span className="text-red-500">*</span></label>
                                         <input type="text" name="zip" value={formData.zip} onChange={handleInputChange} className="w-full px-4 py-3 bg-secondary border border-theme rounded-lg text-primary focus:border-gold focus:outline-none" required />
                                     </div>
                                 </div>

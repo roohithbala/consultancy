@@ -13,7 +13,7 @@ export const getUserProfile = async (req, res) => {
             email: user.email,
             role: user.role,
             companyName: user.companyName,
-            gstNumber: user.gstNumber,
+            gstNo: user.gstNo,
             phone: user.phone,
             addresses: user.addresses,
         });
@@ -32,8 +32,12 @@ export const updateUserProfile = async (req, res) => {
         user.name = req.body.name || user.name;
         user.email = req.body.email || user.email;
         user.companyName = req.body.companyName || user.companyName;
-        user.gstNumber = req.body.gstNumber || user.gstNumber;
+        user.gstNo = req.body.gstNo || user.gstNo;
         user.phone = req.body.phone || user.phone;
+
+        if (req.body.is2SVEnabled !== undefined) {
+            user.is2SVEnabled = req.body.is2SVEnabled;
+        }
 
         if (req.body.password) {
             user.password = req.body.password;
@@ -41,16 +45,20 @@ export const updateUserProfile = async (req, res) => {
 
         const updatedUser = await user.save();
 
+        // Pass the token back - either from the current request or a fresh one
+        const token = req.headers.authorization.split(' ')[1];
+
         res.json({
             _id: updatedUser._id,
             name: updatedUser.name,
             email: updatedUser.email,
             role: updatedUser.role,
             companyName: updatedUser.companyName,
-            gstNumber: updatedUser.gstNumber,
+            gstNo: updatedUser.gstNo,
             phone: updatedUser.phone,
             addresses: updatedUser.addresses,
-            token: req.user.token, // Assuming we want to keep the same token or token logic handles it elsewhere
+            is2SVEnabled: updatedUser.is2SVEnabled,
+            token: token,
         });
     } else {
         res.status(404).json({ message: 'User not found' });

@@ -13,7 +13,11 @@ const userSchema = new mongoose.Schema({
     },
     password: {
         type: String,
-        required: true,
+    },
+    googleId: {
+        type: String,
+        unique: true,
+        sparse: true, // Only exists for Google users
     },
     role: {
         type: String,
@@ -25,6 +29,19 @@ const userSchema = new mongoose.Schema({
     },
     phone: {
         type: String,
+    },
+    gstNo: {
+        type: String, // Optional
+    },
+    is2SVEnabled: {
+        type: Boolean,
+        default: false,
+    },
+    otp: {
+        type: String,
+    },
+    otpExpires: {
+        type: Date,
     },
     addresses: [{
         addressType: { type: String, default: 'Home' }, // Home, Work, etc.
@@ -39,9 +56,9 @@ const userSchema = new mongoose.Schema({
 });
 
 // Password Hash Middleware
-userSchema.pre('save', async function (next) {
-    if (!this.isModified('password')) {
-        next();
+userSchema.pre('save', async function () {
+    if (!this.password || !this.isModified('password')) {
+        return;
     }
     const salt = await bcrypt.genSalt(10);
     this.password = await bcrypt.hash(this.password, salt);

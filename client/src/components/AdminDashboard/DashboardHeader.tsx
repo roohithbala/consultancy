@@ -7,17 +7,17 @@ interface DashboardHeaderProps {
 
 const DashboardHeader = ({ onFilter, onExport }: DashboardHeaderProps) => {
     return (
-        <header className="mb-10 flex flex-col md:flex-row md:items-center justify-between gap-6 border-b border-white/5 pb-8">
+        <header className="mb-10 flex flex-col md:flex-row md:items-center justify-between gap-6 border-b border-theme pb-8">
             <div>
-                <h1 className="text-4xl font-serif font-black text-white tracking-widest uppercase">
+                <h1 className="text-4xl font-serif font-black text-primary-text tracking-widest uppercase">
                     Admin <span className="text-brand italic font-normal">Dashboard</span>
                 </h1>
-                <p className="text-secondary/40 mt-3 text-[10px] font-black tracking-[0.4em] uppercase">Intelligence & Strategic Control</p>
+                <p className="text-secondary-text/40 mt-3 text-[10px] font-black tracking-[0.4em] uppercase">Intelligence & Strategic Control</p>
             </div>
             <div className="flex gap-4">
                 <button 
                     onClick={onFilter}
-                    className="px-6 py-3 bg-white/5 border border-white/10 rounded-2xl text-[10px] font-black uppercase tracking-widest text-brand hover:bg-brand/10 transition-all flex items-center gap-2"
+                    className="px-6 py-3 bg-bg-alt border border-theme rounded-2xl text-[10px] font-black uppercase tracking-widest text-brand hover:bg-brand/10 transition-all flex items-center gap-2"
                 >
                     <ListFilter size={14} /> Refine View
                 </button>

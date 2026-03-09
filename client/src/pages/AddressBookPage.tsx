@@ -122,7 +122,7 @@ const AddressBookPage = ({ isEmbedded = false }: { isEmbedded?: boolean }) => {
                                 </div>
                             </div>
                             <div>
-                                <label className="block text-[10px] font-black uppercase tracking-[0.3em] text-primary-text/80 mb-3">Postal Code</label>
+                                <label className="block text-[10px] font-black uppercase tracking-[0.3em] text-primary-text/80 mb-3">Postal Code <span className="text-red-500">*</span></label>
                                 <input
                                     className="w-full bg-bg-main border border-theme rounded-2xl px-6 py-4 text-primary-text focus:border-brand outline-none shadow-sm font-bold text-sm"
                                     value={newAddress.postalCode}
@@ -132,7 +132,7 @@ const AddressBookPage = ({ isEmbedded = false }: { isEmbedded?: boolean }) => {
                                 />
                             </div>
                             <div className="md:col-span-2">
-                                <label className="block text-[10px] font-black uppercase tracking-[0.3em] text-primary-text/80 mb-3">Street Address</label>
+                                <label className="block text-[10px] font-black uppercase tracking-[0.3em] text-primary-text/80 mb-3">Street Address <span className="text-red-500">*</span></label>
                                 <input
                                     className="w-full bg-bg-main border border-theme rounded-2xl px-6 py-4 text-primary-text focus:border-brand outline-none placeholder:text-secondary-text/20 shadow-sm font-bold text-sm"
                                     value={newAddress.street}
@@ -142,7 +142,7 @@ const AddressBookPage = ({ isEmbedded = false }: { isEmbedded?: boolean }) => {
                                 />
                             </div>
                             <div>
-                                <label className="block text-[10px] font-black uppercase tracking-[0.3em] text-primary-text/80 mb-3">City</label>
+                                <label className="block text-[10px] font-black uppercase tracking-[0.3em] text-primary-text/80 mb-3">City <span className="text-red-500">*</span></label>
                                 <input
                                     className="w-full bg-bg-main border border-theme rounded-2xl px-6 py-4 text-primary-text focus:border-brand outline-none shadow-sm font-bold text-sm"
                                     value={newAddress.city}
@@ -152,7 +152,7 @@ const AddressBookPage = ({ isEmbedded = false }: { isEmbedded?: boolean }) => {
                                 />
                             </div>
                             <div>
-                                <label className="block text-[10px] font-black uppercase tracking-[0.3em] text-primary-text/80 mb-3">Country</label>
+                                <label className="block text-[10px] font-black uppercase tracking-[0.3em] text-primary-text/80 mb-3">Country <span className="text-red-500">*</span></label>
                                 <input
                                     className="w-full bg-bg-main border border-theme rounded-2xl px-6 py-4 text-primary-text focus:border-brand outline-none shadow-sm font-bold text-sm"
                                     value={newAddress.country}

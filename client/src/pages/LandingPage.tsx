@@ -32,18 +32,17 @@ const LandingPage = () => {
     return (
         <div className="bg-bg-main text-primary-text font-sans selection:bg-brand/30 selection:text-brand scroll-smooth transition-colors duration-300">
             {/* Hero Section */}
-            <section className="relative h-screen flex items-center justify-center overflow-hidden bg-bg-main text-primary-text">
-                <div className="absolute inset-0 z-0 bg-bg-main">
-                    <div className="absolute inset-0 dark:bg-black/60 z-10 transition-colors duration-500"></div>
+            <section className="relative h-screen flex items-center justify-center overflow-hidden bg-black text-white">
+                <div className="absolute inset-0 z-0">
+                    <img 
+                        src="/premium_shoe_fabric_background_hero_1773033299227.png" 
+                        alt="Premium Shoe Materials Background" 
+                        className="w-full h-full object-cover opacity-60"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/40 to-bg-main z-10"></div>
                     
-                    {/* Simplified Premium Background for Maximum Contrast */}
-                    <div className="absolute inset-0 overflow-hidden">
-                        <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-brand/5 rounded-full blur-[120px]"></div>
-                        <div className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] bg-brand/5 rounded-full blur-[120px]"></div>
-                        
-                        {/* Technical Grid with higher opacity for depth */}
-                        <div className="absolute inset-0 bg-[linear-gradient(to_right,var(--border-color)_1px,transparent_1px),linear-gradient(to_bottom,var(--border-color)_1px,transparent_1px)] bg-[size:60px_60px] opacity-[0.15] [mask-image:radial-gradient(ellipse_80%_80%_at_50%_40%,#000_20%,transparent_100%)]"></div>
-                    </div>
+                    {/* Technical Grid Overlay */}
+                    <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(255,255,255,0.05)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.05)_1px,transparent_1px)] bg-[size:60px_60px] z-20 [mask-image:radial-gradient(ellipse_80%_80%_at_50%_40%,#000_20%,transparent_100%)]"></div>
                 </div>
 
                 <div className="relative z-20 text-center px-4 max-w-6xl mx-auto">

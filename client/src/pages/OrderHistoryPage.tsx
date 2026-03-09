@@ -123,7 +123,7 @@ const OrderHistoryPage = () => {
                                         </div>
 
                                         <Link
-                                            to={`/order/${order._id}`}
+                                            to={`/order/${order._id}?showInvoice=true`}
                                             className="mt-6 flex items-center gap-2 text-xs font-bold uppercase tracking-widest border border-theme px-6 py-3 text-primary hover:bg-gold hover:text-black transition-all rounded"
                                         >
                                             <Eye size={16} /> View Invoice

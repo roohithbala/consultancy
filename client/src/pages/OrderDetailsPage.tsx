@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useSearchParams } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { useReactToPrint } from 'react-to-print';
 import type { RootState } from '../store';
@@ -19,6 +19,8 @@ import PrintableInvoice from '../components/OrderDetails/PrintableInvoice';
 
 const OrderDetailsPage = () => {
     const { id } = useParams();
+    const [searchParams] = useSearchParams();
+    const showInvoice = searchParams.get('showInvoice') === 'true';
     const { user } = useSelector((state: RootState) => state.auth);
     const [order, setOrder] = useState<any>(null);
     const [loading, setLoading] = useState(true);
@@ -41,6 +43,17 @@ const OrderDetailsPage = () => {
         };
         fetchOrder();
     }, [id, user]);
+
+    // Auto-print if showInvoice is true
+    useEffect(() => {
+        if (!loading && order && showInvoice) {
+            // Small delay to ensure PrintableInvoice is rendered
+            const timer = setTimeout(() => {
+                reactToPrintFn();
+            }, 500);
+            return () => clearTimeout(timer);
+        }
+    }, [loading, order, showInvoice, reactToPrintFn]);
 
     const handleUpdateInvoice = async () => {
         if (user?.role !== 'admin') return;

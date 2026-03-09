@@ -75,18 +75,24 @@ const ContactPage = () => {
                             </div>
                         </div>
 
-                        {/* Map */}
-                        <div className="w-full h-64 rounded-xl overflow-hidden border border-white/10 grayscale hover:grayscale-0 transition-all duration-700 relative group">
-                            <iframe
-                                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d15643.5186789!2d77.58913!3d11.314269!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMTHCsDE4JzUxLjQiTiA3N8KwMzUnMjAuOSJF!5e0!3m2!1sen!2sin!4v1689765432109!5m2!1sen!2sin"
+                        {/* Map - Premium Static Illustration */}
+                        <div className="w-full h-80 rounded-2xl overflow-hidden border border-theme shadow-lg relative group transition-all duration-700">
+                            <iframe 
+                                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3912.277247246965!2d77.58624377481323!3d11.314434688868955!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3ba96d003bcaca1d%3A0x3177f70469bf8105!2sZain%20fabrics!5e0!3m2!1sen!2sin!4v1773037303137!5m2!1sen!2sin"
                                 width="100%"
                                 height="100%"
                                 style={{ border: 0 }}
                                 allowFullScreen
                                 loading="lazy"
                                 referrerPolicy="no-referrer-when-downgrade"
+                                className="w-full h-full"
                             ></iframe>
-                            <div className="absolute inset-0 bg-black/20 group-hover:bg-transparent pointer-events-none transition-colors"></div>
+                            <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent pointer-events-none"></div>
+                            <div className="absolute top-4 left-4 right-4 text-center pointer-events-none">
+                                <span className="text-[10px] font-black uppercase tracking-[0.4em] text-white bg-brand/80 backdrop-blur-md px-4 py-1.5 rounded-full shadow-lg">
+                                    Strategic Manufacturing HQ
+                                </span>
+                            </div>
                         </div>
 
                     </div>

@@ -23,7 +23,7 @@ const ProfilePage = () => {
         name: user?.name || '',
         email: user?.email || '',
         companyName: user?.companyName || '',
-        gstNumber: user?.gstNumber || '',
+        gstNo: user?.gstNo || '',
         phone: user?.phone || '',
     });
 
@@ -32,11 +32,15 @@ const ProfilePage = () => {
         confirmPassword: ''
     });
 
-    const [twoFactorEnabled, setTwoFactorEnabled] = useState(false); // Simulated
+    const [twoFactorEnabled, setTwoFactorEnabled] = useState(user?.is2SVEnabled || false);
 
     useEffect(() => {
         if (!user) navigate('/login');
     }, [user, navigate]);
+
+    useEffect(() => {
+        setTwoFactorEnabled(user?.is2SVEnabled || false);
+    }, [user?.is2SVEnabled]);
 
     const handleDetailsChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setDetails({ ...details, [e.target.name]: e.target.value });
@@ -44,6 +48,33 @@ const ProfilePage = () => {
 
     const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setPasswordData({ ...passwordData, [e.target.name]: e.target.value });
+    };
+
+    const toggle2SV = async () => {
+        setLoading(true);
+        setErrorMessage('');
+        setSuccessMessage('');
+        try {
+            const res = await fetch('http://localhost:5000/api/users/profile', {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${user?.token}`
+                },
+                body: JSON.stringify({ is2SVEnabled: !twoFactorEnabled })
+            });
+
+            const data = await res.json();
+            if (!res.ok) throw new Error(data.message || 'Failed to toggle 2SV');
+
+            setTwoFactorEnabled(data.is2SVEnabled);
+            dispatch(setCredentials({ ...data, token: user?.token }));
+            setSuccessMessage(`2-Step Verification ${data.is2SVEnabled ? 'enabled' : 'disabled'} successfully.`);
+        } catch (err: any) {
+            setErrorMessage(err.message);
+        } finally {
+            setLoading(false);
+        }
     };
 
     const updateProfile = async (e: React.FormEvent) => {
@@ -176,8 +207,8 @@ const ProfilePage = () => {
                                         <label className="block text-[10px] font-black uppercase tracking-[0.3em] text-primary-text/80 mb-3">GST Details (Optional)</label>
                                         <input
                                             type="text"
-                                            name="gstNumber"
-                                            value={details.gstNumber}
+                                            name="gstNo"
+                                            value={details.gstNo}
                                             onChange={handleDetailsChange}
                                             placeholder="GSTIN"
                                             className="w-full bg-bg-main border border-theme rounded-xl p-4 text-primary-text focus:border-brand outline-none transition-all shadow-sm"
@@ -244,11 +275,12 @@ const ProfilePage = () => {
                                             {twoFactorEnabled ? 'Enabled' : 'Disabled'}
                                         </span>
                                         <button
-                                            onClick={() => setTwoFactorEnabled(!twoFactorEnabled)}
-                                            className={`px-6 py-3 text-[10px] font-black uppercase tracking-widest transition-all rounded-full shadow-sm ${twoFactorEnabled ? 'bg-red-500/10 text-red-500 hover:bg-red-500/20' : 'bg-brand/10 text-brand hover:bg-brand/20'
+                                            onClick={toggle2SV}
+                                            disabled={loading}
+                                            className={`px-6 py-3 text-[10px] font-black uppercase tracking-widest transition-all rounded-full shadow-sm disabled:opacity-50 ${twoFactorEnabled ? 'bg-red-500/10 text-red-500 hover:bg-red-500/20' : 'bg-brand/10 text-brand hover:bg-brand/20'
                                                 }`}
                                         >
-                                            {twoFactorEnabled ? 'Disable' : 'Enable'}
+                                            {loading ? 'Changing...' : (twoFactorEnabled ? 'Disable' : 'Enable')}
                                         </button>
                                     </div>
                                 </div>

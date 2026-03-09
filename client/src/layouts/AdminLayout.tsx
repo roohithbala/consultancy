@@ -24,14 +24,14 @@ const AdminLayout = () => {
     ];
 
     return (
-        <div className="flex h-screen bg-black text-gray-200 font-sans selection:bg-gold selection:text-black transition-colors duration-300 overflow-hidden relative">
+        <div className="flex h-screen bg-bg-main text-primary-text font-sans selection:bg-brand selection:text-black transition-colors duration-300 overflow-hidden relative">
 
             {/* Mobile Header */}
-            <div className="md:hidden fixed top-0 w-full bg-card/90 backdrop-blur-md border-b border-theme z-50 p-4 flex justify-between items-center shadow-lg">
-                <span className="text-xl font-bold font-serif tracking-widest text-primary">ZAIN <span className="text-gold">ADMIN</span></span>
+            <div className="md:hidden fixed top-0 w-full bg-bg-alt/90 backdrop-blur-md border-b border-theme z-50 p-4 flex justify-between items-center shadow-lg">
+                <span className="text-xl font-bold font-serif tracking-widest text-primary-text">ZAIN <span className="text-brand">ADMIN</span></span>
                 <div className="flex items-center gap-4">
                     <ThemeToggle />
-                    <button onClick={() => setIsSidebarOpen(!isSidebarOpen)} className="text-primary hover:text-gold transition-colors">
+                    <button onClick={() => setIsSidebarOpen(!isSidebarOpen)} className="text-primary-text hover:text-brand transition-colors">
                         {isSidebarOpen ? <X /> : <Menu />}
                     </button>
                 </div>
@@ -42,7 +42,7 @@ const AdminLayout = () => {
                 className={`
                     fixed md:static inset-y-0 left-0 z-40 
                     ${isExpanded ? 'md:w-72' : 'md:w-20'} 
-                    w-72 bg-card/80 backdrop-blur-xl border-r border-theme transform transition-all duration-500 ease-in-out 
+                    w-72 bg-bg-alt/80 backdrop-blur-xl border-r border-theme transform transition-all duration-500 ease-in-out 
                     ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'}
                     shadow-2xl flex flex-col z-10 m-0 md:m-4 md:rounded-2xl border-y md:border-l
                 `}
@@ -51,19 +51,19 @@ const AdminLayout = () => {
                 <div className="p-6 flex items-center justify-between border-b border-theme/50 min-h-[88px]">
                     {isExpanded ? (
                         <div className="animate-fade-in">
-                            <h2 className="text-2xl font-bold font-serif tracking-widest text-primary">ZAIN</h2>
-                            <p className="text-[10px] text-gold tracking-[0.3em] font-sans uppercase">Admin Console</p>
+                            <h2 className="text-2xl font-bold font-serif tracking-widest text-primary-text">ZAIN</h2>
+                            <p className="text-[10px] text-brand tracking-[0.3em] font-sans uppercase">Admin Console</p>
                         </div>
                     ) : (
                         <div className="w-full flex justify-center">
-                            <span className="text-2xl font-bold font-serif text-gold">Z</span>
+                            <span className="text-2xl font-bold font-serif text-brand">Z</span>
                         </div>
                     )}
 
                     {/* Desktop Toggle Button */}
                     <button
                         onClick={() => setIsExpanded(!isExpanded)}
-                        className="hidden md:flex p-1.5 rounded-full hover:bg-gold/10 text-secondary hover:text-gold transition-colors"
+                        className="hidden md:flex p-1.5 rounded-full hover:bg-brand/10 text-secondary-text hover:text-brand transition-colors"
                     >
                         <ChevronRight size={16} className={`transform transition-transform duration-500 ${isExpanded ? 'rotate-180' : 'rotate-0'}`} />
                     </button>
@@ -82,18 +82,18 @@ const AdminLayout = () => {
                                 className={`
                                     flex items-center gap-4 px-4 py-3 rounded-xl transition-all duration-300 group relative overflow-hidden
                                     ${isActive
-                                        ? 'bg-gradient-to-r from-gold to-yellow-600 text-black shadow-lg shadow-gold/20 font-bold'
-                                        : 'hover:bg-secondary/10 text-secondary hover:text-primary'}
+                                        ? 'bg-brand text-black shadow-lg shadow-brand/20 font-black uppercase tracking-widest text-[10px]'
+                                        : 'hover:bg-brand/5 text-secondary-text hover:text-primary-text'}
                                 `}
                             >
-                                <item.icon size={20} className={`${isActive ? 'text-black' : 'text-gold group-hover:scale-110 transition-transform'}`} />
+                                <item.icon size={20} className={`${isActive ? 'text-black' : 'text-brand/60 group-hover:text-brand group-hover:scale-110 transition-all font-bold'}`} strokeWidth={isActive ? 3 : 2} />
 
                                 <span className={`whitespace-nowrap transition-all duration-300 ${isExpanded ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-4 absolute left-14'}`}>
                                     {item.label}
                                 </span>
 
                                 {!isExpanded && (
-                                    <div className="absolute left-full ml-4 px-2 py-1 bg-black text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap z-50 border border-gold/20 shadow-xl">
+                                    <div className="absolute left-full ml-4 px-3 py-1.5 bg-bg-alt text-primary-text text-[10px] font-black uppercase tracking-widest rounded-lg opacity-0 group-hover:opacity-100 transition-all pointer-events-none whitespace-nowrap z-50 border border-brand/20 shadow-xl">
                                         {item.label}
                                     </div>
                                 )}

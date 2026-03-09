@@ -1,4 +1,5 @@
 import { Award, Globe, TrendingUp } from 'lucide-react';
+import { COMPANY_DETAILS } from '../config/companyDetails';
 
 const AboutPage = () => {
     return (
@@ -58,7 +59,7 @@ const AboutPage = () => {
             </section>
 
             {/* Why Choose Us */}
-            <section className="py-24 bg-bg-alt relative overflow-hidden transition-colors duration-500">
+            <section className="py-24 bg-bg-alt relative overflow-hidden transition-colors duration-500 pb-32">
                 <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-brand/5 to-transparent"></div>
                 <div className="max-w-7xl mx-auto px-6">
                     <div className="text-center mb-20">
@@ -80,7 +81,46 @@ const AboutPage = () => {
                         ))}
                     </div>
                 </div>
-                <div className="absolute bottom-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-brand/5 to-transparent"></div>
+            </section>
+
+            {/* Our Location - Styled Static Map */}
+            <section className="py-32 bg-bg-main relative border-t border-theme/20">
+                <div className="max-w-7xl mx-auto px-6 text-center">
+                    <div className="mb-16">
+                        <h2 className="text-5xl md:text-6xl font-serif text-primary-text mb-4 font-bold tracking-tight italic">
+                            Our <span className="text-brand opacity-80 not-italic">Location</span>
+                        </h2>
+                        <p className="text-secondary-text font-light tracking-widest uppercase text-[10px]">Find us easily in the heart of Erode.</p>
+                    </div>
+                    
+                    <div className="relative max-w-5xl mx-auto h-[500px] rounded-[3rem] overflow-hidden border border-theme shadow-[0_30px_60px_-15px_rgba(0,0,0,0.5)] group">
+                        <iframe 
+                            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3912.277247246965!2d77.58624377481323!3d11.314434688868955!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3ba96d003bcaca1d%3A0x3177f70469bf8105!2sZain%20fabrics!5e0!3m2!1sen!2sin!4v1773037303137!5m2!1sen!2sin"
+                            width="100%"
+                            height="100%"
+                            style={{ border: 0 }}
+                            allowFullScreen
+                            loading="lazy"
+                            referrerPolicy="no-referrer-when-downgrade"
+                            className="w-full h-full"
+                        ></iframe>
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent pointer-events-none"></div>
+                        
+                        {/* Interactive Floating Card */}
+                        <div className="absolute bottom-12 left-12 right-12 md:right-auto text-left bg-bg-main/40 backdrop-blur-xl p-8 rounded-[2rem] border border-white/10 max-w-md shadow-2xl transform transition-transform duration-500 group-hover:-translate-y-2">
+                            <h4 className="text-brand font-black text-[10px] uppercase tracking-[0.4em] mb-4">ZAIN FABRICS</h4>
+                            <p className="text-primary-text text-sm font-bold leading-relaxed mb-4">
+                                {COMPANY_DETAILS.address[0]}<br />
+                                {COMPANY_DETAILS.address[1]}<br />
+                                {COMPANY_DETAILS.address[2]}
+                            </p>
+                            <div className="pt-4 border-t border-white/5 flex items-center gap-4">
+                                <span className="w-2 h-2 bg-brand rounded-full animate-pulse"></span>
+                                <span className="text-[9px] uppercase tracking-widest text-secondary-text/60 font-black italic">Manufacturing Headquarters</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </section>
 
         </div>
