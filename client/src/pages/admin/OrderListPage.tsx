@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import type { RootState } from '../../store';
 import { Truck, CheckCircle, Clock, XCircle, Search, Eye } from 'lucide-react';
 
@@ -22,6 +22,7 @@ const OrderListPage = () => {
     const { user } = useSelector((state: RootState) => state.auth);
     const [searchTerm, setSearchTerm] = useState('');
     const [statusFilter, setStatusFilter] = useState('All');
+    const navigate = useNavigate();
 
     useEffect(() => {
         const fetchOrders = async () => {
@@ -138,7 +139,11 @@ const OrderListPage = () => {
                             </thead>
                             <tbody className="divide-y divide-theme text-sm">
                                 {filteredOrders.map((order) => (
-                                    <tr key={order._id} className="hover:bg-bg-alt transition-colors group">
+                                    <tr
+                                        key={order._id}
+                                        onClick={() => navigate(`/order/${order._id}`)}
+                                        className="hover:bg-bg-alt transition-colors group cursor-pointer"
+                                    >
                                         <td className="px-6 py-4 font-mono text-secondary-text">
                                             #{order._id.substring(0, 8)}
                                         </td>
@@ -166,7 +171,7 @@ const OrderListPage = () => {
                                                 {order.status}
                                             </span>
                                         </td>
-                                        <td className="px-6 py-4 text-right">
+                                        <td className="px-6 py-4 text-right" onClick={e => e.stopPropagation()}>
                                             <div className="flex items-center justify-end gap-1.5 opacity-50 group-hover:opacity-100 transition-opacity">
                                                 <Link to={`/order/${order._id}`} className="text-secondary-text hover:text-primary-text p-1.5 hover:bg-bg-alt rounded transition-colors" title="View">
                                                     <Eye size={15} />

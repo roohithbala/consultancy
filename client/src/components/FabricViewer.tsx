@@ -56,7 +56,7 @@ const FabricViewer = ({ textureUrl, color = '#ffffff', normalMapUrl, roughnessMa
     };
 
     return (
-        <div className="w-full h-[500px] bg-slate-900 rounded-lg overflow-hidden relative">
+        <div className="w-full h-full bg-[#0a0a0a] rounded-lg overflow-hidden relative">
             <div className="absolute top-4 right-4 z-10 bg-black/60 backdrop-blur-sm px-3 py-1.5 rounded-full text-xs text-white/60 flex gap-3 items-center border border-white/10">
                 <span>Interactive 3D Preview</span>
                 <button onClick={handleReset} className="text-brand hover:text-white font-bold transition-colors">Reset View</button>

@@ -108,12 +108,12 @@ const FootwearConfigurator = ({ color: externalColor, modelUrl, fallbackImage }:
     const show3D = materialType !== 'Original';
 
     return (
-        <div className="flex flex-col lg:flex-row gap-6 bg-slate-950 border border-white/10 p-4 rounded-xl shadow-2xl">
+        <div className="flex flex-col lg:flex-row h-full">
             {/* Viewer Area */}
-            <div className="flex-1 h-[500px] bg-slate-900 rounded-lg relative overflow-hidden flex items-center justify-center">
+            <div className="flex-1 h-full bg-[#0a0a0a] relative overflow-hidden lg:rounded-l-[2.5rem] flex items-center justify-center">
                 {!show3D ? (
                     /* Original → static image */
-                    <div className="relative w-full h-full flex items-center justify-center bg-slate-900 rounded-lg overflow-hidden">
+                    <div className="relative w-full h-full flex items-center justify-center bg-secondary rounded-lg overflow-hidden">
                         <img
                             src={fallbackImage || '/3dmodel/t13.png'}
                             alt="Material View"
@@ -155,16 +155,16 @@ const FootwearConfigurator = ({ color: externalColor, modelUrl, fallbackImage }:
             </div>
 
             {/* Control Panel */}
-            <div className="lg:w-64 flex flex-col gap-6 p-2">
+            <div className="lg:w-72 flex flex-col gap-6 p-6 bg-secondary border-l border-theme lg:rounded-r-[2.5rem] z-10 relative">
                 {/* Original / Finished surface */}
                 <div>
-                    <p className="text-[9px] text-white/40 uppercase tracking-[0.3em] font-black mb-3">Surface View</p>
+                    <p className="text-[9px] text-secondary-text/60 uppercase tracking-[0.3em] font-black mb-3">Surface View</p>
                     <button
                         onClick={() => setMaterialType('Original')}
                         className={`w-full px-5 py-3.5 rounded-xl uppercase text-[10px] font-black tracking-[0.15em] transition-all border ${
                             materialType === 'Original'
                             ? 'bg-brand text-black border-brand shadow-[0_0_20px_rgba(16,185,129,0.3)]'
-                            : 'bg-white/5 text-white/70 border-white/10 hover:border-brand/30 hover:text-white'
+                            : 'bg-secondary text-primary-text border-theme hover:border-brand/30 hover:text-brand'
                         }`}
                     >
                         Finished Surface
@@ -173,7 +173,7 @@ const FootwearConfigurator = ({ color: externalColor, modelUrl, fallbackImage }:
 
                 {/* Cross-section texture views */}
                 <div>
-                    <p className="text-[9px] text-white/40 uppercase tracking-[0.3em] font-black mb-3">Cross-Section Views</p>
+                    <p className="text-[9px] text-secondary-text/60 uppercase tracking-[0.3em] font-black mb-3">Cross-Section Views</p>
                     <div className="grid grid-cols-2 gap-2.5">
                         {Object.keys(textures).filter(k => k !== 'Original').map((type) => (
                             <button
@@ -182,7 +182,7 @@ const FootwearConfigurator = ({ color: externalColor, modelUrl, fallbackImage }:
                                 className={`px-3 py-3 rounded-xl uppercase text-[9px] font-black tracking-[0.12em] transition-all border ${
                                     materialType === type
                                     ? 'bg-brand text-black border-brand shadow-[0_0_15px_rgba(16,185,129,0.2)]'
-                                    : 'bg-white/5 text-white/60 border-white/10 hover:border-brand/30 hover:text-white'
+                                    : 'bg-secondary text-primary-text border-theme hover:border-brand/30 hover:text-brand'
                                 }`}
                             >
                                 {MATERIAL_LABELS[type] || type}
@@ -191,8 +191,8 @@ const FootwearConfigurator = ({ color: externalColor, modelUrl, fallbackImage }:
                     </div>
                 </div>
 
-                <div className="mt-auto pt-6 border-t border-white/10">
-                    <p className="text-[10px] text-white/40 leading-relaxed">
+                <div className="mt-auto pt-6 border-t border-theme">
+                    <p className="text-[10px] text-secondary-text leading-relaxed">
                         {materialType === 'Original'
                             ? 'Finished product surface as used in manufacturing.'
                             : `${MATERIAL_LABELS[materialType] || materialType}: internal fiber layer in 3D. Drag to rotate, scroll to zoom.`}

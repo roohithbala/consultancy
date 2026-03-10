@@ -137,7 +137,7 @@ const ProductDetailPage = () => {
                 <div className="flex flex-col lg:flex-row gap-16">
                     {/* Left Column - Visuals */}
                     <div className="lg:w-2/3">
-                        <div className="relative h-[650px] bg-bg-main border border-border/10 rounded-[2.5rem] overflow-hidden shadow-2xl mb-10 group">
+                        <div className="relative h-[650px] bg-[#0a0a0a] border border-theme rounded-[2.5rem] overflow-hidden shadow-2xl mb-10 group">
                             {/* 3D Fabric Viewer or Image */}
                             <div className="absolute inset-0 z-0">
                                 <ThreeErrorBoundary>
@@ -156,7 +156,7 @@ const ProductDetailPage = () => {
                                                 roughnessMapUrl={product.textureMaps.roughnessMap}
                                             />
                                         ) : (
-                                            <div className="w-full h-full flex flex-col items-center justify-center bg-accent-dark p-12 text-center">
+                                            <div className="w-full h-full flex flex-col items-center justify-center bg-[#0a0a0a] p-12 text-center">
                                                 <div className="w-32 h-32 mb-8 relative">
                                                     <div className="absolute inset-0 bg-brand/20 rounded-full animate-ping"></div>
                                                     <div className="relative bg-brand/10 border border-brand/30 w-full h-full rounded-full flex items-center justify-center">
@@ -165,7 +165,7 @@ const ProductDetailPage = () => {
                                                 </div>
                                                 <h3 className="text-2xl font-serif font-bold text-white mb-4">3D Material Not Available</h3>
                                                 <p className="text-gray-400 text-sm max-w-sm mx-auto leading-relaxed">
-                                                    This specific material grade is currently being digitized. 
+                                                    This specific material grade is currently being digitized.
                                                     Please refer to the high-resolution gallery and technical specifications below.
                                                 </p>
                                             </div>
@@ -189,22 +189,22 @@ const ProductDetailPage = () => {
                                 </span>
                             </div>
  
-                            <div className="absolute bottom-0 left-0 w-full p-8 bg-gradient-to-t from-black via-black/40 to-transparent">
+                            <div className={`absolute bottom-0 left-0 p-8 flex flex-col justify-end pointer-events-none ${viewMode === '3d' && (product.materialType === 'INTERLININGS' || product.materialType === 'JERSEY' || product.materialType === 'FOAM LAMINATIONS' || product.modelUrl) ? 'w-full lg:w-[calc(100%-18rem)] bg-gradient-to-t from-black via-black/40 to-transparent' : 'w-full bg-gradient-to-t from-bg-main/90 via-bg-main/30 to-transparent'}`}>
                                 <div className="flex items-center justify-between">
-                                    <p className="text-[11px] text-white/80 flex items-center gap-3 uppercase tracking-[0.1em] font-black">
+                                    <p className="text-[11px] text-primary-text/80 flex items-center gap-3 uppercase tracking-[0.1em] font-black">
                                         <Layers size={16} className="text-brand" strokeWidth={3} />
                                         {viewMode === '3d' ? 'Interactive Render • Zenith Certified' : 'Fabric Surface Detail • Macro Inspection'}
                                     </p>
                                     <div className="flex gap-2">
-                                        <div className="w-1.5 h-1.5 rounded-full bg-white/20"></div>
-                                        <div className="w-1.5 h-1.5 rounded-full bg-white/20"></div>
+                                        <div className="w-1.5 h-1.5 rounded-full bg-secondary-text/20"></div>
+                                        <div className="w-1.5 h-1.5 rounded-full bg-secondary-text/20"></div>
                                         <div className="w-1.5 h-1.5 rounded-full bg-[#10b981]"></div>
                                     </div>
                                 </div>
                             </div>
                         </div>
 
-                        <div className="flex gap-4 overflow-x-auto pb-8 border-b border-white/10 no-scrollbar">
+                        <div className="flex gap-4 overflow-x-auto pb-8 border-b border-theme no-scrollbar">
                             {product.imageUrl && (
                                 <button 
                                     onClick={() => { setViewMode('image'); setActiveThumbnail(0); }}
@@ -265,7 +265,7 @@ const ProductDetailPage = () => {
 
                     {/* Right Column - Actions */}
                     <div className="lg:w-1/3">
-                        <div className="sticky top-24 bg-bg-main border border-border/10 p-10 rounded-[2.5rem] shadow-2xl animate-fade-in transition-colors duration-500">
+                        <div className="sticky top-24 bg-card border border-theme p-10 rounded-[2.5rem] shadow-2xl animate-fade-in transition-colors duration-500">
                             <div className="mb-6 flex items-center gap-3">
                                 <span className="text-brand font-black tracking-[0.3em] uppercase text-[10px] px-3 py-1 bg-brand/10 border border-brand/20 rounded-full">{product.materialType}</span>
                                 <div className="h-px flex-1 bg-border/10"></div>
@@ -315,27 +315,27 @@ const ProductDetailPage = () => {
                             </div>
 
                             {/* Sample Verification */}
-                            <div className="mb-8 bg-card/50 p-5 border border-theme/50 rounded-lg relative overflow-hidden group hover:border-gold/30 transition-all">
+                            <div className="mb-8 bg-secondary border border-theme rounded-lg p-5 relative overflow-hidden">
                                 <div className="flex items-center gap-3 mb-4">
-                                             <div className="bg-brand/20 p-1.5 rounded-full text-brand">
+                                    <div className="bg-brand/20 p-1.5 rounded-full text-brand">
                                         <ShieldCheck size={18} />
                                     </div>
                                     <div>
-                                        <h4 className="text-sm font-bold uppercase text-primary tracking-widest leading-none">Sample Link</h4>
-                                        <p className="text-[10px] text-gray-500 mt-1">Verify quality before bulk purchase</p>
+                                        <h4 className="text-sm font-bold uppercase text-primary-text tracking-widest leading-none">Sample Link</h4>
+                                        <p className="text-[10px] text-secondary-text mt-1">Verify quality before bulk purchase</p>
                                     </div>
                                 </div>
  
                                 {verifiedSamples.length > 0 ? (
                                     <div className="relative">
                                         <select
-                                            className="w-full appearance-none bg-black/40 border border-theme text-primary text-sm p-4 pr-10 focus:border-brand outline-none rounded transition-colors cursor-pointer hover:bg-black/60 font-mono"
+                                            className="w-full appearance-none bg-secondary border border-theme text-primary-text text-sm p-4 pr-10 focus:border-brand outline-none rounded-lg transition-colors cursor-pointer font-mono"
                                             value={selectedSampleId}
                                             onChange={(e) => setSelectedSampleId(e.target.value)}
                                         >
-                                            <option value="" className="bg-gray-900 text-gray-400">-- Select Previous Verified Sample --</option>
+                                            <option value="">-- Select Previous Verified Sample --</option>
                                             {verifiedSamples.map(sample => (
-                                                <option key={sample._id} value={sample._id} className="bg-gray-900 text-white">
+                                                <option key={sample._id} value={sample._id}>
                                                     Sample #{sample._id.substring(0, 6).toUpperCase()} — {new Date(sample.date).toLocaleDateString()}
                                                 </option>
                                             ))}
@@ -348,19 +348,19 @@ const ProductDetailPage = () => {
                                     <div className="relative">
                                         <input
                                             type="text"
-                                            className="w-full bg-black/40 border border-theme text-primary text-sm p-4 focus:border-brand outline-none rounded placeholder:text-gray-600 font-mono"
+                                            className="w-full bg-secondary border border-theme text-primary-text text-sm p-4 focus:border-brand outline-none rounded-lg placeholder:text-secondary-text/50 font-mono"
                                             placeholder="Enter Sample ID Manually"
                                             value={manualSampleId}
                                             onChange={(e) => setManualSampleId(e.target.value)}
                                         />
-                                        <p className="text-[10px] text-red-400/80 mt-2 flex items-center gap-1">
+                                        <p className="text-[10px] text-red-500/80 mt-2 flex items-center gap-1">
                                             <AlertTriangle size={10} /> No delivered samples found on this account.
                                         </p>
                                     </div>
                                 )}
                             </div>
 
-                            {!isReadOnly ? (
+                            {!isReadOnly && user?.role !== 'admin' ? (
                                 <div className="space-y-4">
                                     <button
                                         onClick={() => addToCartHandler('regular')}
@@ -375,30 +375,28 @@ const ProductDetailPage = () => {
                                         Secure Verification Sample ({product.samplePrice ? `₹${product.samplePrice}` : 'Comp'})
                                     </button>
                                 </div>
-                            ) : (
-                                user?.role === 'admin' && (
-                                    <div className="space-y-4">
-                                        <button 
-                                            onClick={() => window.history.back()}
-                                            className="w-full bg-brand/10 border border-brand/30 text-brand py-5 font-black uppercase tracking-[0.2em] text-[10px] rounded-full hover:bg-brand/20 transition-all flex items-center justify-center gap-3"
-                                        >
-                                            <ArrowRight size={16} className="rotate-180" /> Back to Order Page
-                                        </button>
-                                        <div className="p-4 bg-blue-500/10 border border-blue-500/20 rounded-xl text-center">
-                                            <p className="text-[10px] font-bold text-blue-400 uppercase tracking-widest">Mirror Mode Active</p>
-                                            <p className="text-[9px] text-gray-500 mt-1">Viewing specifications as seen by the customer.</p>
-                                        </div>
+                            ) : user?.role === 'admin' ? (
+                                <div className="space-y-3">
+                                    <div className="p-4 bg-brand/5 border border-brand/20 rounded-xl text-center">
+                                        <p className="text-[10px] font-black text-brand uppercase tracking-widest mb-1">👁 Admin Preview Mode</p>
+                                        <p className="text-[9px] text-secondary-text">This is how customers see this product. Ordering is disabled for admins.</p>
                                     </div>
-                                )
-                            )}
+                                    <button
+                                        onClick={() => window.history.back()}
+                                        className="w-full bg-secondary border border-theme text-secondary-text py-3 font-black uppercase tracking-[0.2em] text-[10px] rounded-full hover:border-brand/40 hover:text-brand transition-all flex items-center justify-center gap-2"
+                                    >
+                                        <ArrowRight size={14} className="rotate-180" /> Back
+                                    </button>
+                                </div>
+                            ) : null}
 
                             {/* Trust Badges */}
-                            <div className="mt-8 pt-8 border-t border-white/10 space-y-3">
-                                <div className="flex items-center gap-3 text-xs text-secondary/60">
+                            <div className="mt-8 pt-8 border-t border-theme space-y-3">
+                                <div className="flex items-center gap-3 text-xs text-secondary-text">
                                     <Truck size={14} className="text-brand" />
                                     <span>Global Shipping (2-5 Days)</span>
                                 </div>
-                                <div className="flex items-center gap-3 text-xs text-secondary/60">
+                                <div className="flex items-center gap-3 text-xs text-secondary-text">
                                     <Check size={14} className="text-brand" />
                                     <span>Certified Quality Inspection</span>
                                 </div>
@@ -412,7 +410,7 @@ const ProductDetailPage = () => {
                     <div className="mt-20 border-t border-theme pt-12">
                         <div className="flex items-center gap-4 mb-8">
                             <FileText size={24} className="text-brand" />
-                            <h3 className="text-2xl font-serif font-bold text-primary">Certifications & Data Sheets</h3>
+                            <h3 className="text-2xl font-serif font-bold text-primary-text">Certifications &amp; Data Sheets</h3>
                         </div>
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                             {product.documents.map((doc, idx) => (
@@ -423,8 +421,8 @@ const ProductDetailPage = () => {
                                     rel="noopener noreferrer"
                                     className="flex items-center justify-between p-6 bg-card border border-theme hover:border-brand/50 transition-colors group rounded-2xl"
                                 >
-                                    <span className="text-sm font-bold text-secondary group-hover:text-primary uppercase tracking-wider">{doc.name}</span>
-                                    <Download size={20} className="text-secondary group-hover:text-brand transition-colors" />
+                                    <span className="text-sm font-bold text-primary-text group-hover:text-brand uppercase tracking-wider">{doc.name}</span>
+                                    <Download size={20} className="text-secondary-text group-hover:text-brand transition-colors" />
                                 </a>
                             ))}
                         </div>
@@ -445,9 +443,9 @@ const ProductDetailPage = () => {
                                 <AlertTriangle className="text-red-500" size={24} />
                             </div>
                             <div>
-                                <h3 className="text-2xl font-serif font-bold text-primary mb-3 tracking-wide">Unverified Order Warning</h3>
-                                <p className="text-secondary text-sm leading-relaxed font-light">
-                                    You are initiating a bulk production run without a linked <span className="text-primary font-bold border-b border-theme">Sample ID</span>.
+                                <h3 className="text-2xl font-serif font-bold text-primary-text mb-3 tracking-wide">Unverified Order Warning</h3>
+                                <p className="text-secondary-text text-sm leading-relaxed font-light">
+                                    You are initiating a bulk production run without a linked <span className="text-primary-text font-bold border-b border-theme">Sample ID</span>.
                                     Color matching and texture consistency cannot be guaranteed without a reference sample.
                                 </p>
                             </div>
@@ -458,10 +456,10 @@ const ProductDetailPage = () => {
                             onClick={() => setRiskAccepted(!riskAccepted)}
                         >
                             <label className="flex items-start gap-4 cursor-pointer pointer-events-none">
-                                <div className={`w-5 h-5 border rounded flex items-center justify-center mt-0.5 transition-all duration-300 ${riskAccepted ? 'bg-brand border-brand scale-110' : 'border-gray-500 bg-transparent'}`}>
+                                <div className={`w-5 h-5 border rounded flex items-center justify-center mt-0.5 transition-all duration-300 ${riskAccepted ? 'bg-brand border-brand scale-110' : 'border-theme bg-transparent'}`}>
                                     {riskAccepted && <Check size={12} className="text-black font-bold" />}
                                 </div>
-                                <span className={`text-sm ${riskAccepted ? 'text-primary font-medium' : 'text-secondary'} transition-colors select-none`}>
+                                <span className={`text-sm ${riskAccepted ? 'text-primary-text font-medium' : 'text-secondary-text'} transition-colors select-none`}>
                                     I acknowledge the risk. I understand that returns are not accepted for non-sampled bulk orders.
                                 </span>
                             </label>
@@ -470,7 +468,7 @@ const ProductDetailPage = () => {
                         <div className="flex gap-4">
                             <button
                                 onClick={() => setShowRiskModal(false)}
-                                className="flex-1 py-4 border border-theme text-secondary font-bold uppercase tracking-widest text-xs hover:bg-secondary/10 hover:text-primary transition-all rounded-lg"
+                                className="flex-1 py-4 border border-theme text-secondary-text font-bold uppercase tracking-widest text-xs hover:bg-secondary hover:text-primary-text transition-all rounded-lg"
                             >
                                 Cancel Order
                             </button>
