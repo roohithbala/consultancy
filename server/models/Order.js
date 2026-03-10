@@ -108,8 +108,8 @@ const orderSchema = new mongoose.Schema({
     },
     status: {
         type: String,
-        enum: ['Pending', 'Processing', 'Shipped', 'OutForDelivery', 'Delivered', 'Cancelled'],
-        default: 'Pending'
+        enum: ['Ordered', 'Processing', 'Shipped', 'Out', 'Delivered', 'Cancelled'],
+        default: 'Ordered'
     },
     invoiceUrl: { type: String },
     invoiceNumber: { type: String },
@@ -124,7 +124,11 @@ const orderSchema = new mongoose.Schema({
         default: 'None'
     },
     refundAmount: { type: Number },
-    refundDate: { type: Date }
+    refundDate: { type: Date },
+    // Credit Order Fields
+    isCredit: { type: Boolean, default: false },
+    creditTermsDays: { type: Number, default: 0 },
+    creditDueDate: { type: Date },
 }, {
     timestamps: true,
 });

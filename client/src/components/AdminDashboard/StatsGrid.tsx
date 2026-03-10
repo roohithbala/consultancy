@@ -20,15 +20,17 @@ const StatsGrid = ({ stats }: StatsGridProps) => {
     return (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-16">
             {statConfigs.map((stat, idx) => (
-                <div key={idx} className="glass rounded-[2rem] p-8 hover:border-brand/40 transition-all duration-700 group shadow-2xl hover:-translate-y-2 border border-theme">
+                <div key={idx} className="bg-secondary border border-theme rounded-[2rem] p-8 hover:border-brand/40 transition-all duration-700 group shadow-xl hover:-translate-y-2 flex flex-col justify-between">
                     <div className="flex justify-between items-start mb-6">
                         <div className={`p-4 bg-bg-alt rounded-2xl ${stat.color} group-hover:bg-brand/10 transition-all duration-500`}>
                             <stat.icon size={28} strokeWidth={1.5} />
                         </div>
                         <TrendingUp size={18} className="text-brand opacity-40 group-hover:opacity-100 transition-opacity" />
                     </div>
-                    <h3 className="text-secondary-text/40 text-[10px] font-black uppercase tracking-[0.2em] mb-2">{stat.title}</h3>
-                    <p className="text-3xl font-black text-primary-text group-hover:text-brand transition-colors duration-500 tracking-tighter italic">{stat.value}</p>
+                    <div>
+                        <h3 className="text-secondary-text text-[10px] font-bold uppercase tracking-[0.2em] mb-2">{stat.title}</h3>
+                        <p className="text-3xl font-black text-primary-text group-hover:text-brand transition-colors duration-500 tracking-tighter italic">{stat.value}</p>
+                    </div>
                 </div>
             ))}
         </div>

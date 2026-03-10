@@ -1,6 +1,6 @@
 const SystemStatus = ({ gatewayMode = "Test Mode" }: { gatewayMode?: string }) => {
     return (
-        <div className="bg-bg-alt/50 backdrop-blur-md rounded-2xl border border-theme p-8 shadow-sm">
+        <div className="bg-secondary border border-theme rounded-2xl p-8 shadow-sm">
             <h3 className="text-xl font-bold text-primary-text font-serif mb-6 tracking-wide underline decoration-brand/30 underline-offset-8">System Status</h3>
             <div className="space-y-4">
                 <div className="flex items-center gap-4 text-[10px] font-black uppercase tracking-widest text-secondary-text">

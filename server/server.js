@@ -26,6 +26,7 @@ import userRoutes from './routes/userRoutes.js';
 import paymentRoutes from './routes/paymentRoutes.js';
 import serviceRoutes from './routes/serviceRoutes.js';
 import settingsRoutes from './routes/settingsRoutes.js';
+import billingRoutes from './routes/billingRoutes.js';
 
 app.use('/api/auth', authRoutes);
 app.use('/api/users', userRoutes);
@@ -35,6 +36,7 @@ app.use('/api/orders', orderRoutes);
 app.use('/api/payment', paymentRoutes);
 app.use('/api/services', serviceRoutes);
 app.use('/api/settings', settingsRoutes);
+app.use('/api/billing', billingRoutes);
 
 app.get('/', (req, res) => {
     res.send('Zain Fabrics API is running...');

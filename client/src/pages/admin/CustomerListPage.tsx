@@ -83,31 +83,31 @@ const CustomerListPage = () => {
         c.companyName?.toLowerCase().includes(searchTerm.toLowerCase())
     );
 
-    if (loading) return <div className="min-h-screen bg-black flex items-center justify-center text-gold"><div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gold"></div></div>;
+    if (loading) return <div className="min-h-screen bg-white dark:bg-black flex items-center justify-center text-brand"><div className="animate-spin rounded-full h-12 w-12 border-b-2 border-brand"></div></div>;
 
     return (
-        <div className="min-h-screen bg-black text-gray-200 p-8 font-sans">
+        <div className="min-h-screen bg-white dark:bg-black text-gray-900 dark:text-gray-200 p-8 font-sans transition-colors duration-200">
             <div className="max-w-7xl mx-auto">
                 <div className="flex justify-between items-center mb-10">
                     <div>
-                        <h1 className="text-4xl font-serif font-black text-white tracking-tight italic">Manage <span className="text-gold">Customers</span></h1>
-                        <p className="text-gray-500 text-sm mt-2 uppercase tracking-widest font-bold">Relationship Management & Communications</p>
+                        <h1 className="text-4xl font-serif font-black text-gray-900 dark:text-white tracking-tight italic">Manage <span className="text-brand">Customers</span></h1>
+                        <p className="text-gray-500 dark:text-gray-400 text-sm mt-2 uppercase tracking-widest font-bold">Relationship Management & Communications</p>
                     </div>
                     <div className="relative w-96">
-                        <Search size={20} className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-600" />
+                        <Search size={20} className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" />
                         <input 
                             type="text" 
                             placeholder="Search by name, email or company..." 
-                            className="w-full bg-white/5 border border-white/10 rounded-full py-3 pl-12 pr-6 text-sm text-white focus:outline-none focus:border-gold/50 transition-all font-medium"
+                            className="w-full bg-white dark:bg-white/5 border border-gray-200 dark:border-white/10 rounded-full py-3 pl-12 pr-6 text-sm text-gray-900 dark:text-white focus:outline-none focus:border-brand transition-all font-medium shadow-sm"
                             value={searchTerm}
                             onChange={(e) => setSearchTerm(e.target.value)}
                         />
                     </div>
                 </div>
 
-                <div className="bg-white/5 backdrop-blur-md rounded-2xl border border-white/10 overflow-hidden shadow-2xl">
+                <div className="bg-white dark:bg-white/5 backdrop-blur-md rounded-2xl border border-gray-200 dark:border-white/10 overflow-hidden shadow-2xl">
                     <table className="w-full text-left">
-                        <thead className="bg-white/5 text-gray-400 text-[10px] uppercase font-bold tracking-[0.2em] border-b border-white/10">
+                        <thead className="bg-gray-100 dark:bg-white/5 text-gray-600 dark:text-gray-400 text-[10px] uppercase font-bold tracking-[0.2em] border-b border-gray-200 dark:border-white/10">
                             <tr>
                                 <th className="px-8 py-6">Customer Details</th>
                                 <th className="px-8 py-6">Company & GST</th>
@@ -115,42 +115,42 @@ const CustomerListPage = () => {
                                 <th className="px-8 py-6 text-right">Engagement Actions</th>
                             </tr>
                         </thead>
-                        <tbody className="divide-y divide-white/10">
+                        <tbody className="divide-y divide-gray-100 dark:divide-white/10">
                             {filteredCustomers.length > 0 ? (
                                 filteredCustomers.map(customer => (
-                                    <tr key={customer._id} className="hover:bg-white/5 transition-all group">
+                                    <tr key={customer._id} className="hover:bg-gray-50 dark:hover:bg-white/5 transition-all group">
                                         <td className="px-8 py-6">
                                             <div className="flex items-center gap-4">
-                                                <div className="w-10 h-10 bg-gold/10 rounded-full flex items-center justify-center text-gold border border-gold/20">
+                                                <div className="w-10 h-10 bg-brand/10 rounded-full flex items-center justify-center text-brand border border-brand/20">
                                                     <User size={18} />
                                                 </div>
                                                 <div>
-                                                    <p className="font-bold text-white tracking-wide">{customer.name}</p>
-                                                    <p className="text-xs text-gray-500 group-hover:text-gray-300 transition-colors">{customer.email}</p>
+                                                    <p className="font-bold text-gray-900 dark:text-white tracking-wide">{customer.name}</p>
+                                                    <p className="text-xs text-brand font-medium group-hover:text-brand/80 transition-colors">{customer.email}</p>
                                                 </div>
                                             </div>
                                         </td>
                                         <td className="px-8 py-6">
-                                            <p className="text-sm font-semibold text-gray-300">{customer.companyName || 'Individual'}</p>
-                                            <p className="text-[10px] font-mono text-gray-500 uppercase">{customer.gstNumber || 'N/A'}</p>
+                                            <p className="text-sm font-bold text-gray-900 dark:text-gray-200">{customer.companyName || 'Individual'}</p>
+                                            <p className="text-[10px] font-mono text-gray-600 dark:text-gray-500 uppercase">{customer.gstNumber || 'N/A'}</p>
                                         </td>
                                         <td className="px-8 py-6">
                                             <div className="flex items-center gap-2">
-                                                <div className={`w-2 h-2 rounded-full ${customer.role === 'admin' ? 'bg-purple-500' : 'bg-green-500'}`}></div>
-                                                <span className="text-[10px] font-bold uppercase tracking-widest text-gray-400">{customer.role}</span>
+                                                <div className={`w-2 h-2 rounded-full ${customer.role === 'admin' ? 'bg-purple-500' : 'bg-brand'}`}></div>
+                                                <span className="text-[10px] font-bold uppercase tracking-widest text-gray-600 dark:text-gray-400">{customer.role}</span>
                                             </div>
                                         </td>
                                         <td className="px-8 py-6 text-right">
                                             <div className="flex justify-end gap-3 invisible group-hover:visible transition-all">
                                                 <button 
                                                     onClick={() => sendGreeting(customer)}
-                                                    className="p-2 bg-blue-500/10 text-blue-400 border border-blue-500/20 rounded hover:bg-blue-500/20 transition-all flex items-center gap-2 text-[10px] font-bold uppercase tracking-wider"
+                                                    className="p-2 bg-brand/10 text-brand dark:text-brand border border-brand/20 rounded hover:bg-brand/20 transition-all flex items-center gap-2 text-[10px] font-bold uppercase tracking-wider"
                                                 >
-                                                    <Mail size={12} /> Greeting
+                                                    <Mail size={14} /> Greeting
                                                 </button>
                                                 <button 
                                                     onClick={() => sendReminder(customer)}
-                                                    className="p-2 bg-amber-500/10 text-amber-400 border border-amber-500/20 rounded hover:bg-amber-500/20 transition-all flex items-center gap-2 text-[10px] font-bold uppercase tracking-wider"
+                                                    className="p-2 bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/20 rounded hover:bg-amber-500/20 transition-all flex items-center gap-2 text-[10px] font-bold uppercase tracking-wider"
                                                 >
                                                     <Clock size={12} /> Reminder
                                                 </button>
@@ -170,20 +170,20 @@ const CustomerListPage = () => {
 
             {/* Email Modal */}
             {showEmailModal && (
-                <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
-                    <div className="bg-[#111] border border-white/10 p-8 rounded-2xl max-w-2xl w-full shadow-2xl">
+                <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 dark:bg-black/80 backdrop-blur-sm">
+                    <div className="bg-white dark:bg-[#111] border border-gray-200 dark:border-white/10 p-8 rounded-2xl max-w-2xl w-full shadow-2xl">
                         <div className="flex justify-between items-center mb-6">
-                            <h3 className="text-xl font-bold text-white flex items-center gap-3">
-                                <Mail className="text-gold" /> Compose Email to {selectedCustomer?.name}
+                            <h3 className="text-xl font-bold text-gray-900 dark:text-white flex items-center gap-3">
+                                <Mail className="text-brand" /> Compose Email to {selectedCustomer?.name}
                             </h3>
-                            <button onClick={() => setShowEmailModal(false)} className="text-gray-500 hover:text-white">✕</button>
+                            <button onClick={() => setShowEmailModal(false)} className="text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors">✕</button>
                         </div>
                         <form onSubmit={handleSendEmail} className="space-y-6">
                             <div>
                                 <label className="block text-[10px] font-bold uppercase tracking-widest text-gray-500 mb-2">Subject</label>
                                 <input 
                                     type="text" 
-                                    className="w-full bg-white/5 border border-white/10 rounded-lg p-3 text-sm text-white focus:border-gold outline-none"
+                                    className="w-full bg-gray-50 dark:bg-white/5 border border-gray-200 dark:border-white/10 rounded-lg p-3 text-sm text-gray-900 dark:text-white focus:border-brand outline-none transition-all"
                                     value={emailData.subject}
                                     onChange={(e) => setEmailData({...emailData, subject: e.target.value})}
                                     required
@@ -193,7 +193,7 @@ const CustomerListPage = () => {
                                 <label className="block text-[10px] font-bold uppercase tracking-widest text-gray-500 mb-2">Message</label>
                                 <textarea 
                                     rows={8}
-                                    className="w-full bg-white/5 border border-white/10 rounded-lg p-4 text-sm text-white focus:border-gold outline-none resize-none leading-relaxed"
+                                    className="w-full bg-gray-50 dark:bg-white/5 border border-gray-200 dark:border-white/10 rounded-lg p-4 text-sm text-gray-900 dark:text-white focus:border-brand outline-none resize-none leading-relaxed transition-all"
                                     value={emailData.message}
                                     onChange={(e) => setEmailData({...emailData, message: e.target.value})}
                                     required
@@ -203,14 +203,14 @@ const CustomerListPage = () => {
                                 <button 
                                     type="button"
                                     onClick={() => setShowEmailModal(false)}
-                                    className="px-6 py-2 text-xs font-bold uppercase tracking-widest text-gray-400 hover:text-white"
+                                    className="px-6 py-2 text-xs font-bold uppercase tracking-widest text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors"
                                 >
                                     Discard
                                 </button>
                                 <button 
                                     type="submit"
                                     disabled={sending}
-                                    className="px-8 py-3 bg-gold text-black rounded-lg text-xs font-black uppercase tracking-[0.2em] hover:bg-white transition-all disabled:opacity-50 flex items-center gap-2"
+                                    className="px-8 py-3 bg-brand text-white dark:text-black rounded-lg text-xs font-black uppercase tracking-[0.2em] hover:opacity-90 transition-all disabled:opacity-50 flex items-center gap-2 shadow-lg shadow-brand/20 active:scale-95"
                                 >
                                     {sending ? 'Sending...' : <><CheckCircle size={16} /> Send Dispatch</>}
                                 </button>

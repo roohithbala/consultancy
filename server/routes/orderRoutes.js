@@ -11,6 +11,10 @@ import {
     updateRefundStatus,
     updateOrderFinancials,
     updatePaymentStatus,
+    getRevenueByDay,
+    getStatusBreakdown,
+    getProductReport,
+    getCustomerReport,
 } from '../controllers/orderController.js';
 import { protect, admin } from '../middleware/authMiddleware.js';
 
@@ -19,6 +23,12 @@ const router = express.Router();
 router.route('/myorders').get(protect, getMyOrders);
 router.route('/admin/stats').get(protect, admin, getAdminStats);
 router.route('/samples/:productId').get(protect, getVerifiedSamples);
+
+// Analytics routes
+router.route('/analytics/revenue').get(protect, admin, getRevenueByDay);
+router.route('/analytics/status').get(protect, admin, getStatusBreakdown);
+router.route('/analytics/products').get(protect, admin, getProductReport);
+router.route('/analytics/customers').get(protect, admin, getCustomerReport);
 
 router.route('/')
     .post(protect, addOrderItems)

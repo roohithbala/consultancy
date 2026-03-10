@@ -1,7 +1,7 @@
 import User from '../models/User.js';
 import jwt from 'jsonwebtoken';
 import { OAuth2Client } from 'google-auth-library';
-import { sendEmail, getOTPHtml } from '../utils/sendEmail.js';
+import { sendEmail, getOTPHtml, getWelcomeHtml } from '../utils/sendEmail.js';
 
 const generateToken = (id) => {
     return jwt.sign({ id }, process.env.JWT_SECRET, {
@@ -45,6 +45,15 @@ const registerUser = async (req, res) => {
                 gstNo: user.gstNo,
                 token: generateToken(user._id),
             });
+
+            // Send Welcome Email
+            sendEmail(
+                user.email,
+                'Welcome to Zain Fabrics',
+                `Welcome to Zain Fabrics, ${user.name}! We're glad to have you with us.`,
+                [],
+                getWelcomeHtml(user.name)
+            ).catch(err => console.error('Welcome email failed:', err));
         } else {
             res.status(400).json({ message: 'Invalid user data' });
         }

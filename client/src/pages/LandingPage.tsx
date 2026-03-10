@@ -1,4 +1,4 @@
-import { ArrowRight, Globe, CheckCircle, Play } from 'lucide-react';
+import { ArrowRight, Globe, Play } from 'lucide-react';
 import { Link, Navigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import type { RootState } from '../store';
@@ -12,21 +12,21 @@ const LandingPage = () => {
     }
 
     const processes = [
-        'COATINGS',
-        'INTERLININGS',
-        'RAISING',
-        'DRILL',
-        'JERSEY',
-        'CANVAS',
-        'BONDING',
-        'FOAM LAMINATIONS',
-        'Advanced Fusing',
-        'Polyester Printing',
-        'Precision Sizing',
-        'Premium Weaving',
-        'Dye & Wash',
-        'Eva Polymer Coating',
-        'Dot Coating'
+        { name: 'COATINGS',          img: '/capabilities/capability_coatings_1773046543066.png' },
+        { name: 'INTERLININGS',      img: '/capabilities/capability_interlinings_1773046559078.png' },
+        { name: 'RAISING',           img: '/capabilities/capability_raising_1773046577665.png' },
+        { name: 'DRILL',             img: '/capabilities/capability_drill_1773046598374.png' },
+        { name: 'JERSEY',            img: '/capabilities/capability_jersey_1773046618140.png' },
+        { name: 'CANVAS',            img: '/capabilities/capability_canvas_1773046633864.png' },
+        { name: 'BONDING',           img: '/capabilities/capability_bonding_1773046650713.png' },
+        { name: 'FOAM LAMINATIONS',  img: '/capabilities/capability_foam_lamination_1773046667501.png' },
+        { name: 'Advanced Fusing',   img: '/capabilities/capability_advanced_fusing_1773046697258.png' },
+        { name: 'Polyester Printing',img: '/capabilities/capability_polyester_printing_1773046713786.png' },
+        { name: 'Precision Sizing',  img: '/capabilities/capability_precision_sizing_1773046730630.png' },
+        { name: 'Premium Weaving',   img: '/capabilities/capability_premium_weaving_1773046747739.png' },
+        { name: 'Dye & Wash',        img: '/capabilities/capability_dye_wash_1773046766236.png' },
+        { name: 'Eva Polymer Coating', img: '/capabilities/capability_eva_coating_1773046781092.png' },
+        { name: 'Dot Coating',       img: '' },
     ];
 
     return (
@@ -39,44 +39,46 @@ const LandingPage = () => {
                         alt="Premium Shoe Materials Background" 
                         className="w-full h-full object-cover opacity-60"
                     />
-                    <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/40 to-bg-main z-10"></div>
+                    <div className="absolute inset-0 bg-gradient-to-b from-black/80 via-black/50 to-black/90 z-10"></div>
                     
                     {/* Technical Grid Overlay */}
-                    <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(255,255,255,0.05)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.05)_1px,transparent_1px)] bg-[size:60px_60px] z-20 [mask-image:radial-gradient(ellipse_80%_80%_at_50%_40%,#000_20%,transparent_100%)]"></div>
+                    <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(255,255,255,0.04)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.04)_1px,transparent_1px)] bg-[size:60px_60px] z-20 [mask-image:radial-gradient(ellipse_80%_80%_at_50%_40%,#000_20%,transparent_100%)]"></div>
                 </div>
 
                 <div className="relative z-20 text-center px-4 max-w-6xl mx-auto">
-                    <div className="inline-flex items-center gap-2 border border-theme px-5 py-2.5 rounded-full mb-8 bg-bg-main shadow-sm">
+                    {/* Badge */}
+                    <div className="inline-flex items-center gap-2 border border-white/20 px-5 py-2.5 rounded-full mb-8 bg-white/5 backdrop-blur-sm">
                         <span className="w-1.5 h-1.5 bg-brand rounded-full animate-pulse"></span>
-                        <span className="text-[10px] uppercase tracking-[0.3em] text-primary-text font-black">ESTD 2014</span>
+                        <span className="text-[10px] uppercase tracking-[0.3em] text-white/80 font-black">ESTD 2014</span>
                     </div>
 
-                    <h1 className="text-7xl md:text-9xl font-black mb-10 leading-tight tracking-tighter text-primary-text">
+                    <h1 className="text-7xl md:text-9xl font-black mb-10 leading-[0.95] tracking-tighter text-white">
                         Material <br /> <span className="text-brand italic font-normal pr-4">Excellence</span>
                     </h1>
 
-                    <p className="text-xl md:text-2xl mb-12 text-secondary-text max-w-3xl mx-auto leading-relaxed font-light">
-                        Engineered shoe materials for the world's leading brands. <br />
-                        Defining quality on the <span className="text-brand font-bold border-b-2 border-brand pb-1">Global Stage</span>.
+                    <p className="text-lg md:text-xl mb-12 text-white/60 max-w-2xl mx-auto leading-relaxed font-light">
+                        Engineered shoe materials for the world's leading brands.<br />
+                        Defining quality on the <span className="text-brand font-bold border-b border-brand pb-0.5">Global Stage</span>.
                     </p>
 
-                    <div className="flex flex-col md:flex-row items-center justify-center gap-6">
-                        <Link to="/products" className="group relative px-14 py-6 bg-brand text-black font-black uppercase tracking-[0.3em] text-[10px] overflow-hidden transition-all hover:scale-105 active:scale-95 rounded-full shadow-2xl shadow-brand/20">
+                    <div className="flex flex-col md:flex-row items-center justify-center gap-5">
+                        <Link to="/products" className="group relative px-12 py-5 bg-brand text-black font-black uppercase tracking-[0.25em] text-[10px] overflow-hidden transition-all hover:scale-105 active:scale-95 rounded-full shadow-2xl shadow-brand/30">
                             <span className="relative z-10 flex items-center gap-3">
-                                Explore Collection <ArrowRight size={18} strokeWidth={3} />
+                                Explore Collection <ArrowRight size={16} strokeWidth={3} />
                             </span>
-                            <div className="absolute inset-0 bg-white/40 transform -translate-x-full group-hover:translate-x-0 transition-transform duration-700 ease-out origin-left"></div>
+                            <div className="absolute inset-0 bg-white/30 transform -translate-x-full group-hover:translate-x-0 transition-transform duration-700 ease-out origin-left"></div>
                         </Link>
 
-                        <Link to="/contact" className="group px-12 py-6 border border-theme text-primary-text font-black uppercase tracking-[0.3em] text-[10px] hover:border-brand hover:text-brand transition-all flex items-center gap-3 rounded-full bg-secondary shadow-sm">
-                            <Play size={16} className="fill-current" strokeWidth={3} /> Our Story
+                        <Link to="/contact" className="group px-10 py-5 border border-white/25 text-white/80 font-black uppercase tracking-[0.25em] text-[10px] hover:border-brand hover:text-brand transition-all flex items-center gap-3 rounded-full backdrop-blur-sm bg-white/5">
+                            <Play size={14} className="fill-current" strokeWidth={3} /> Our Story
                         </Link>
                     </div>
                 </div>
 
                 {/* Scroll Indicator */}
-                <div className="absolute bottom-10 left-1/2 -translate-x-1/2 animate-bounce">
-                    <span className="text-secondary-text/30 text-[10px] uppercase tracking-widest writing-vertical-rl">Scroll</span>
+                <div className="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2">
+                    <div className="w-px h-12 bg-gradient-to-b from-white/40 to-transparent animate-pulse"></div>
+                    <span className="text-white/30 text-[9px] uppercase tracking-[0.4em]">Scroll</span>
                 </div>
             </section>
 
@@ -149,18 +151,31 @@ const LandingPage = () => {
                         </Link>
                     </div>
 
-                    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
+                    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
                           {processes.map((process, index) => (
-                            <div key={index} className="group relative h-48 border border-theme bg-bg-main rounded-3xl overflow-hidden hover:bg-brand/5 transition-all duration-500 shadow-sm hover:shadow-xl hover:-translate-y-2 flex flex-col items-center justify-center p-6">
-                                <div className="w-12 h-12 rounded-2xl bg-secondary border border-theme flex items-center justify-center text-secondary-text/30 mb-4 group-hover:border-brand/40 group-hover:text-brand transition-all duration-300">
-                                    <CheckCircle size={20} strokeWidth={1.5} />
+                            <div key={index} className="group relative h-52 rounded-2xl overflow-hidden hover:-translate-y-2 transition-all duration-500 shadow-md hover:shadow-2xl cursor-pointer">
+                                {/* Background Image */}
+                                {process.img ? (
+                                    <img
+                                        src={process.img}
+                                        alt={process.name}
+                                        className="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                                    />
+                                ) : (
+                                    <div className="absolute inset-0 bg-gradient-to-br from-slate-800 to-slate-900" />
+                                )}
+                                {/* Dark overlay */}
+                                <div className="absolute inset-0 bg-black/50 group-hover:bg-black/30 transition-colors duration-500" />
+                                {/* Green top border on hover */}
+                                <div className="absolute top-0 left-0 w-full h-1 bg-brand transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left" />
+                                {/* Label */}
+                                <div className="absolute bottom-0 left-0 right-0 p-4">
+                                    <h3 className="text-[11px] font-black text-white tracking-widest uppercase leading-tight drop-shadow-lg">{process.name}</h3>
                                 </div>
-                                <h3 className="text-[11px] font-black text-primary-text font-serif group-hover:text-brand transition-colors tracking-widest uppercase text-center leading-tight">{process}</h3>
-                                <div className="absolute top-0 left-0 w-full h-1 bg-brand transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left"></div>
                             </div>
                         ))}
-                        <div className="group relative h-48 border border-brand/20 bg-brand/5 rounded-3xl overflow-hidden hover:bg-brand/10 transition-all duration-500 flex items-center justify-center shadow-sm hover:shadow-xl hover:-translate-y-2">
-                            <span className="text-brand font-black uppercase tracking-[0.3em] text-[9px] group-hover:scale-110 transition-transform cursor-pointer px-6 py-3 rounded-full border border-brand/10">
+                        <div className="group relative h-52 border border-brand/20 bg-brand/5 rounded-2xl overflow-hidden hover:bg-brand/10 transition-all duration-500 flex items-center justify-center shadow-sm hover:shadow-xl hover:-translate-y-2">
+                            <span className="text-brand font-black uppercase tracking-[0.3em] text-[9px] group-hover:scale-110 transition-transform cursor-pointer px-6 py-3 rounded-full border border-brand/10 text-center">
                                 + Custom Solutions
                             </span>
                         </div>

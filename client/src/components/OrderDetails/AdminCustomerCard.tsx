@@ -4,8 +4,8 @@ interface AdminCustomerCardProps {
 
 const AdminCustomerCard = ({ order }: AdminCustomerCardProps) => {
     return (
-        <div className="bg-gradient-to-br from-blue-900/20 to-indigo-900/20 border border-blue-500/30 p-6 rounded-xl mb-6 no-print shadow-lg">
-            <h2 className="text-xl font-serif font-bold mb-4 text-blue-400 flex items-center gap-2">
+        <div className="bg-secondary border border-theme p-6 rounded-xl mb-6 no-print shadow-xl">
+            <h2 className="text-xl font-serif font-bold mb-4 text-primary-text flex items-center gap-2">
                 👤 Customer Information
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -13,15 +13,19 @@ const AdminCustomerCard = ({ order }: AdminCustomerCardProps) => {
                 <Box label="Email Address" value={order.user?.email || 'N/A'} mono />
                 <Box label="Phone Number" value={order.shippingAddress?.phone || order.user?.phone || 'N/A'} />
                 <Box label="Customer ID" value={order.user?._id || 'N/A'} mono small />
+                {order.user?.companyName && <Box label="Company" value={order.user.companyName} />}
+                {order.user?.creditEnabled && (
+                    <Box label="Credit Terms" value={`Net-${order.user.creditTermsDays || 0} · Limit ₹${order.user.creditLimit?.toLocaleString()}`} />
+                )}
             </div>
         </div>
     );
 };
 
 const Box = ({ label, value, mono, small }: any) => (
-    <div className="bg-black/30 p-4 rounded-lg border border-white/10">
-        <p className="text-xs text-gray-400 uppercase tracking-wider mb-2">{label}</p>
-        <p className={`text-white font-bold ${mono ? 'font-mono' : ''} ${small ? 'text-xs' : 'text-lg'}`}>{value}</p>
+    <div className="bg-bg-alt p-4 rounded-lg border border-theme">
+        <p className="text-xs text-secondary-text uppercase tracking-wider mb-2 font-bold">{label}</p>
+        <p className={`text-primary-text font-bold ${mono ? 'font-mono' : ''} ${small ? 'text-xs' : 'text-lg'}`}>{value}</p>
     </div>
 );
 

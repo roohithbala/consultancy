@@ -1,9 +1,9 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import type { RootState } from '../store';
 import { clearCart } from '../store/cartSlice';
-import { CheckCircle, Truck, MapPin } from 'lucide-react';
+import { CheckCircle, Truck, MapPin, CreditCard } from 'lucide-react';
 
 const CheckoutPage = () => {
     const { cartItems, totalAmount } = useSelector((state: RootState) => state.cart);
@@ -12,13 +12,15 @@ const CheckoutPage = () => {
     const navigate = useNavigate();
     const [step, setStep] = useState(1);
     const [loading, setLoading] = useState(false);
-    const [paymentMethod, setPaymentMethod] = useState('Razorpay'); // Default
-    const [deliveryMethod, setDeliveryMethod] = useState<'Courier' | 'Pickup'>('Courier'); // Default
+    const [paymentMethod, setPaymentMethod] = useState('Razorpay');
+    const [deliveryMethod, setDeliveryMethod] = useState<'Courier' | 'Pickup'>('Courier');
     const [showAddressModal, setShowAddressModal] = useState(false);
     const [savedAddresses, setSavedAddresses] = useState<any[]>([]);
     const [utrNumber, setUtrNumber] = useState('');
-
     const [orderId, setOrderId] = useState<string | null>(null);
+
+    // Credit state
+    const [creditInfo, setCreditInfo] = useState<{ enabled: boolean; termsDays: number; limit: number } | null>(null);
 
     const [formData, setFormData] = useState({
         name: user?.name || '',
@@ -30,6 +32,27 @@ const CheckoutPage = () => {
         country: 'India',
         companyName: user?.companyName || ''
     });
+
+    // Fetch credit status on mount
+    useEffect(() => {
+        const fetchCredit = async () => {
+            if (!user?.token) return;
+            try {
+                const res = await fetch('http://localhost:5000/api/users/profile', {
+                    headers: { Authorization: `Bearer ${user.token}` }
+                });
+                const data = await res.json();
+                if (data.creditEnabled) {
+                    setCreditInfo({
+                        enabled: true,
+                        termsDays: data.creditTermsDays || 30,
+                        limit: data.creditLimit || 0,
+                    });
+                }
+            } catch { /* ignore */ }
+        };
+        fetchCredit();
+    }, [user?.token]);
 
     // Fetch addresses when modal opens
     const fetchAddresses = async () => {
@@ -214,6 +237,41 @@ const CheckoutPage = () => {
             return;
         }
 
+        // Credit order — no payment gateway needed
+        if (paymentMethod === 'Credit') {
+            setLoading(true);
+            try {
+                const creditDueDate = new Date();
+                creditDueDate.setDate(creditDueDate.getDate() + (creditInfo?.termsDays || 30));
+                const res = await fetch('http://localhost:5000/api/orders', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${user!.token}` },
+                    body: JSON.stringify({
+                        ...orderData,
+                        isPaid: false,
+                        isCredit: true,
+                        creditTermsDays: creditInfo?.termsDays || 30,
+                        creditDueDate,
+                        paymentMethod: 'Credit',
+                    }),
+                });
+                if (res.ok) {
+                    const order = await res.json();
+                    setOrderId(order._id);
+                    dispatch(clearCart());
+                    setStep(2);
+                } else {
+                    alert('Credit order placement failed');
+                }
+            } catch (error) {
+                console.error(error);
+                alert('Something went wrong');
+            } finally {
+                setLoading(false);
+            }
+            return;
+        }
+
         setLoading(true);
         try {
             const res = await fetch('http://localhost:5000/api/orders', {
@@ -273,7 +331,20 @@ const CheckoutPage = () => {
                     <p className="text-secondary mb-6">
                         Thank you, {formData.name}. Your order has been placed. We have sent a confirmation email to <b>{formData.email}</b>.
                         {paymentMethod === 'Razorpay' && ' Payment was successful via Razorpay Secure.'}
+                        {paymentMethod === 'Credit' && ` Your order is on a Net-${creditInfo?.termsDays}-day credit account.`}
                     </p>
+
+                    {paymentMethod === 'Credit' && creditInfo && (
+                        <div className="bg-brand/5 border border-brand/20 p-6 rounded-lg mb-8 text-left">
+                            <h3 className="font-bold text-lg mb-3 text-primary flex items-center gap-2"><CreditCard size={16} className="text-brand" /> Credit Order Confirmed</h3>
+                            <div className="space-y-1 text-sm text-secondary">
+                                <p><span className="font-semibold w-32 inline-block text-primary">Payment Terms:</span> Net-{creditInfo.termsDays} Days</p>
+                                <p><span className="font-semibold w-32 inline-block text-primary">Due By:</span> {new Date(Date.now() + creditInfo.termsDays * 86400000).toLocaleDateString()}</p>
+                                {creditInfo.limit > 0 && <p><span className="font-semibold w-32 inline-block text-primary">Credit Limit:</span> ₹{creditInfo.limit.toLocaleString()}</p>}
+                            </div>
+                            <p className="text-xs text-amber-500 mt-3 font-semibold">Note: Payment is due by the date shown. Late payments may affect your credit terms.</p>
+                        </div>
+                    )}
 
                     {paymentMethod === 'BankTransfer' && (
                         <div className="bg-secondary border border-theme p-6 rounded-lg mb-8 text-left">
@@ -411,6 +482,32 @@ const CheckoutPage = () => {
 
                                 <div className="mt-8">
                                     <h2 className="text-xl font-bold mb-4 text-primary font-serif">Payment Method</h2>
+
+                                    {/* Credit option banner */}
+                                    {creditInfo?.enabled && (
+                                        <div
+                                            onClick={() => setPaymentMethod('Credit')}
+                                            className={`border rounded-2xl p-6 cursor-pointer transition-all duration-300 mb-3 ${paymentMethod === 'Credit' ? 'border-brand bg-brand/5 shadow-md shadow-brand/10' : 'border-theme hover:border-brand/30 bg-secondary/30'}`}
+                                        >
+                                            <div className="flex items-center gap-4">
+                                                <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center transition-all duration-300 ${paymentMethod === 'Credit' ? 'border-brand bg-brand/10' : 'border-theme'}`}>
+                                                    {paymentMethod === 'Credit' && <div className="w-2.5 h-2.5 bg-brand rounded-full"></div>}
+                                                </div>
+                                                <div className="flex-1">
+                                                    <p className={`font-black uppercase tracking-[0.1em] text-xs flex items-center gap-2 ${paymentMethod === 'Credit' ? 'text-primary-text' : 'text-secondary-text'}`}>
+                                                        <CreditCard size={16} strokeWidth={2.5} className="text-brand" />
+                                                        Pay on Credit — Net-{creditInfo.termsDays} Days
+                                                    </p>
+                                                    <p className="text-[10px] font-bold text-secondary-text/70 mt-1">
+                                                        Due by: {new Date(Date.now() + creditInfo.termsDays * 86400000).toLocaleDateString()}
+                                                        {creditInfo.limit > 0 && ` · Credit Limit: ₹${creditInfo.limit.toLocaleString()}`}
+                                                    </p>
+                                                </div>
+                                                <span className="text-[9px] font-black uppercase bg-brand/10 text-brand px-2 py-1 rounded-lg border border-brand/20">Credit Account</span>
+                                            </div>
+                                        </div>
+                                    )}
+
                                     <div className="space-y-3">
                                         {[
                                             { id: 'Razorpay', label: 'Razorpay (Credit/Debit/UPI/NetBanking)' },

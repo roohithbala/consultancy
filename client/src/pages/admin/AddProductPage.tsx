@@ -123,169 +123,150 @@ const AddProductPage = () => {
     };
 
     return (
-        <div className="max-w-4xl mx-auto">
-            <h1 className="text-3xl font-bold mb-8">Add New Product</h1>
+        <div className="max-w-5xl mx-auto pb-12">
+            <h1 className="text-4xl font-serif font-black mb-10 text-primary-text tracking-widest uppercase">
+                Add New <span className="text-brand italic font-normal">Product</span>
+            </h1>
 
-            <form onSubmit={handleSubmit} className="bg-white p-8 rounded-lg shadow-sm border border-gray-100 space-y-6">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <form onSubmit={handleSubmit} className="bg-secondary p-8 md:p-10 rounded-[2rem] shadow-2xl border border-theme space-y-10">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                     <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">Product Name</label>
-                        <input type="text" name="name" value={formData.name} onChange={handleInputChange} className="w-full px-4 py-2 border rounded-lg" required />
+                        <label className="block text-xs font-bold text-secondary-text uppercase tracking-widest mb-3">Product Name</label>
+                        <input type="text" name="name" value={formData.name} onChange={handleInputChange} className="w-full px-5 py-4 bg-bg-main border border-theme rounded-xl text-primary-text focus:border-brand outline-none transition-all shadow-sm" required />
                     </div>
                     <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">Material Type</label>
-                        <select name="materialType" value={formData.materialType} onChange={handleInputChange} className="w-full px-4 py-2 border rounded-lg bg-white" required>
-                            <option value="">Select Material</option>
-                            <option value="Vamp Lining">Vamp Lining</option>
-                            <option value="Quarter Lining">Quarter Lining</option>
-                            <option value="Counter Lining">Counter Lining</option>
-                            <option value="Strobel">Strobel</option>
-                            <option value="Non-Woven">Non-Woven</option>
-                            <option value="Microfiber">Microfiber</option>
+                        <label className="block text-xs font-bold text-secondary-text uppercase tracking-widest mb-3">Material Type</label>
+                        <select name="materialType" value={formData.materialType} onChange={handleInputChange} className="w-full px-5 py-4 bg-bg-main border border-theme rounded-xl text-primary-text focus:border-brand outline-none transition-all shadow-sm" required>
+                            <option value="">— Select Material Type —</option>
+                            <optgroup label="Core Processes">
+                                <option value="COATINGS">COATINGS</option>
+                                <option value="INTERLININGS">INTERLININGS</option>
+                                <option value="RAISING">RAISING</option>
+                                <option value="DRILL">DRILL</option>
+                                <option value="JERSEY">JERSEY</option>
+                                <option value="CANVAS">CANVAS</option>
+                                <option value="BONDING">BONDING</option>
+                                <option value="FOAM LAMINATIONS">FOAM LAMINATIONS</option>
+                            </optgroup>
+                            <optgroup label="Specialist Processes">
+                                <option value="Advanced Fusing">Advanced Fusing</option>
+                                <option value="Polyester Printing">Polyester Printing</option>
+                                <option value="Precision Sizing">Precision Sizing</option>
+                                <option value="Premium Weaving">Premium Weaving</option>
+                                <option value="Dye &amp; Wash">Dye &amp; Wash</option>
+                                <option value="Eva Polymer Coating">Eva Polymer Coating</option>
+                                <option value="Dot Coating">Dot Coating</option>
+                            </optgroup>
                         </select>
                     </div>
                 </div>
 
-                <div className="flex items-center gap-4 bg-gray-50 p-4 rounded-lg border border-gray-100">
-                    <label className="flex items-center cursor-pointer relative">
-                        <input 
-                            type="checkbox" 
-                            name="isAvailable" 
-                            checked={formData.isAvailable} 
-                            onChange={(e) => setFormData(prev => ({ ...prev, isAvailable: e.target.checked }))} 
-                            className="sr-only peer" 
+                <div className="flex items-center gap-6 bg-bg-main p-6 rounded-2xl border border-theme">
+                    <label className="flex items-center cursor-pointer relative group">
+                        <input
+                            type="checkbox"
+                            name="isAvailable"
+                            checked={formData.isAvailable}
+                            onChange={(e) => setFormData(prev => ({ ...prev, isAvailable: e.target.checked }))}
+                            className="sr-only peer"
                         />
-                        <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-gold"></div>
-                        <span className="ml-3 text-sm font-bold text-gray-700 uppercase tracking-wider">Product Available in Catalog</span>
+                        <div className="w-14 h-7 bg-secondary-text/30 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border after:border-gray-200 after:rounded-full after:h-6 after:w-6 after:transition-all peer-checked:bg-brand shadow-inner"></div>
+                        <span className="ml-4 text-sm font-bold text-primary-text uppercase tracking-widest group-hover:text-brand transition-colors">Catalog Availability</span>
                     </label>
                 </div>
 
                 <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Available Coatings (Comma separated)</label>
-                    <input
-                        type="text"
-                        name="coatings"
-                        value={formData.coatings}
-                        onChange={handleInputChange}
-                        placeholder="e.g. TPU, EVA, PU, Hotmelt"
-                        className="w-full px-4 py-2 border rounded-lg"
-                    />
+                    <label className="block text-xs font-bold text-secondary-text uppercase tracking-widest mb-3">Available Coatings <span className="text-secondary-text/60 lowercase">(comma-separated)</span></label>
+                    <input type="text" name="coatings" value={formData.coatings} onChange={handleInputChange} placeholder="e.g. TPU, EVA, PU, Hotmelt" className="w-full px-5 py-4 bg-bg-main border border-theme rounded-xl text-primary-text focus:border-brand outline-none transition-all shadow-sm placeholder:text-secondary-text" />
                 </div>
 
                 <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Description</label>
-                    <textarea name="description" value={formData.description} onChange={handleInputChange} className="w-full px-4 py-2 border rounded-lg h-32" required></textarea>
+                    <label className="block text-xs font-bold text-secondary-text uppercase tracking-widest mb-3">Description</label>
+                    <textarea name="description" value={formData.description} onChange={handleInputChange} className="w-full px-5 py-4 bg-bg-main border border-theme rounded-xl text-primary-text focus:border-brand outline-none transition-all shadow-sm h-40 resize-none leading-relaxed" required></textarea>
                 </div>
 
                 <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Sample Price (₹) (0 for free)</label>
-                    <input type="number" name="samplePrice" value={formData.samplePrice} onChange={handleInputChange} className="w-full px-4 py-2 border rounded-lg" />
+                    <label className="block text-xs font-bold text-secondary-text uppercase tracking-widest mb-3">Sample Price (₹) <span className="text-secondary-text/60 lowercase">(0 for free)</span></label>
+                    <input type="number" name="samplePrice" value={formData.samplePrice} onChange={handleInputChange} className="w-full px-5 py-4 bg-bg-main border border-theme rounded-xl text-primary-text focus:border-brand outline-none transition-all shadow-sm font-mono" />
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                     <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">Price / Meter (₹)</label>
-                        <input type="number" name="pricePerMeter" value={formData.pricePerMeter} onChange={handleInputChange} className="w-full px-4 py-2 border rounded-lg" required />
+                        <label className="block text-xs font-bold text-secondary-text uppercase tracking-widest mb-3">Price / Meter (₹)</label>
+                        <input type="number" name="pricePerMeter" value={formData.pricePerMeter} onChange={handleInputChange} className="w-full px-5 py-4 bg-bg-main border border-theme rounded-xl text-primary-text focus:border-brand outline-none transition-all shadow-sm font-mono" required />
                     </div>
                     <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">Stock (Meters)</label>
-                        <input type="number" name="inStock" value={formData.inStock} onChange={handleInputChange} className="w-full px-4 py-2 border rounded-lg" required />
+                        <label className="block text-xs font-bold text-secondary-text uppercase tracking-widest mb-3">Stock (Meters)</label>
+                        <input type="number" name="inStock" value={formData.inStock} onChange={handleInputChange} className="w-full px-5 py-4 bg-bg-main border border-theme rounded-xl text-primary-text focus:border-brand outline-none transition-all shadow-sm font-mono" required />
                     </div>
                     <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">GSM</label>
-                        <input type="number" name="gsm" value={formData.gsm} onChange={handleInputChange} className="w-full px-4 py-2 border rounded-lg" />
-                    </div>
-                </div>
-
-                <div className="border-t pt-6">
-                    <h3 className="text-lg font-bold mb-4">Visual Assets</h3>
-
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-2">Main Product Image</label>
-                            <div className="flex items-center gap-4">
-                                <label className="cursor-pointer bg-gray-100 hover:bg-gray-200 px-4 py-2 rounded-lg flex items-center gap-2">
-                                    <Upload size={16} /> Upload
-                                    <input type="file" className="hidden" onChange={(e) => uploadFileHandler(e, 'imageUrl')} />
-                                </label>
-                                {formData.imageUrl && <span className="text-xs text-green-600 truncate max-w-[200px]">Uploaded</span>}
-                            </div>
-                        </div>
-
-                        <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-2">Fabric Texture Map (For 3D)</label>
-                            <div className="flex items-center gap-4">
-                                <label className="cursor-pointer bg-gray-100 hover:bg-gray-200 px-4 py-2 rounded-lg flex items-center gap-2">
-                                    <Upload size={16} /> Upload
-                                    <input type="file" className="hidden" onChange={(e) => uploadFileHandler(e, 'textureUrl')} />
-                                </label>
-                                {formData.textureUrl && <span className="text-xs text-green-600 truncate max-w-[200px]">Uploaded</span>}
-                            </div>
-                        </div>
-
-                        <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-2">Normal Map (Optional)</label>
-                            <div className="flex items-center gap-4">
-                                <label className="cursor-pointer bg-gray-100 hover:bg-gray-200 px-4 py-2 rounded-lg flex items-center gap-2">
-                                    <Upload size={16} /> Upload
-                                    <input type="file" className="hidden" onChange={(e) => uploadFileHandler(e, 'normalMapUrl')} />
-                                </label>
-                            </div>
-                        </div>
-
-                        <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-2">Roughness Map (Optional)</label>
-                            <div className="flex items-center gap-4">
-                                <label className="cursor-pointer bg-gray-100 hover:bg-gray-200 px-4 py-2 rounded-lg flex items-center gap-2">
-                                    <Upload size={16} /> Upload
-                                    <input type="file" className="hidden" onChange={(e) => uploadFileHandler(e, 'roughnessMapUrl')} />
-                                </label>
-                            </div>
-                        </div>
+                        <label className="block text-xs font-bold text-secondary-text uppercase tracking-widest mb-3">GSM</label>
+                        <input type="number" name="gsm" value={formData.gsm} onChange={handleInputChange} className="w-full px-5 py-4 bg-bg-main border border-theme rounded-xl text-primary-text focus:border-brand outline-none transition-all shadow-sm font-mono" />
                     </div>
                 </div>
 
-                <div className="border-t pt-6">
-                    <h3 className="text-lg font-bold mb-4">Certifications & Documents</h3>
+                <div className="border-t border-theme pt-10">
+                    <h3 className="text-2xl font-serif font-bold mb-8 text-primary-text">Visual Assets</h3>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        {['imageUrl', 'textureUrl', 'normalMapUrl', 'roughnessMapUrl'].map((field, idx) => {
+                            const labels = ['Main Product Image', 'Fabric Texture Map (For 3D)', 'Normal Map (Optional)', 'Roughness Map (Optional)'];
+                            const isReq = idx < 2;
+                            const isUploaded = !!(formData as any)[field];
+                            return (
+                                <div key={field} className="bg-bg-main p-6 rounded-2xl border border-theme">
+                                    <label className="block text-xs font-bold text-secondary-text uppercase tracking-widest mb-4">
+                                        {labels[idx]} {isReq && <span className="text-brand">*</span>}
+                                    </label>
+                                    <div className="flex items-center gap-4">
+                                        <label className="cursor-pointer bg-secondary hover:bg-brand/10 border border-theme px-5 py-3 rounded-xl flex items-center gap-3 transition-all text-sm font-bold text-primary-text shadow-sm hover:text-brand flex-grow justify-center">
+                                            <Upload size={18} /> {isUploaded ? 'Replace File' : 'Upload'}
+                                            <input type="file" className="hidden" onChange={(e) => uploadFileHandler(e, field)} />
+                                        </label>
+                                    </div>
+                                    {isUploaded && <p className="text-xs text-brand mt-3 font-medium flex items-center gap-1"><span className="w-2 h-2 rounded-full bg-brand"></span> Asset Loaded</p>}
+                                </div>
+                            );
+                        })}
+                    </div>
+                </div>
 
-                    <div className="space-y-4">
+                <div className="border-t border-theme pt-10">
+                    <h3 className="text-2xl font-serif font-bold mb-8 text-primary-text">Certifications &amp; Documents</h3>
+                    <div className="space-y-6">
                         {documents.map((doc, index) => (
-                            <div key={index} className="flex flex-col md:flex-row gap-4 items-start md:items-end border p-4 rounded-lg bg-gray-50">
+                            <div key={index} className="flex flex-col md:flex-row gap-6 p-6 rounded-2xl bg-bg-main border border-theme items-start md:items-end">
                                 <div className="flex-1 w-full">
-                                    <label className="block text-sm font-medium text-gray-700 mb-1">Document Name</label>
+                                    <label className="block text-xs font-bold text-secondary-text uppercase tracking-widest mb-3">Document Name</label>
                                     <input
                                         type="text"
                                         value={doc.name}
                                         onChange={(e) => handleDocumentNameChange(index, e.target.value)}
                                         placeholder="e.g. ISO Certificate"
-                                        className="w-full px-4 py-2 border rounded-lg"
+                                        className="w-full px-5 py-4 bg-secondary border border-theme rounded-xl text-primary-text focus:border-brand outline-none transition-all shadow-sm placeholder:text-secondary-text"
                                     />
                                 </div>
                                 <div className="flex-1 w-full">
-                                    <label className="block text-sm font-medium text-gray-700 mb-1">File (PDF/Image)</label>
-                                    <div className="flex items-center gap-2">
-                                        <label className="cursor-pointer bg-white border hover:bg-gray-100 px-4 py-2 rounded-lg flex items-center gap-2 flex-grow justify-center">
-                                            <Upload size={16} /> {doc.url ? 'Change File' : 'Upload File'}
-                                            <input type="file" className="hidden" onChange={(e) => uploadFileHandler(e, 'doc', index)} />
-                                        </label>
-                                    </div>
-                                    {doc.url && <p className="text-xs text-green-600 mt-1 truncate">Uploaded: ...{doc.url.slice(-20)}</p>}
+                                    <label className="block text-xs font-bold text-secondary-text uppercase tracking-widest mb-3">File (PDF/Image)</label>
+                                    <label className="cursor-pointer bg-secondary hover:bg-brand/10 border border-theme px-5 py-4 rounded-xl flex items-center gap-3 transition-all text-sm font-bold text-primary-text shadow-sm hover:text-brand justify-center w-full">
+                                        <Upload size={18} /> {doc.url ? 'Change File' : 'Upload Document'}
+                                        <input type="file" className="hidden" onChange={(e) => uploadFileHandler(e, 'doc', index)} />
+                                    </label>
+                                    {doc.url && <p className="text-xs text-brand mt-3 font-medium truncate flex items-center gap-1"><span className="w-2 h-2 rounded-full bg-brand"></span> ...{doc.url.slice(-20)}</p>}
                                 </div>
-                                <button type="button" onClick={() => removeDocumentRow(index)} className="text-red-500 hover:text-red-700 font-medium px-4 py-2">
+                                <button type="button" onClick={() => removeDocumentRow(index)} className="px-5 py-4 bg-red-500/10 text-red-600 hover:bg-red-500/20 font-bold uppercase tracking-widest text-xs rounded-xl transition-all h-[54px]">
                                     Remove
                                 </button>
                             </div>
                         ))}
                     </div>
-
-                    <button type="button" onClick={addDocumentRow} className="mt-4 text-sm font-bold text-accent hover:underline">
+                    <button type="button" onClick={addDocumentRow} className="mt-6 px-6 py-3 bg-bg-main border border-theme border-dashed text-xs font-bold text-secondary-text hover:text-brand hover:border-brand uppercase tracking-widest rounded-xl transition-all shadow-sm">
                         + Add Document
                     </button>
                 </div>
 
-                <div className="flex justify-end pt-6">
-                    <button type="submit" disabled={uploading} className="bg-black text-white px-8 py-3 rounded-lg font-semibold hover:bg-gray-800 transition-colors disabled:opacity-50">
-                        {uploading ? 'Uploading Assets...' : 'Create Product'}
+                <div className="flex justify-end pt-10 mt-6 border-t border-theme">
+                    <button type="submit" disabled={uploading} className="bg-brand text-black px-10 py-4 rounded-xl font-black uppercase tracking-[0.2em] hover:opacity-90 transition-all disabled:opacity-50 flex items-center gap-3 shadow-xl hover:shadow-brand/20 active:scale-95 text-sm">
+                        {uploading ? 'Uploading Assets...' : 'Initialize Product Lifecycle'}
                     </button>
                 </div>
             </form>

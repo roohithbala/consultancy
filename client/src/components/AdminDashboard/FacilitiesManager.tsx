@@ -10,7 +10,7 @@ interface FacilitiesManagerProps {
 
 const FacilitiesManager = ({ facilities, toggleFacility }: FacilitiesManagerProps) => {
     return (
-        <div className="bg-bg-alt/50 backdrop-blur-md rounded-2xl border border-theme p-8 shadow-sm">
+        <div className="bg-secondary border border-theme rounded-2xl p-8 shadow-sm">
             <h3 className="text-xl font-bold text-primary-text font-serif mb-6 tracking-wide underline decoration-brand/30 underline-offset-8">Facilities</h3>
             <div className="space-y-6">
                 {Object.entries(facilities).map(([key, value]) => (
@@ -20,14 +20,14 @@ const FacilitiesManager = ({ facilities, toggleFacility }: FacilitiesManagerProp
                         </span>
                         <button
                             onClick={() => toggleFacility(key)}
-                            className={`w-12 h-6 rounded-full relative transition-all duration-500 ${value ? 'bg-brand shadow-[0_0_15px_rgba(16,185,129,0.3)]' : 'bg-secondary border border-theme'}`}
+                            className={`w-12 h-6 rounded-full relative transition-all duration-500 ${value ? 'bg-brand shadow-[0_0_15px_rgba(16,185,129,0.3)]' : 'bg-bg-alt border border-theme'}`}
                         >
                             <span className={`absolute top-1 left-1 bg-white w-4 h-4 rounded-full transition-all duration-500 shadow-lg ${value ? 'translate-x-6' : 'translate-x-0'}`} />
                         </button>
                     </div>
                 ))}
             </div>
-            <div className="mt-8 pt-6 border-t border-theme text-[9px] font-bold text-secondary-text/60 italic">
+            <div className="mt-8 pt-6 border-t border-theme text-[9px] font-bold text-secondary-text italic">
                 Manage active payment gateways and notification systems.
             </div>
         </div>

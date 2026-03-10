@@ -10,8 +10,25 @@ const productSchema = new mongoose.Schema({
         required: true,
     },
     materialType: {
-        type: String, // e.g., 'Cotton', 'Polyester', 'Silk'
+        type: String,
         required: true,
+        enum: [
+            'COATINGS',
+            'INTERLININGS',
+            'RAISING',
+            'DRILL',
+            'JERSEY',
+            'CANVAS',
+            'BONDING',
+            'FOAM LAMINATIONS',
+            'Advanced Fusing',
+            'Polyester Printing',
+            'Precision Sizing',
+            'Premium Weaving',
+            'Dye & Wash',
+            'Eva Polymer Coating',
+            'Dot Coating',
+        ],
     },
     pricePerMeter: {
         type: Number,

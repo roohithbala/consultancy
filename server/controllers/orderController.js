@@ -4,7 +4,7 @@ import Product from '../models/Product.js';
 import path from 'path';
 import fs from 'fs';
 import { generateInvoice } from '../utils/generateInvoice.js';
-import { sendEmail } from '../utils/sendEmail.js';
+import { sendEmail, getOrderConfirmationHtml, getOrderShippedHtml, getOrderCancelledHtml, getRefundUpdateHtml, getOrderOutHtml, getOrderDeliveredHtml, getOrderStatusUpdateHtml } from '../utils/sendEmail.js';
 
 // @desc    Create new order
 // @route   POST /api/orders
@@ -22,6 +22,9 @@ export const addOrderItems = async (req, res) => {
         paidAt,
         paymentResult,
         deliveryMethod,
+        isCredit,
+        creditTermsDays,
+        creditDueDate,
     } = req.body;
 
     if (orderItems && orderItems.length === 0) {
@@ -43,6 +46,9 @@ export const addOrderItems = async (req, res) => {
                 isPaid: isPaid || false,
                 paidAt: paidAt || undefined,
                 paymentResult: paymentResult || {},
+                isCredit: isCredit || false,
+                creditTermsDays: creditTermsDays || 0,
+                creditDueDate: creditDueDate || undefined,
                 trackingHistory: [{
                     status: 'Ordered',
                     description: 'Order has been placed successfully.',
@@ -58,7 +64,9 @@ export const addOrderItems = async (req, res) => {
                 sendEmail(
                     req.user.email,
                     `Order Confirmation #${createdOrder._id}`,
-                    `Thank you for your order! Your order ID is ${createdOrder._id}. We will notify you when it ships.`
+                    `Thank you for your order! Your order ID is ${createdOrder._id}. We will notify you when it ships.`,
+                    [],
+                    getOrderConfirmationHtml(req.user.name, createdOrder._id, createdOrder.totalPrice)
                 ).catch(err => console.error("Email failed:", err));
             }
 
@@ -103,7 +111,7 @@ export const getVerifiedSamples = async (req, res) => {
 // @route   GET /api/orders/:id
 // @access  Private
 export const getOrderById = async (req, res) => {
-    const order = await Order.findById(req.params.id).populate('user', 'name email');
+    const order = await Order.findById(req.params.id).populate('user', 'name email phone companyName gstNo');
 
     if (order) {
         res.json(order);
@@ -124,7 +132,7 @@ export const getMyOrders = async (req, res) => {
 // @route   GET /api/orders
 // @access  Private/Admin
 export const getOrders = async (req, res) => {
-    const orders = await Order.find({}).populate('user', 'id name').sort({ createdAt: -1 });
+    const orders = await Order.find({}).populate('user', 'name email phone companyName').sort({ createdAt: -1 });
     res.json(orders);
 };
 
@@ -133,39 +141,57 @@ export const getOrders = async (req, res) => {
 // @access  Private/Admin
 export const updateOrderStatus = async (req, res) => {
     const order = await Order.findById(req.params.id);
+    if (!order) return res.status(404).json({ message: 'Order not found' });
+
+    const newStatus = req.body.status;
+    const currentStatus = order.status;
+
+    // Strict Status Flow Definition - Treat 'Pending' as 'Ordered' for logic
+    const statusFlow = ['Ordered', 'Processing', 'Shipped', 'Out', 'Delivered'];
+    
+    // Normalize current status for flow logic
+    const effectiveCurrentStatus = (currentStatus === 'Pending') ? 'Ordered' : currentStatus;
+    
+    const currentIndex = statusFlow.indexOf(effectiveCurrentStatus);
+    const nextIndex = statusFlow.indexOf(newStatus);
+
+    if (newStatus && newStatus !== currentStatus && newStatus !== 'Cancelled') {
+        // Enforce sequential flow
+        if (nextIndex === -1) {
+            return res.status(400).json({ message: `Invalid status: ${newStatus}` });
+        }
+        if (nextIndex !== currentIndex + 1) {
+            return res.status(400).json({ message: `Invalid status jump. Order must follow: ${statusFlow.join(' -> ')}` });
+        }
+    }
 
     if (order) {
         order.status = req.body.status || order.status;
 
         // Add to tracking history
-        order.trackingHistory.push({
-            status: req.body.status,
-            description: `Order status updated to ${req.body.status}`,
-            location: 'Warehouse' // Could be dynamic in future
-        });
+        if (req.body.status && req.body.status !== currentStatus) {
+            order.trackingHistory.push({
+                status: req.body.status,
+                description: `Order status updated to ${req.body.status}`,
+                location: 'Warehouse'
+            });
+        }
 
         if (req.body.status === 'Delivered') {
             order.isDelivered = true;
             order.deliveredAt = Date.now();
         }
 
-        // Manual Invoice / Bill Number Handling
-        if (req.body.invoiceNumber) {
-            order.invoiceNumber = req.body.invoiceNumber;
-        }
+        if (req.body.invoiceNumber) order.invoiceNumber = req.body.invoiceNumber;
         if (req.body.manualInvoiceUrl) {
             order.manualInvoiceUrl = req.body.manualInvoiceUrl;
-            order.invoiceUrl = req.body.manualInvoiceUrl; // Override main URL for easy access
+            order.invoiceUrl = req.body.manualInvoiceUrl;
             order.isManualInvoice = true;
         }
 
-        // Tracking Info Handling
         if (req.body.trackingInfo) {
             order.trackingNumber = req.body.trackingInfo;
-            if (req.body.courierName) {
-                order.courierName = req.body.courierName;
-            }
-            // Add to tracking history
+            if (req.body.courierName) order.courierName = req.body.courierName;
             order.trackingHistory.push({
                 status: 'Tracking Updated',
                 description: `Tracking number added: ${req.body.trackingInfo}${req.body.courierName ? ' via ' + req.body.courierName : ''}`,
@@ -176,22 +202,17 @@ export const updateOrderStatus = async (req, res) => {
         if (req.body.status === 'Shipped' && !order.invoiceUrl) {
             const invoiceName = `invoice-${order._id}.pdf`;
             const invoicePath = path.join(process.cwd(), 'uploads', 'invoices', invoiceName);
-
             try {
-                // Generate Invoice
                 await generateInvoice(order, invoicePath);
-
-                // Update Order with URL (assuming serving static files from /uploads)
                 order.invoiceUrl = `/uploads/invoices/${invoiceName}`;
                 order.invoiceDate = Date.now();
-
-                // Send Email with Attachment
                 if (order.user && order.user.email) {
                     await sendEmail(
                         order.user.email,
                         `Dispatch Notification & Invoice - Order #${order._id}`,
                         `Your order has been shipped! Please find your Tax Invoice attached.`,
-                        [{ filename: invoiceName, path: invoicePath }]
+                        [{ filename: invoiceName, path: invoicePath }],
+                        getOrderShippedHtml(order.user.name, order._id, order.trackingNumber || 'En route')
                     );
                 }
             } catch (err) {
@@ -200,9 +221,33 @@ export const updateOrderStatus = async (req, res) => {
         }
 
         const updatedOrder = await order.save();
-        res.json(updatedOrder);
-    } else {
-        res.status(404).json({ message: 'Order not found' });
+        const populatedOrder = await Order.findById(updatedOrder._id).populate('user', 'name email');
+
+        // Status change emails
+        if (populatedOrder.user && populatedOrder.user.email) {
+            const userEmail = populatedOrder.user.email;
+            const userName = populatedOrder.user.name || 'Valued Customer';
+            const status = req.body.status;
+
+            try {
+                if (status === 'Delivered') {
+                    await sendEmail(userEmail, `Order Delivered - #${populatedOrder._id}`, `Your order #${populatedOrder._id} has been delivered successfully.`, [], getOrderDeliveredHtml(userName, populatedOrder._id));
+                } else if (status === 'Out') {
+                    await sendEmail(userEmail, `Out for Delivery - #${populatedOrder._id}`, `Your order #${populatedOrder._id} is out for delivery!`, [], getOrderOutHtml(userName, populatedOrder._id));
+                } else if (status === 'Shipped' && (req.body.manualInvoiceUrl || !populatedOrder.invoiceUrl)) {
+                    await sendEmail(userEmail, `Dispatch Notification - Order #${populatedOrder._id}`, `Your order #${populatedOrder._id} has been shipped!`, [], getOrderShippedHtml(userName, populatedOrder._id, populatedOrder.trackingNumber || 'En route'));
+                } else if (status && status !== 'Shipped' && status !== 'Ordered' && status !== currentStatus) {
+                    await sendEmail(userEmail, `Order Status Update: ${status} - #${populatedOrder._id}`, `Your order #${populatedOrder._id} status is now: ${status}`, [], getOrderStatusUpdateHtml(userName, populatedOrder._id, status, `Your order has been updated to ${status}.`));
+                }
+
+                if (req.body.trackingInfo && status !== 'Shipped' && status !== 'Delivered' && status !== 'Out') {
+                   await sendEmail(userEmail, `Tracking Information Updated - #${populatedOrder._id}`, `Tracking info added for order #${populatedOrder._id}: ${req.body.trackingInfo}`, [], getOrderStatusUpdateHtml(userName, populatedOrder._id, populatedOrder.status, `Tracking information has been updated: ${req.body.trackingInfo}${req.body.courierName ? ' via ' + req.body.courierName : ''}`));
+                }
+            } catch (err) {
+                console.error("Status email failed:", err);
+            }
+        }
+        res.json(populatedOrder);
     }
 };
 
@@ -262,9 +307,18 @@ export const cancelOrder = async (req, res) => {
             throw new Error('Not authorized to cancel this order');
         }
 
-        if (order.status === 'Delivered' || order.status === 'Shipped') {
+        const isAdmin = req.user.role === 'admin';
+
+        // Customers can only cancel when order is still in 'Ordered' status
+        if (!isAdmin && order.status !== 'Ordered') {
             res.status(400);
-            throw new Error('Cannot cancel order that has already been shipped or delivered. Please request a return instead.');
+            throw new Error(`Cannot cancel order in '${order.status}' status. Cancellation is only allowed before processing begins.`);
+        }
+
+        // Admins can cancel anything up to (not including) Shipped / Delivered
+        if (isAdmin && ['Shipped', 'Out', 'Delivered'].includes(order.status)) {
+            res.status(400);
+            throw new Error('Cannot cancel order that has already been shipped or delivered. Please raise a return instead.');
         }
 
         order.status = 'Cancelled';
@@ -283,7 +337,9 @@ export const cancelOrder = async (req, res) => {
             sendEmail(
                 req.user.email,
                 `Order Cancelled - #${order._id}`,
-                `Your order #${order._id} has been cancelled.${order.isPaid ? ' A refund has been requested.' : ''}`
+                `Your order #${order._id} has been cancelled.${order.isPaid ? ' A refund has been requested.' : ''}`,
+                [],
+                getOrderCancelledHtml(req.user.name, order._id, order.cancellationReason)
             );
         }
 
@@ -318,7 +374,9 @@ export const updateRefundStatus = async (req, res) => {
                 sendEmail(
                     user.email,
                     `Refund Status Update - Order #${order._id}`,
-                    `Your refund status for order #${order._id} is now: ${refundStatus}.`
+                    `Your refund status for order #${order._id} is now: ${refundStatus}.`,
+                    [],
+                    getRefundUpdateHtml(user.name, order._id, refundStatus)
                 );
             }
         }
@@ -395,3 +453,148 @@ export const updatePaymentStatus = async (req, res) => {
         res.status(404).json({ message: 'Order not found' });
     }
 };
+
+// ── Analytics Helpers ──────────────────────────────────────────────────────
+
+const getDaysFilter = (days) => {
+    if (!days || days === 'all') return {};
+    const since = new Date();
+    since.setDate(since.getDate() - parseInt(days));
+    return { createdAt: { $gte: since } };
+};
+
+// @desc    Get daily revenue chart data
+// @route   GET /api/orders/analytics/revenue?days=30
+// @access  Private/Admin
+export const getRevenueByDay = async (req, res) => {
+    try {
+        const { days = '30' } = req.query;
+        const dateFilter = getDaysFilter(days);
+
+        const orders = await Order.find(dateFilter).select('totalPrice createdAt status isPaid');
+
+        // Group by date
+        const revenueMap = {};
+        orders.forEach(order => {
+            const date = new Date(order.createdAt).toISOString().split('T')[0];
+            if (!revenueMap[date]) revenueMap[date] = { date, revenue: 0, orders: 0, paid: 0 };
+            revenueMap[date].revenue += order.totalPrice || 0;
+            revenueMap[date].orders += 1;
+            if (order.isPaid) revenueMap[date].paid += order.totalPrice || 0;
+        });
+
+        const result = Object.values(revenueMap).sort((a, b) => a.date.localeCompare(b.date));
+        res.json(result);
+    } catch (err) {
+        res.status(500).json({ message: err.message });
+    }
+};
+
+// @desc    Get order status breakdown
+// @route   GET /api/orders/analytics/status?days=30
+// @access  Private/Admin
+export const getStatusBreakdown = async (req, res) => {
+    try {
+        const { days = 'all' } = req.query;
+        const dateFilter = getDaysFilter(days);
+
+        const breakdown = await Order.aggregate([
+            { $match: dateFilter },
+            { $group: { _id: '$status', count: { $sum: 1 }, totalRevenue: { $sum: '$totalPrice' } } },
+            { $sort: { count: -1 } }
+        ]);
+
+        res.json(breakdown.map(b => ({ status: b._id, count: b.count, revenue: b.totalRevenue })));
+    } catch (err) {
+        res.status(500).json({ message: err.message });
+    }
+};
+
+// @desc    Get product purchase frequency report
+// @route   GET /api/orders/analytics/products?days=30
+// @access  Private/Admin
+export const getProductReport = async (req, res) => {
+    try {
+        const { days = 'all' } = req.query;
+        const dateFilter = getDaysFilter(days);
+
+        const result = await Order.aggregate([
+            { $match: { ...dateFilter, status: { $ne: 'Cancelled' } } },
+            { $unwind: '$orderItems' },
+            {
+                $group: {
+                    _id: '$orderItems.product',
+                    name: { $first: '$orderItems.name' },
+                    totalPurchases: { $sum: '$orderItems.quantity' },
+                    totalRevenue: { $sum: { $multiply: ['$orderItems.price', '$orderItems.quantity'] } },
+                    uniqueCustomers: { $addToSet: '$user' },
+                    orderCount: { $sum: 1 },
+                }
+            },
+            {
+                $project: {
+                    name: 1,
+                    totalPurchases: 1,
+                    totalRevenue: 1,
+                    orderCount: 1,
+                    uniqueCustomers: { $size: '$uniqueCustomers' },
+                }
+            },
+            { $sort: { totalRevenue: -1 } },
+            { $limit: 20 }
+        ]);
+
+        res.json(result);
+    } catch (err) {
+        res.status(500).json({ message: err.message });
+    }
+};
+
+// @desc    Get customer purchase frequency report
+// @route   GET /api/orders/analytics/customers?days=30
+// @access  Private/Admin
+export const getCustomerReport = async (req, res) => {
+    try {
+        const { days = 'all' } = req.query;
+        const dateFilter = getDaysFilter(days);
+
+        const result = await Order.aggregate([
+            { $match: { ...dateFilter, status: { $ne: 'Cancelled' } } },
+            {
+                $group: {
+                    _id: '$user',
+                    orderCount: { $sum: 1 },
+                    totalSpend: { $sum: '$totalPrice' },
+                    lastOrder: { $max: '$createdAt' },
+                    statuses: { $addToSet: '$status' },
+                }
+            },
+            { $sort: { totalSpend: -1 } },
+            { $limit: 20 },
+            {
+                $lookup: {
+                    from: 'users',
+                    localField: '_id',
+                    foreignField: '_id',
+                    as: 'userInfo',
+                }
+            },
+            { $unwind: { path: '$userInfo', preserveNullAndEmptyArrays: true } },
+            {
+                $project: {
+                    name: { $ifNull: ['$userInfo.name', 'Guest'] },
+                    email: { $ifNull: ['$userInfo.email', ''] },
+                    company: { $ifNull: ['$userInfo.companyName', ''] },
+                    orderCount: 1,
+                    totalSpend: 1,
+                    lastOrder: 1,
+                }
+            }
+        ]);
+
+        res.json(result);
+    } catch (err) {
+        res.status(500).json({ message: err.message });
+    }
+};
+

@@ -83,13 +83,13 @@ const PrintableInvoice = forwardRef<HTMLDivElement, PrintableInvoiceProps>(
                         <p>2. Goods once sold will not be taken back.</p>
                         <p>3. Subject to jurisdiction of local courts.</p>
                     </div>
-                    <div className="w-80 bg-black text-white p-8 rounded-2xl shadow-2xl space-y-4">
-                        <div className="flex justify-between text-gray-400 text-xs"><span>Subtotal</span><span className="font-mono">₹{subtotal.toFixed(2)}</span></div>
-                        <div className="flex justify-between text-gray-400 text-xs"><span>Shipping Fee</span><span className="font-mono">₹{order.shippingPrice}</span></div>
-                        <div className="flex justify-between text-gray-400 text-xs pb-4 border-b border-white/10"><span>GST (18%)</span><span className="font-mono">₹{gst.toFixed(2)}</span></div>
+                    <div className="w-80 bg-gray-50 dark:bg-black p-8 rounded-2xl shadow-2xl space-y-4 border border-gray-200 dark:border-white/10">
+                        <div className="flex justify-between text-gray-500 dark:text-gray-400 text-xs"><span>Subtotal</span><span className="font-mono text-gray-900 dark:text-white">₹{subtotal.toFixed(2)}</span></div>
+                        <div className="flex justify-between text-gray-500 dark:text-gray-400 text-xs"><span>Shipping Fee</span><span className="font-mono text-gray-900 dark:text-white">₹{order.shippingPrice}</span></div>
+                        <div className="flex justify-between text-gray-500 dark:text-gray-400 text-xs pb-4 border-b border-gray-200 dark:border-white/10"><span>GST (18%)</span><span className="font-mono text-gray-900 dark:text-white">₹{gst.toFixed(2)}</span></div>
                         <div className="flex justify-between font-bold text-xl pt-2">
-                            <span className="text-gold font-serif italic">Grand Total</span>
-                            <span className="font-mono text-white">₹{order.totalPrice.toFixed(2)}</span>
+                            <span className="text-gray-900 dark:text-brand font-serif italic">Grand Total</span>
+                            <span className="font-mono text-gray-900 dark:text-white">₹{order.totalPrice.toFixed(2)}</span>
                         </div>
                     </div>
                 </div>

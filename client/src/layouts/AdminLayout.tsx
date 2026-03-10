@@ -2,15 +2,18 @@ import { useState } from 'react';
 import { Link, Outlet, useNavigate, useLocation } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { logout } from '../store/authSlice';
-import { LayoutDashboard, Package, ShoppingBag, LogOut, Menu, X, ChevronRight } from 'lucide-react';
+import { Package, ShoppingBag, LogOut, Menu, X, ChevronRight, BarChart2, Receipt } from 'lucide-react';
 import ThemeToggle from '../components/ThemeToggle';
 
 const AdminLayout = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const location = useLocation();
-    const [isSidebarOpen, setIsSidebarOpen] = useState(false); // Mobile toggle
-    const [isExpanded, setIsExpanded] = useState(true); // Desktop expand/collapse
+
+    // On desktop: sidebar is always expanded by default
+    // On mobile: sidebar is hidden by default (slide-in drawer)
+    const [isExpanded, setIsExpanded] = useState(true);   // desktop collapse/expand
+    const [mobileOpen, setMobileOpen] = useState(false);  // mobile drawer toggle
 
     const handleLogout = () => {
         dispatch(logout());
@@ -18,82 +21,100 @@ const AdminLayout = () => {
     };
 
     const navItems = [
-        { path: '/admin', icon: LayoutDashboard, label: 'Dashboard' },
-        { path: '/admin/products', icon: Package, label: 'Products' },
-        { path: '/admin/orders', icon: ShoppingBag, label: 'Orders' },
+        { path: '/admin',            icon: BarChart2,       label: 'Analytics' },
+        { path: '/admin/products',   icon: Package,         label: 'Products' },
+        { path: '/admin/orders',     icon: ShoppingBag,     label: 'Orders' },
+        { path: '/admin/billing',    icon: Receipt,         label: 'Billing' },
     ];
 
+    const sidebarWidth = isExpanded ? 'md:w-72' : 'md:w-20';
+
     return (
-        <div className="flex h-screen bg-bg-main text-primary-text font-sans selection:bg-brand selection:text-black transition-colors duration-300 overflow-hidden relative">
+        <div className="flex h-screen bg-bg-main text-primary-text font-sans overflow-hidden transition-colors duration-300">
 
-            {/* Mobile Header */}
-            <div className="md:hidden fixed top-0 w-full bg-bg-alt/90 backdrop-blur-md border-b border-theme z-50 p-4 flex justify-between items-center shadow-lg">
-                <span className="text-xl font-bold font-serif tracking-widest text-primary-text">ZAIN <span className="text-brand">ADMIN</span></span>
-                <div className="flex items-center gap-4">
-                    <ThemeToggle />
-                    <button onClick={() => setIsSidebarOpen(!isSidebarOpen)} className="text-primary-text hover:text-brand transition-colors">
-                        {isSidebarOpen ? <X /> : <Menu />}
-                    </button>
-                </div>
-            </div>
-
-            {/* Sidebar (Desktop & Mobile) */}
+            {/* ── Sidebar ─────────────────────────────────────────────────── */}
+            {/*
+              Desktop: always visible, togglable between wide (72) and icon-only (20).
+              Mobile:  full-width drawer that slides in from left when mobileOpen=true.
+              There is NO separate top navbar — the sidebar is the single nav surface.
+            */}
             <aside
                 className={`
-                    fixed md:static inset-y-0 left-0 z-40 
-                    ${isExpanded ? 'md:w-72' : 'md:w-20'} 
-                    w-72 bg-bg-alt/80 backdrop-blur-xl border-r border-theme transform transition-all duration-500 ease-in-out 
-                    ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'}
-                    shadow-2xl flex flex-col z-10 m-0 md:m-4 md:rounded-2xl border-y md:border-l
+                    fixed inset-y-0 left-0 z-50
+                    w-72 ${sidebarWidth}
+                    bg-primary border-r border-theme
+                    flex flex-col
+                    shadow-2xl
+                    transition-all duration-300 ease-in-out
+                    ${mobileOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'}
+                    md:relative md:flex md:translate-x-0
+                    md:m-4 md:rounded-2xl md:border md:h-auto
                 `}
             >
-                {/* Sidebar Header */}
-                <div className="p-6 flex items-center justify-between border-b border-theme/50 min-h-[88px]">
+                {/* Sidebar header */}
+                <div className="flex items-center justify-between px-5 py-5 border-b border-theme min-h-[72px]">
                     {isExpanded ? (
-                        <div className="animate-fade-in">
-                            <h2 className="text-2xl font-bold font-serif tracking-widest text-primary-text">ZAIN</h2>
-                            <p className="text-[10px] text-brand tracking-[0.3em] font-sans uppercase">Admin Console</p>
+                        <div>
+                            <h2 className="text-xl font-black font-serif tracking-widest text-primary-text">ZAIN</h2>
+                            <p className="text-[9px] text-brand tracking-[0.3em] font-black uppercase mt-0.5">Admin Console</p>
                         </div>
                     ) : (
-                        <div className="w-full flex justify-center">
-                            <span className="text-2xl font-bold font-serif text-brand">Z</span>
-                        </div>
+                        <span className="text-xl font-black font-serif text-brand mx-auto">Z</span>
                     )}
 
-                    {/* Desktop Toggle Button */}
+                    {/* Desktop collapse button */}
                     <button
                         onClick={() => setIsExpanded(!isExpanded)}
                         className="hidden md:flex p-1.5 rounded-full hover:bg-brand/10 text-secondary-text hover:text-brand transition-colors"
+                        aria-label="Toggle sidebar"
                     >
-                        <ChevronRight size={16} className={`transform transition-transform duration-500 ${isExpanded ? 'rotate-180' : 'rotate-0'}`} />
+                        <ChevronRight
+                            size={16}
+                            className={`transition-transform duration-300 ${isExpanded ? 'rotate-180' : 'rotate-0'}`}
+                        />
+                    </button>
+
+                    {/* Mobile close button */}
+                    <button
+                        onClick={() => setMobileOpen(false)}
+                        className="md:hidden p-1.5 rounded-full hover:bg-brand/10 text-secondary-text hover:text-brand transition-colors"
+                        aria-label="Close sidebar"
+                    >
+                        <X size={18} />
                     </button>
                 </div>
 
                 {/* Navigation */}
-                <nav className="flex-1 px-3 py-6 space-y-2 overflow-y-auto scrollbar-none">
+                <nav className="flex-1 px-3 py-5 space-y-1 overflow-y-auto">
                     {navItems.map((item) => {
-                        const isActive = location.pathname === item.path || (item.path !== '/admin' && location.pathname.startsWith(item.path));
+                        const isActive =
+                            location.pathname === item.path ||
+                            (item.path !== '/admin' && location.pathname.startsWith(item.path));
 
                         return (
                             <Link
                                 key={item.path}
                                 to={item.path}
-                                onClick={() => setIsSidebarOpen(false)}
+                                onClick={() => setMobileOpen(false)}
                                 className={`
-                                    flex items-center gap-4 px-4 py-3 rounded-xl transition-all duration-300 group relative overflow-hidden
+                                    relative flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 group overflow-visible
                                     ${isActive
-                                        ? 'bg-brand text-black shadow-lg shadow-brand/20 font-black uppercase tracking-widest text-[10px]'
+                                        ? 'bg-brand text-black font-black uppercase tracking-widest text-[10px] shadow-lg shadow-brand/20'
                                         : 'hover:bg-brand/5 text-secondary-text hover:text-primary-text'}
                                 `}
                             >
-                                <item.icon size={20} className={`${isActive ? 'text-black' : 'text-brand/60 group-hover:text-brand group-hover:scale-110 transition-all font-bold'}`} strokeWidth={isActive ? 3 : 2} />
-
-                                <span className={`whitespace-nowrap transition-all duration-300 ${isExpanded ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-4 absolute left-14'}`}>
+                                <item.icon
+                                    size={20}
+                                    strokeWidth={isActive ? 3 : 2}
+                                    className={`flex-shrink-0 ${isActive ? 'text-black' : 'text-brand/70 group-hover:text-brand group-hover:scale-110 transition-all'}`}
+                                />
+                                <span className={`whitespace-nowrap transition-all duration-300 ${isExpanded ? 'opacity-100' : 'opacity-0 w-0 overflow-hidden'}`}>
                                     {item.label}
                                 </span>
 
+                                {/* Tooltip when collapsed (desktop only) */}
                                 {!isExpanded && (
-                                    <div className="absolute left-full ml-4 px-3 py-1.5 bg-bg-alt text-primary-text text-[10px] font-black uppercase tracking-widest rounded-lg opacity-0 group-hover:opacity-100 transition-all pointer-events-none whitespace-nowrap z-50 border border-brand/20 shadow-xl">
+                                    <div className="absolute left-full ml-3 px-3 py-1.5 bg-primary border border-brand/20 text-primary-text text-[10px] font-black uppercase tracking-widest rounded-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap z-50 shadow-xl hidden md:block">
                                         {item.label}
                                     </div>
                                 )}
@@ -102,33 +123,52 @@ const AdminLayout = () => {
                     })}
                 </nav>
 
-                {/* Sidebar Footer */}
-                <div className="p-4 border-t border-theme/50">
+                {/* Sidebar footer */}
+                <div className="p-3 border-t border-theme flex flex-col gap-2">
+                    <div className={`flex ${isExpanded ? 'justify-start' : 'justify-center'} px-1`}>
+                        <ThemeToggle />
+                    </div>
                     <button
                         onClick={handleLogout}
-                        className={`
-                            flex items-center gap-4 px-4 py-3 w-full rounded-xl text-left text-red-500 hover:bg-red-500/10 transition-all group
-                            ${!isExpanded && 'justify-center'}
-                        `}
+                        className={`flex items-center gap-3 px-4 py-3 w-full rounded-xl text-left text-red-500 hover:bg-red-500/10 transition-all group ${!isExpanded ? 'justify-center' : ''}`}
                     >
-                        <LogOut size={20} className="group-hover:translate-x-[-2px] transition-transform" />
-                        {isExpanded && <span className="font-bold text-sm tracking-wide">Logout</span>}
+                        <LogOut size={18} className="flex-shrink-0 group-hover:-translate-x-0.5 transition-transform" />
+                        {isExpanded && <span className="font-bold text-sm">Logout</span>}
                     </button>
                 </div>
             </aside>
 
-            {/* Overlay for mobile */}
-            {isSidebarOpen && (
+            {/* Mobile backdrop */}
+            {mobileOpen && (
                 <div
-                    className="fixed inset-0 bg-black/60 backdrop-blur-sm z-30 md:hidden animate-fade-in"
-                    onClick={() => setIsSidebarOpen(false)}
+                    className="fixed inset-0 bg-black/60 backdrop-blur-sm z-40 md:hidden"
+                    onClick={() => setMobileOpen(false)}
                 />
             )}
 
-            {/* Main Content */}
-            <main className="flex-1 overflow-y-auto pt-20 md:pt-0 p-4 md:p-6 z-10 relative">
-                <Outlet />
-            </main>
+            {/* ── Main content area ───────────────────────────────────────── */}
+            <div className="flex-1 flex flex-col overflow-hidden">
+                {/* Mobile-only top strip — just a hamburger + title, no full nav */}
+                <div className="md:hidden flex items-center gap-4 px-4 py-3 border-b border-theme bg-primary flex-shrink-0">
+                    <button
+                        onClick={() => setMobileOpen(true)}
+                        className="p-2 rounded-lg hover:bg-brand/10 text-primary-text hover:text-brand transition-colors"
+                        aria-label="Open menu"
+                    >
+                        <Menu size={22} />
+                    </button>
+                    <span className="text-lg font-black font-serif tracking-widest text-primary-text">
+                        ZAIN <span className="text-brand italic font-normal">Admin</span>
+                    </span>
+                    <div className="ml-auto">
+                        <ThemeToggle />
+                    </div>
+                </div>
+
+                <main className="flex-1 overflow-y-auto p-4 md:p-6 bg-bg-main transition-colors duration-200">
+                    <Outlet />
+                </main>
+            </div>
         </div>
     );
 };

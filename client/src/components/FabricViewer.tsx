@@ -56,13 +56,14 @@ const FabricViewer = ({ textureUrl, color = '#ffffff', normalMapUrl, roughnessMa
     };
 
     return (
-        <div className="w-full h-[500px] bg-gray-100 rounded-lg overflow-hidden relative">
-            <div className="absolute top-4 right-4 z-10 bg-white/80 backdrop-blur-sm p-2 rounded text-xs text-gray-500 flex gap-2">
+        <div className="w-full h-[500px] bg-slate-900 rounded-lg overflow-hidden relative">
+            <div className="absolute top-4 right-4 z-10 bg-black/60 backdrop-blur-sm px-3 py-1.5 rounded-full text-xs text-white/60 flex gap-3 items-center border border-white/10">
                 <span>Interactive 3D Preview</span>
-                <button onClick={handleReset} className="text-accent hover:underline font-bold">Reset View</button>
+                <button onClick={handleReset} className="text-brand hover:text-white font-bold transition-colors">Reset View</button>
             </div>
             <ThreeErrorBoundary>
-                <Canvas shadows dpr={[1, 2]} camera={{ fov: 45 }}>
+                <Canvas shadows dpr={[1, 2]} camera={{ fov: 45, position: [0, 2, 3] }} gl={{ alpha: false }}>
+                    <color attach="background" args={['#0a0a0a']} />
                     <Suspense fallback={null}>
                         <Stage environment="city" intensity={0.5}>
                             <FabricScene

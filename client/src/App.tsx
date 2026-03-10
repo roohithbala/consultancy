@@ -29,6 +29,8 @@ import OrderDetailsPage from './pages/OrderDetailsPage';
 import OrderHistoryPage from './pages/OrderHistoryPage';
 import ProfilePage from './pages/ProfilePage';
 import CustomerListPage from './pages/admin/CustomerListPage';
+import AnalyticsDashboardPage from './pages/admin/AnalyticsDashboardPage';
+import BillingPage from './pages/admin/BillingPage';
 import PrivacyPage from './pages/PrivacyPage';
 import TermsPage from './pages/TermsPage';
 
@@ -76,12 +78,15 @@ function App() {
             {/* Admin Routes */}
             <Route path="/admin" element={<AdminRoute />}>
               <Route element={<AdminLayout />}>
-                <Route index element={<AdminDashboardPage />} />
+                <Route index element={<AnalyticsDashboardPage />} />
+                <Route path="dashboard" element={<AdminDashboardPage />} />
                 <Route path="products" element={<ProductListPage />} />
                 <Route path="products/add" element={<AddProductPage />} />
                 <Route path="products/:id/edit" element={<EditProductPage />} />
                 <Route path="orders" element={<OrderListPage />} />
                 <Route path="customers" element={<CustomerListPage />} />
+                <Route path="analytics" element={<AnalyticsDashboardPage />} />
+                <Route path="billing" element={<BillingPage />} />
               </Route>
             </Route>
           </Routes>

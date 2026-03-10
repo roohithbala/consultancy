@@ -76,10 +76,10 @@ const AdminDashboardPage = () => {
         if (user) fetchData();
     }, [user]);
 
-    if (loading) return <div className="min-h-screen flex items-center justify-center bg-bg-main text-brand"><div className="animate-spin rounded-full h-12 w-12 border-b-2 border-brand"></div></div>;
+    if (loading) return <div className="min-h-screen flex items-center justify-center"><div className="animate-spin rounded-full h-12 w-12 border-b-2 border-brand"></div></div>;
 
     return (
-        <div className="min-h-screen bg-bg-main text-primary-text p-4 md:p-8 font-sans">
+        <div className="font-sans pb-8">
             <div className="max-w-7xl mx-auto">
                 <DashboardHeader />
                 <StatsGrid stats={stats} />

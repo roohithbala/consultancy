@@ -127,8 +127,14 @@ export const sendUserEmail = async (req, res) => {
 
     if (user) {
         try {
-            const { sendEmail } = await import('../utils/sendEmail.js');
-            await sendEmail(user.email, subject, message);
+            const { sendEmail, getAdminCustomEmailHtml } = await import('../utils/sendEmail.js');
+            await sendEmail(
+                user.email, 
+                subject, 
+                message, 
+                [], 
+                getAdminCustomEmailHtml(user.name, subject, message)
+            );
             res.json({ message: 'Email sent successfully' });
         } catch (error) {
             res.status(500).json({ message: 'Error sending email', error: error.message });
