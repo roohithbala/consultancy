@@ -4,6 +4,7 @@ import Product from '../models/Product.js';
 import path from 'path';
 import fs from 'fs';
 import { generateInvoice } from '../utils/generateInvoice.js';
+import { uploadToMega } from '../utils/megaStorage.js';
 import { sendEmail, getOrderConfirmationHtml, getOrderShippedHtml, getOrderCancelledHtml, getRefundUpdateHtml, getOrderOutHtml, getOrderDeliveredHtml, getOrderStatusUpdateHtml } from '../utils/sendEmail.js';
 
 // @desc    Create new order
@@ -256,17 +257,29 @@ export const updateOrderStatus = async (req, res) => {
             const invoicePath = path.join(process.cwd(), 'uploads', 'invoices', invoiceName);
             try {
                 await generateInvoice(order, invoicePath);
-                order.invoiceUrl = `/uploads/invoices/${invoiceName}`;
+                
+                // Upload to MEGA
+                console.log('Uploading invoice to MEGA...');
+                const megaLink = await uploadToMega(invoicePath);
+                console.log('Invoice uploaded to MEGA:', megaLink);
+                
+                order.invoiceUrl = megaLink;
                 order.invoiceDate = Date.now();
+                
                 if (order.user && order.user.email) {
                     await sendEmail(
                         order.user.email,
                         `Dispatch Notification & Invoice - Order #${order._id}`,
-                        `Your order has been shipped! Please find your Tax Invoice attached.`,
-                        [{ filename: invoiceName, path: invoicePath }],
+                        `Your order has been shipped! Please find your Tax Invoice at: ${megaLink}`,
+                        [{ filename: invoiceName, path: invoicePath }], // Still send as attachment
                         getOrderShippedHtml(order.user.name, order._id, order.trackingNumber || 'En route')
                     );
                 }
+                
+                // Clean up local file after upload
+                fs.unlink(invoicePath, (err) => {
+                    if (err) console.error('Error deleting local invoice path:', err);
+                });
             } catch (err) {
                 console.error("Error generating invoice:", err);
             }
