@@ -85,10 +85,16 @@ const Footer = () => {
 
                 {/* Bottom bar */}
                 <div className="pt-12 border-t border-theme flex flex-col md:flex-row justify-between items-center gap-8">
-                    <div className="flex items-center gap-4">
-                        <div className="w-2 h-2 rounded-full bg-brand animate-pulse"></div>
+                    <div className="flex flex-col md:flex-row items-center gap-4">
+                        <div className="flex items-center gap-4">
+                            <div className="w-2 h-2 rounded-full bg-brand animate-pulse"></div>
+                            <p className="text-[10px] font-black uppercase tracking-[0.2em] text-secondary">
+                                &copy; {new Date().getFullYear()} Zain Fabrics &bull; Est. 2014 &bull; Precision Engineered
+                            </p>
+                        </div>
+                        <div className="h-4 w-px bg-theme hidden md:block"></div>
                         <p className="text-[10px] font-black uppercase tracking-[0.2em] text-secondary">
-                            &copy; {new Date().getFullYear()} Zain Fabrics &bull; Est. 2014 &bull; Precision Engineered
+                            Developed by <a href="https://github.com/roohithbala" target="_blank" rel="noopener noreferrer" className="text-brand hover:underline">roohithbala</a>
                         </p>
                     </div>
                     <div className="flex gap-10 text-[10px] font-black uppercase tracking-[0.2em] text-secondary">

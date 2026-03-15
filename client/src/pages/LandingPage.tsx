@@ -26,7 +26,7 @@ const LandingPage = () => {
         { name: 'Premium Weaving',   img: '/capabilities/capability_premium_weaving_1773046747739.png', fallback: 'https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?auto=format&fit=crop&q=80&w=800' },
         { name: 'Dye & Wash',        img: '/capabilities/capability_dye_wash_1773046766236.png', fallback: 'https://images.unsplash.com/photo-1584622781564-1d9876a13d00?auto=format&fit=crop&q=80&w=800' },
         { name: 'Eva Polymer Coating', img: '/capabilities/capability_eva_coating_1773046781092.png', fallback: 'https://images.unsplash.com/photo-1590247813693-5541d1c609fd?auto=format&fit=crop&q=80&w=800' },
-        { name: 'Dot Coating',       img: '', fallback: 'https://images.unsplash.com/photo-1517373116369-9bdb8cc51630?auto=format&fit=crop&q=80&w=800' },
+        { name: 'Dot Coating',       img: 'https://images.unsplash.com/photo-1517373116369-9bdb8cc51630?auto=format&fit=crop&q=80&w=800', fallback: 'https://images.unsplash.com/photo-1517373116369-9bdb8cc51630?auto=format&fit=crop&q=80&w=800' },
     ];
 
     return (
@@ -187,7 +187,6 @@ const LandingPage = () => {
                     </div>
                 </div>
             </section>
-
         </div>
     );
 };
