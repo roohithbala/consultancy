@@ -2,6 +2,7 @@ import { ArrowRight, Globe, Play } from 'lucide-react';
 import { Link, Navigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import type { RootState } from '../store';
+import { CATEGORY_FALLBACKS } from '../config/imageFallback';
 
 const LandingPage = () => {
     const { user } = useSelector((state: RootState) => state.auth);
@@ -12,21 +13,21 @@ const LandingPage = () => {
     }
 
     const processes = [
-        { name: 'COATINGS',          img: '/capabilities/capability_coatings_1773046543066.png', fallback: 'https://images.unsplash.com/photo-1558444479-c749ddb1b55a?auto=format&fit=crop&q=80&w=800' },
-        { name: 'INTERLININGS',      img: '/capabilities/capability_interlinings_1773046559078.png', fallback: 'https://images.unsplash.com/photo-1528459801416-a9e53bbf4e17?auto=format&fit=crop&q=80&w=800' },
-        { name: 'RAISING',           img: '/capabilities/capability_raising_1773046577665.png', fallback: 'https://images.unsplash.com/photo-1618220179428-22790b461013?auto=format&fit=crop&q=80&w=800' },
-        { name: 'DRILL',             img: '/capabilities/capability_drill_1773046598374.png', fallback: 'https://images.unsplash.com/photo-1582733986280-48ef01859e86?auto=format&fit=crop&q=80&w=800' },
-        { name: 'JERSEY',            img: '/capabilities/capability_jersey_1773046618140.png', fallback: 'https://images.unsplash.com/photo-1614676471928-2ed0ad1061a4?auto=format&fit=crop&q=80&w=800' },
-        { name: 'CANVAS',            img: '/capabilities/capability_canvas_1773046633864.png', fallback: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&q=80&w=800' },
-        { name: 'BONDING',           img: '/capabilities/capability_bonding_1773046650713.png', fallback: 'https://images.unsplash.com/photo-1504384308090-c894fdcc538d?auto=format&fit=crop&q=80&w=800' },
-        { name: 'FOAM LAMINATIONS',  img: '/capabilities/capability_foam_lamination_1773046667501.png', fallback: 'https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&q=80&w=800' },
-        { name: 'Advanced Fusing',   img: '/capabilities/capability_advanced_fusing_1773046697258.png', fallback: 'https://images.unsplash.com/photo-1581092160562-40aa08e78837?auto=format&fit=crop&q=80&w=800' },
-        { name: 'Polyester Printing',img: '/capabilities/capability_polyester_printing_1773046713786.png', fallback: 'https://images.unsplash.com/photo-1563089145-599997674d42?auto=format&fit=crop&q=80&w=800' },
-        { name: 'Precision Sizing',  img: '/capabilities/capability_precision_sizing_1773046730630.png', fallback: 'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&q=80&w=800' },
-        { name: 'Premium Weaving',   img: '/capabilities/capability_premium_weaving_1773046747739.png', fallback: 'https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?auto=format&fit=crop&q=80&w=800' },
-        { name: 'Dye & Wash',        img: '/capabilities/capability_dye_wash_1773046766236.png', fallback: 'https://images.unsplash.com/photo-1584622781564-1d9876a13d00?auto=format&fit=crop&q=80&w=800' },
-        { name: 'Eva Polymer Coating', img: '/capabilities/capability_eva_coating_1773046781092.png', fallback: 'https://images.unsplash.com/photo-1590247813693-5541d1c609fd?auto=format&fit=crop&q=80&w=800' },
-        { name: 'Dot Coating',       img: 'https://images.unsplash.com/photo-1517373116369-9bdb8cc51630?auto=format&fit=crop&q=80&w=800', fallback: 'https://images.unsplash.com/photo-1517373116369-9bdb8cc51630?auto=format&fit=crop&q=80&w=800' },
+        { name: 'COATINGS',          img: '/capabilities/capability_coatings_1773046543066.png', fallback: CATEGORY_FALLBACKS['COATINGS'] },
+        { name: 'INTERLININGS',      img: '/capabilities/capability_interlinings_1773046559078.png', fallback: CATEGORY_FALLBACKS['INTERLININGS'] },
+        { name: 'RAISING',           img: '/capabilities/capability_raising_1773046577665.png', fallback: CATEGORY_FALLBACKS['RAISING'] },
+        { name: 'DRILL',             img: '/capabilities/capability_drill_1773046598374.png', fallback: CATEGORY_FALLBACKS['DRILL'] },
+        { name: 'JERSEY',            img: '/capabilities/capability_jersey_1773046618140.png', fallback: CATEGORY_FALLBACKS['JERSEY'] },
+        { name: 'CANVAS',            img: '/capabilities/capability_canvas_1773046633864.png', fallback: CATEGORY_FALLBACKS['CANVAS'] },
+        { name: 'BONDING',           img: '/capabilities/capability_bonding_1773046650713.png', fallback: CATEGORY_FALLBACKS['BONDING'] },
+        { name: 'FOAM LAMINATIONS',  img: '/capabilities/capability_foam_lamination_1773046667501.png', fallback: CATEGORY_FALLBACKS['FOAM LAMINATIONS'] },
+        { name: 'Advanced Fusing',   img: '/capabilities/capability_advanced_fusing_1773046697258.png', fallback: 'https://images.unsplash.com/photo-1544006659-f0b21f04cb1d?auto=format&fit=crop&q=80&w=800' },
+        { name: 'Polyester Printing',img: '/capabilities/capability_polyester_printing_1773046713786.png', fallback: 'https://images.unsplash.com/photo-1520038410233-7141be7e6f97?auto=format&fit=crop&q=80&w=800' },
+        { name: 'Precision Sizing',  img: '/capabilities/capability_precision_sizing_1773046730630.png', fallback: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&q=80&w=800' },
+        { name: 'Premium Weaving',   img: '/capabilities/capability_premium_weaving_1773046747739.png', fallback: 'https://images.unsplash.com/photo-1528459801416-a9e53bbf4e17?auto=format&fit=crop&q=80&w=800' },
+        { name: 'Dye & Wash',        img: '/capabilities/capability_dye_wash_1773046766236.png', fallback: 'https://images.unsplash.com/photo-1618220179428-22790b461013?auto=format&fit=crop&q=80&w=800' },
+        { name: 'Eva Polymer Coating', img: '/capabilities/capability_eva_coating_1773046781092.png', fallback: CATEGORY_FALLBACKS['COATINGS'] },
+        { name: 'Dot Coating',       img: 'https://images.unsplash.com/photo-1558444479-c749ddb1b55a?auto=format&fit=crop&q=80&w=800', fallback: 'https://images.unsplash.com/photo-1558444479-c749ddb1b55a?auto=format&fit=crop&q=80&w=800' }
     ];
 
     return (
@@ -35,12 +36,10 @@ const LandingPage = () => {
             <section className="relative h-screen flex items-center justify-center overflow-hidden bg-black text-white">
                 <div className="absolute inset-0 z-0">
                     <img 
-                        src="https://images.unsplash.com/photo-1595950653106-6c9ebd614d3a?auto=format&fit=crop&q=80&w=2000" 
-                        alt="Premium Shoe Materials Background" 
-                        className="w-full h-full object-cover opacity-60"
-                        onError={(e) => {
-                            e.currentTarget.src = "https://images.unsplash.com/photo-1551488831-00ddcb6c6bd3?auto=format&fit=crop&q=80&w=2000";
-                        }}
+                        src="https://images.unsplash.com/photo-1558444479-c749ddb1b55a?auto=format&fit=crop&q=80&w=2000"
+                        alt="Zain Fabrics Factory"
+                        className="w-full h-full object-cover grayscale opacity-40 mix-blend-overlay scale-110"
+                        onError={(e) => { (e.target as HTMLImageElement).src = CATEGORY_FALLBACKS['DEFAULT']; }}
                     />
                     <div className="absolute inset-0 bg-gradient-to-b from-black/80 via-black/50 to-black/90 z-10"></div>
                     
