@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Link, Outlet, useNavigate, useLocation } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { logout } from '../store/authSlice';
-import { Package, ShoppingBag, LogOut, Menu, X, ChevronRight, BarChart2, Receipt, Building2, FileText } from 'lucide-react';
+import { Package, ShoppingBag, LogOut, Menu, X, ChevronRight, BarChart2, Receipt, Building2, FileText, Activity } from 'lucide-react';
 import ThemeToggle from '../components/ThemeToggle';
 
 const AdminLayout = () => {
@@ -26,6 +26,7 @@ const AdminLayout = () => {
         { path: '/admin/orders',     icon: ShoppingBag,     label: 'Orders' },
         { path: '/admin/customers',  icon: Building2,       label: 'Customers' },
         { path: '/admin/billing',    icon: Receipt,         label: 'Billing' },
+        { path: '/admin/activity',   icon: Activity,        label: 'User Logs' },
         { path: '/admin/reports',    icon: FileText,        label: 'Reports' },
     ];
 

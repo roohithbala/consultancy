@@ -10,6 +10,7 @@ import ColorTools from '../components/ColorTools';
 import type { RootState } from '../store';
 import { API } from '../config/api';
 import { CATEGORY_FALLBACKS } from '../config/imageFallback';
+import { logActivity } from '../utils/activity';
 
 interface Product {
     _id: string;
@@ -69,6 +70,12 @@ const ProductDetailPage = () => {
                 const data = await res.json();
                 setProduct(data);
                 setLoading(false);
+                // Log Product View
+                logActivity('PRODUCT_VIEW', { 
+                    productId: id, 
+                    productName: data.name,
+                    category: data.materialType 
+                });
             } catch (error) {
                 console.error("Error fetching product", error);
                 setLoading(false);
@@ -210,7 +217,15 @@ const ProductDetailPage = () => {
                         <div className="flex gap-4 overflow-x-auto pb-8 border-b border-theme no-scrollbar">
                             {product.imageUrl && (
                                 <button 
-                                    onClick={() => { setViewMode('image'); setActiveThumbnail(0); }}
+                                    onClick={() => { 
+                                        setViewMode('image'); 
+                                        setActiveThumbnail(0); 
+                                        logActivity('3D_MODEL_INTERACTION', { 
+                                            productId: product._id, 
+                                            productName: product.name, 
+                                            type: 'Switch to Image' 
+                                        });
+                                    }}
                                     className={`w-24 h-24 border ${activeThumbnail === 0 && viewMode === 'image' ? 'border-brand shadow-[0_0_15px_rgba(16,185,129,0.3)]' : 'border-theme'} hover:border-brand/50 transition-all overflow-hidden relative group rounded-xl bg-bg-alt`}
                                 >
                                     <img 
@@ -224,7 +239,15 @@ const ProductDetailPage = () => {
                             )}
                             {(product.materialType === 'INTERLININGS' || product.materialType === 'JERSEY' || product.materialType === 'FOAM LAMINATIONS' || product.modelUrl || product.textureMaps?.map) && (
                                 <button 
-                                    onClick={() => { setViewMode('3d'); setActiveThumbnail(1); }}
+                                    onClick={() => { 
+                                        setViewMode('3d'); 
+                                        setActiveThumbnail(1); 
+                                        logActivity('3D_MODEL_INTERACTION', { 
+                                            productId: product._id, 
+                                            productName: product.name, 
+                                            type: 'Open 3D' 
+                                        });
+                                    }}
                                     className={`w-24 h-24 border ${activeThumbnail === 1 && viewMode === '3d' ? 'border-brand shadow-[0_0_15px_rgba(16,185,129,0.3)]' : 'border-theme'} hover:border-brand/50 transition-all overflow-hidden relative group rounded-xl bg-bg-alt/10`}
                                 >
                                     <div className="absolute inset-0 flex items-center justify-center">
@@ -287,7 +310,18 @@ const ProductDetailPage = () => {
                              {/* Color Customization - Only show if 3D is available */}
                             {(product.materialType === 'INTERLININGS' || product.textureMaps?.map) && (
                                 <div className={isReadOnly ? 'pointer-events-none opacity-80' : ''}>
-                                    <ColorTools color={selectedColor} onChange={setSelectedColor} />
+                                    <ColorTools 
+                                        color={selectedColor} 
+                                        onChange={(color) => {
+                                            setSelectedColor(color);
+                                            logActivity('3D_MODEL_INTERACTION', { 
+                                                productId: product._id, 
+                                                productName: product.name, 
+                                                type: 'Color Change',
+                                                color: color
+                                            });
+                                        }} 
+                                    />
                                 </div>
                             )}
 

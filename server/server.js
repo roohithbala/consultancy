@@ -3,6 +3,7 @@ import express from 'express';
 import cors from 'cors';
 import mongoose from 'mongoose';
 import dns from 'dns';
+import { activityLogger } from './middleware/activityMiddleware.js';
 
 // Fix for MongoDB Atlas DNS SRV resolution issues in some environments
 dns.setServers(['8.8.8.8', '8.8.4.4']);
@@ -35,6 +36,7 @@ app.use(cors({
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(activityLogger); // Log significant activities
 app.use('/uploads', express.static('uploads'));
 
 // Health Check for Render
@@ -67,6 +69,7 @@ import paymentRoutes from './routes/paymentRoutes.js';
 import serviceRoutes from './routes/serviceRoutes.js';
 import settingsRoutes from './routes/settingsRoutes.js';
 import billingRoutes from './routes/billingRoutes.js';
+import activityRoutes from './routes/activityRoutes.js';
 
 app.use('/api/auth', authRoutes);
 app.use('/api/users', userRoutes);
@@ -77,6 +80,7 @@ app.use('/api/payment', paymentRoutes);
 app.use('/api/services', serviceRoutes);
 app.use('/api/settings', settingsRoutes);
 app.use('/api/billing', billingRoutes);
+app.use('/api/activity', activityRoutes);
 
 app.get('/', (req, res) => {
     res.send('Zain Fabrics API is running...');

@@ -371,7 +371,7 @@ const BillingPage = () => {
                                                 </td>
                                                 <td className="px-4 py-4">
                                                     {inv.invoiceUrl && (
-                                                        <a href={`${API.replace('/api/billing', '')}${inv.invoiceUrl}`} target="_blank" rel="noreferrer"
+                                                        <a href={inv.invoiceUrl.startsWith('http') ? inv.invoiceUrl : `${API.replace('/api/billing', '')}${inv.invoiceUrl}`} target="_blank" rel="noreferrer"
                                                             className="text-[9px] font-black text-brand hover:underline uppercase">PDF</a>
                                                     )}
                                                 </td>

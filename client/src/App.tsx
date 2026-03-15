@@ -33,6 +33,7 @@ import CustomerListPage from './pages/admin/CustomerListPage';
 import AnalyticsDashboardPage from './pages/admin/AnalyticsDashboardPage';
 import BillingPage from './pages/admin/BillingPage';
 import ReportHubPage from './pages/admin/ReportHubPage';
+import UserActivityPage from './pages/admin/UserActivityPage';
 import PrivacyPage from './pages/PrivacyPage';
 import TermsPage from './pages/TermsPage';
 
@@ -87,6 +88,7 @@ function App() {
                 <Route path="customers" element={<CustomerListPage />} />
                 <Route path="analytics" element={<AnalyticsDashboardPage />} />
                 <Route path="billing" element={<BillingPage />} />
+                <Route path="activity" element={<UserActivityPage />} />
                 <Route path="reports" element={<ReportHubPage />} />
               </Route>
             </Route>
