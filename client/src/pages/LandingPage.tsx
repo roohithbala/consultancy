@@ -12,21 +12,21 @@ const LandingPage = () => {
     }
 
     const processes = [
-        { name: 'COATINGS',          img: '/capabilities/capability_coatings_1773046543066.png' },
-        { name: 'INTERLININGS',      img: '/capabilities/capability_interlinings_1773046559078.png' },
-        { name: 'RAISING',           img: '/capabilities/capability_raising_1773046577665.png' },
-        { name: 'DRILL',             img: '/capabilities/capability_drill_1773046598374.png' },
-        { name: 'JERSEY',            img: '/capabilities/capability_jersey_1773046618140.png' },
-        { name: 'CANVAS',            img: '/capabilities/capability_canvas_1773046633864.png' },
-        { name: 'BONDING',           img: '/capabilities/capability_bonding_1773046650713.png' },
-        { name: 'FOAM LAMINATIONS',  img: '/capabilities/capability_foam_lamination_1773046667501.png' },
-        { name: 'Advanced Fusing',   img: '/capabilities/capability_advanced_fusing_1773046697258.png' },
-        { name: 'Polyester Printing',img: '/capabilities/capability_polyester_printing_1773046713786.png' },
-        { name: 'Precision Sizing',  img: '/capabilities/capability_precision_sizing_1773046730630.png' },
-        { name: 'Premium Weaving',   img: '/capabilities/capability_premium_weaving_1773046747739.png' },
-        { name: 'Dye & Wash',        img: '/capabilities/capability_dye_wash_1773046766236.png' },
-        { name: 'Eva Polymer Coating', img: '/capabilities/capability_eva_coating_1773046781092.png' },
-        { name: 'Dot Coating',       img: '' },
+        { name: 'COATINGS',          img: '/capabilities/capability_coatings_1773046543066.png', fallback: 'https://images.unsplash.com/photo-1558444479-c749ddb1b55a?auto=format&fit=crop&q=80&w=800' },
+        { name: 'INTERLININGS',      img: '/capabilities/capability_interlinings_1773046559078.png', fallback: 'https://images.unsplash.com/photo-1528459801416-a9e53bbf4e17?auto=format&fit=crop&q=80&w=800' },
+        { name: 'RAISING',           img: '/capabilities/capability_raising_1773046577665.png', fallback: 'https://images.unsplash.com/photo-1618220179428-22790b461013?auto=format&fit=crop&q=80&w=800' },
+        { name: 'DRILL',             img: '/capabilities/capability_drill_1773046598374.png', fallback: 'https://images.unsplash.com/photo-1582733986280-48ef01859e86?auto=format&fit=crop&q=80&w=800' },
+        { name: 'JERSEY',            img: '/capabilities/capability_jersey_1773046618140.png', fallback: 'https://images.unsplash.com/photo-1614676471928-2ed0ad1061a4?auto=format&fit=crop&q=80&w=800' },
+        { name: 'CANVAS',            img: '/capabilities/capability_canvas_1773046633864.png', fallback: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&q=80&w=800' },
+        { name: 'BONDING',           img: '/capabilities/capability_bonding_1773046650713.png', fallback: 'https://images.unsplash.com/photo-1504384308090-c894fdcc538d?auto=format&fit=crop&q=80&w=800' },
+        { name: 'FOAM LAMINATIONS',  img: '/capabilities/capability_foam_lamination_1773046667501.png', fallback: 'https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&q=80&w=800' },
+        { name: 'Advanced Fusing',   img: '/capabilities/capability_advanced_fusing_1773046697258.png', fallback: 'https://images.unsplash.com/photo-1581092160562-40aa08e78837?auto=format&fit=crop&q=80&w=800' },
+        { name: 'Polyester Printing',img: '/capabilities/capability_polyester_printing_1773046713786.png', fallback: 'https://images.unsplash.com/photo-1563089145-599997674d42?auto=format&fit=crop&q=80&w=800' },
+        { name: 'Precision Sizing',  img: '/capabilities/capability_precision_sizing_1773046730630.png', fallback: 'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&q=80&w=800' },
+        { name: 'Premium Weaving',   img: '/capabilities/capability_premium_weaving_1773046747739.png', fallback: 'https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?auto=format&fit=crop&q=80&w=800' },
+        { name: 'Dye & Wash',        img: '/capabilities/capability_dye_wash_1773046766236.png', fallback: 'https://images.unsplash.com/photo-1584622781564-1d9876a13d00?auto=format&fit=crop&q=80&w=800' },
+        { name: 'Eva Polymer Coating', img: '/capabilities/capability_eva_coating_1773046781092.png', fallback: 'https://images.unsplash.com/photo-1590247813693-5541d1c609fd?auto=format&fit=crop&q=80&w=800' },
+        { name: 'Dot Coating',       img: '', fallback: 'https://images.unsplash.com/photo-1517373116369-9bdb8cc51630?auto=format&fit=crop&q=80&w=800' },
     ];
 
     return (
@@ -35,9 +35,12 @@ const LandingPage = () => {
             <section className="relative h-screen flex items-center justify-center overflow-hidden bg-black text-white">
                 <div className="absolute inset-0 z-0">
                     <img 
-                        src="/premium_shoe_fabric_background_hero_1773033299227.png" 
+                        src="https://images.unsplash.com/photo-1595950653106-6c9ebd614d3a?auto=format&fit=crop&q=80&w=2000" 
                         alt="Premium Shoe Materials Background" 
                         className="w-full h-full object-cover opacity-60"
+                        onError={(e) => {
+                            e.currentTarget.src = "https://images.unsplash.com/photo-1551488831-00ddcb6c6bd3?auto=format&fit=crop&q=80&w=2000";
+                        }}
                     />
                     <div className="absolute inset-0 bg-gradient-to-b from-black/80 via-black/50 to-black/90 z-10"></div>
                     
@@ -154,16 +157,17 @@ const LandingPage = () => {
                     <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
                           {processes.map((process, index) => (
                             <div key={index} className="group relative h-52 rounded-2xl overflow-hidden hover:-translate-y-2 transition-all duration-500 shadow-md hover:shadow-2xl cursor-pointer">
-                                {/* Background Image */}
-                                {process.img ? (
-                                    <img
-                                        src={process.img}
-                                        alt={process.name}
-                                        className="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
-                                    />
-                                ) : (
-                                    <div className="absolute inset-0 bg-gradient-to-br from-slate-800 to-slate-900" />
-                                )}
+                                {/* Background Image with Primary/Fallback Logic */}
+                                <img
+                                    src={process.img || process.fallback}
+                                    alt={process.name}
+                                    className="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                                    onError={(e) => {
+                                        if (e.currentTarget.src !== process.fallback) {
+                                            e.currentTarget.src = process.fallback;
+                                        }
+                                    }}
+                                />
                                 {/* Dark overlay */}
                                 <div className="absolute inset-0 bg-black/50 group-hover:bg-black/30 transition-colors duration-500" />
                                 {/* Green top border on hover */}
@@ -174,6 +178,7 @@ const LandingPage = () => {
                                 </div>
                             </div>
                         ))}
+
                         <div className="group relative h-52 border border-brand/20 bg-brand/5 rounded-2xl overflow-hidden hover:bg-brand/10 transition-all duration-500 flex items-center justify-center shadow-sm hover:shadow-xl hover:-translate-y-2">
                             <span className="text-brand font-black uppercase tracking-[0.3em] text-[9px] group-hover:scale-110 transition-transform cursor-pointer px-6 py-3 rounded-full border border-brand/10 text-center">
                                 + Custom Solutions

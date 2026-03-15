@@ -19,8 +19,6 @@ app.use((req, res, next) => {
 const allowedOrigins = [
     'http://localhost:3000',
     'http://localhost:5173',
-    'https://zain-fabrics.vercel.app',
-    'https://consultancy-iota.vercel.app',
     'https://consultancy-orpin-seven.vercel.app'
 ];
 

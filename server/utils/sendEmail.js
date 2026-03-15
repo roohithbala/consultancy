@@ -107,7 +107,7 @@ export const getWelcomeHtml = (name) => getBaseHtml(
     name,
     `We're thrilled to have you join our global network of footwear material specialists. Explore our premium collections of interlinings, canvas, and reinforced fabrics designed for the world's leading brands.`,
     'Explore Collections',
-    `${process.env.CLIENT_URL || 'http://localhost:3000'}/products`
+    `${process.env.CLIENT_URL || 'https://consultancy-orpin-seven.vercel.app'}/products`
 );
 
 export const getOrderConfirmationHtml = (name, orderId, total) => getBaseHtml(
@@ -115,7 +115,7 @@ export const getOrderConfirmationHtml = (name, orderId, total) => getBaseHtml(
     name,
     `Thank you for your order! We've received your business and are already preparing your materials for dispatch. Your Order ID is <strong>#${orderId}</strong> and the total amount is <strong>₹${total}</strong>.`,
     'View Order Details',
-    `${process.env.CLIENT_URL || 'http://localhost:3000'}/order/${orderId}`
+    `${process.env.CLIENT_URL || 'https://consultancy-orpin-seven.vercel.app'}/order/${orderId}`
 );
 
 export const getOrderShippedHtml = (name, orderId, trackingInfo) => getBaseHtml(
@@ -123,7 +123,7 @@ export const getOrderShippedHtml = (name, orderId, trackingInfo) => getBaseHtml(
     name,
     `Exciting news! Your order <strong>#${orderId}</strong> has been shipped and is on its way to your manufacturing facility. We've attached the tax invoice for your records. Tracking Info: <strong>${trackingInfo}</strong>.`,
     'Track Shipments',
-    `${process.env.CLIENT_URL || 'http://localhost:3000'}/profile`
+    `${process.env.CLIENT_URL || 'https://consultancy-orpin-seven.vercel.app'}/profile`
 );
 
 export const getOrderOutHtml = (name, orderId) => getBaseHtml(
@@ -131,7 +131,7 @@ export const getOrderOutHtml = (name, orderId) => getBaseHtml(
     name,
     `Your order <strong>#${orderId}</strong> is out for delivery! Our logistics partner is currently on the move to your location. Please ensure someone is available to receive the materials.`,
     'View Order History',
-    `${process.env.CLIENT_URL || 'http://localhost:3000'}/profile`
+    `${process.env.CLIENT_URL || 'https://consultancy-orpin-seven.vercel.app'}/profile`
 );
 
 export const getOrderDeliveredHtml = (name, orderId) => getBaseHtml(
@@ -139,7 +139,7 @@ export const getOrderDeliveredHtml = (name, orderId) => getBaseHtml(
     name,
     `Success! Your order <strong>#${orderId}</strong> has been delivered to your location. We hope you are satisfied with the quality of our fabrics. Thank you for choosing Zain Fabrics.`,
     'View Order History',
-    `${process.env.CLIENT_URL || 'http://localhost:3000'}/profile`
+    `${process.env.CLIENT_URL || 'https://consultancy-orpin-seven.vercel.app'}/profile`
 );
 
 export const getOrderStatusUpdateHtml = (name, orderId, status, description) => getBaseHtml(
@@ -147,7 +147,7 @@ export const getOrderStatusUpdateHtml = (name, orderId, status, description) => 
     name,
     `We've updated the status of your order <strong>#${orderId}</strong>. The current status is now: <span style="color: #10b981; font-weight: 800; text-transform: uppercase;">${status}</span>.<br><br><em>${description}</em>`,
     'View Order Details',
-    `${process.env.CLIENT_URL || 'http://localhost:3000'}/order/${orderId}`
+    `${process.env.CLIENT_URL || 'https://consultancy-orpin-seven.vercel.app'}/order/${orderId}`
 );
 
 export const getOrderCancelledHtml = (name, orderId, reason) => getBaseHtml(
@@ -155,7 +155,7 @@ export const getOrderCancelledHtml = (name, orderId, reason) => getBaseHtml(
     name,
     `Your order <strong>#${orderId}</strong> has been successfully cancelled as per your request. ${reason ? `Reason: <em>${reason}</em>.` : ''} If you've already made a payment, a refund has been initiated.`,
     'Return to Store',
-    `${process.env.CLIENT_URL || 'http://localhost:3000'}/products`
+    `${process.env.CLIENT_URL || 'https://consultancy-orpin-seven.vercel.app'}/products`
 );
 
 export const getRefundUpdateHtml = (name, orderId, status) => getBaseHtml(
@@ -163,7 +163,7 @@ export const getRefundUpdateHtml = (name, orderId, status) => getBaseHtml(
     name,
     `We're writing to update you on the refund for order <strong>#${orderId}</strong>. The current status of your refund is: <span style="color: #10b981; font-weight: 800; text-transform: uppercase;">${status}</span>.`,
     'Check Account',
-    `${process.env.CLIENT_URL || 'http://localhost:3000'}/profile`
+    `${process.env.CLIENT_URL || 'https://consultancy-orpin-seven.vercel.app'}/profile`
 );
 
 export const getAdminCustomEmailHtml = (name, subject, message) => getBaseHtml(
@@ -171,7 +171,7 @@ export const getAdminCustomEmailHtml = (name, subject, message) => getBaseHtml(
     name,
     message,
     'Visit Dashboard',
-    `${process.env.CLIENT_URL || 'http://localhost:3000'}`
+    `${process.env.CLIENT_URL || 'https://consultancy-orpin-seven.vercel.app'}`
 );
 
 export const sendEmail = async (to, subject, text, attachments = [], html = null) => {

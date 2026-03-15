@@ -1,6 +1,6 @@
 const API_URL = window.location.hostname === 'localhost' 
     ? 'http://localhost:5000/api' 
-    : 'https://consultancy-p1nd.onrender.com/api'; // Replace with actual Render URL when ready
+    : 'https://consultancy-jhsg.onrender.com/api';
 
 export const API = API_URL;
 
