@@ -8,6 +8,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { addToCart } from '../store/cartSlice';
 import ColorTools from '../components/ColorTools';
 import type { RootState } from '../store';
+import { API } from '../config/api';
 
 interface Product {
     _id: string;
@@ -63,7 +64,7 @@ const ProductDetailPage = () => {
 
         const fetchProduct = async () => {
             try {
-                const res = await fetch(`http://localhost:5000/api/products/${id}`);
+                const res = await fetch(`${API}/products/${id}`);
                 const data = await res.json();
                 setProduct(data);
                 setLoading(false);
@@ -76,7 +77,7 @@ const ProductDetailPage = () => {
         const fetchSamples = async () => {
             if (user && id && !isReadOnly) {
                 try {
-                    const res = await fetch(`http://localhost:5000/api/orders/samples/${id}`, {
+                    const res = await fetch(`${API}/orders/samples/${id}`, {
                         headers: { Authorization: `Bearer ${user.token}` }
                     });
                     if (res.ok) {
@@ -173,10 +174,11 @@ const ProductDetailPage = () => {
                                     ) : (
                                         <div className="w-full h-full flex items-center justify-center bg-accent-dark/20 backdrop-blur-sm overflow-hidden animate-fade-in group-hover:scale-105 transition-transform duration-1000">
                                             <img 
-                                                src={product.imageUrl} 
+                                                src={product.imageUrl || 'https://images.unsplash.com/photo-1544006659-f0b21f04cb1d?q=80&w=1000&auto=format&fit=crop'} 
                                                 alt={product.name} 
-                                                className="max-w-full max-h-full object-contain drop-shadow-2xl"
+                                                className="max-w-full max-h-full object-contain drop-shadow-2xl opacity-0 transition-opacity duration-500"
                                                 onLoad={(e) => (e.target as HTMLImageElement).classList.add('opacity-100')}
+                                                onError={(e) => { (e.target as HTMLImageElement).src = 'https://images.unsplash.com/photo-1551232864-3f0890e580d9?q=80&w=1000&auto=format&fit=crop'; }}
                                             />
                                         </div>
                                     )}
@@ -210,7 +212,12 @@ const ProductDetailPage = () => {
                                     onClick={() => { setViewMode('image'); setActiveThumbnail(0); }}
                                     className={`w-24 h-24 border ${activeThumbnail === 0 && viewMode === 'image' ? 'border-brand shadow-[0_0_15px_rgba(16,185,129,0.3)]' : 'border-theme'} hover:border-brand/50 transition-all overflow-hidden relative group rounded-xl bg-bg-alt`}
                                 >
-                                    <img src={product.imageUrl} className={`w-full h-full object-cover ${activeThumbnail === 0 && viewMode === 'image' ? 'opacity-100' : 'opacity-40'} group-hover:opacity-100 transition-opacity`} alt="Fabric Surface" />
+                                    <img 
+                                        src={product.imageUrl || 'https://images.unsplash.com/photo-1544006659-f0b21f04cb1d?q=80&w=1000&auto=format&fit=crop'} 
+                                        className={`w-full h-full object-cover ${activeThumbnail === 0 && viewMode === 'image' ? 'opacity-100' : 'opacity-40'} group-hover:opacity-100 transition-opacity`} 
+                                        alt="Fabric Surface" 
+                                        onError={(e) => { (e.target as HTMLImageElement).src = 'https://images.unsplash.com/photo-1551232864-3f0890e580d9?q=80&w=1000&auto=format&fit=crop'; }}
+                                    />
                                     <div className="absolute inset-0 bg-brand/5 group-hover:bg-transparent transition-colors"></div>
                                 </button>
                             )}

@@ -33,7 +33,10 @@ const FabricScene = ({ textureUrl, color = '#ffffff', normalMapUrl, roughnessMap
                 {...props}
                 color={color}
                 side={DoubleSide}
-                roughness={0.8}
+                roughness={1}
+                metalness={0.0}
+                emissive={color}
+                emissiveIntensity={0.05}
             />
         </mesh>
     );
@@ -65,7 +68,7 @@ const FabricViewer = ({ textureUrl, color = '#ffffff', normalMapUrl, roughnessMa
                 <Canvas shadows dpr={[1, 2]} camera={{ fov: 45, position: [0, 2, 3] }} gl={{ alpha: false }}>
                     <color attach="background" args={['#0a0a0a']} />
                     <Suspense fallback={null}>
-                        <Stage environment="city" intensity={0.5}>
+                        <Stage environment="city" intensity={2} adjustCamera={1.5}>
                             <FabricScene
                                 textureUrl={textureUrl || "/3dmodel/cotton_texture.png"}
                                 color={color}

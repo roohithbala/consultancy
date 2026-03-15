@@ -3,6 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import type { RootState } from '../../store';
 import { Upload } from 'lucide-react';
+import { API } from '../../config/api';
 
 // Common field classes using CSS variable theme tokens
 const fieldCls = "w-full px-5 py-4 bg-secondary border border-theme rounded-xl text-primary-text focus:border-brand outline-none transition-all shadow-sm";
@@ -36,7 +37,7 @@ const EditProductPage = () => {
     useEffect(() => {
         const fetchProduct = async () => {
             try {
-                const res = await fetch(`http://localhost:5000/api/products/${id}`);
+                const res = await fetch(`${API}/products/${id}`);
                 const data = await res.json();
                 setFormData({
                     name: data.name,
@@ -75,13 +76,13 @@ const EditProductPage = () => {
         uploadData.append('image', file);
         setUploading(true);
         try {
-            const res = await fetch('http://localhost:5000/api/upload', {
+            const res = await fetch(`${API}/upload`, {
                 method: 'POST',
                 headers: { Authorization: `Bearer ${user?.token}` },
                 body: uploadData,
             });
             const data = await res.text();
-            const fullUrl = `http://localhost:5000${data}`;
+            const fullUrl = `${API.replace('/api', '')}${data}`;
             if (index !== undefined) {
                 const newDocs = [...documents];
                 newDocs[index].url = fullUrl;
@@ -122,7 +123,7 @@ const EditProductPage = () => {
             }
         };
         try {
-            const res = await fetch(`http://localhost:5000/api/products/${id}`, {
+            const res = await fetch(`${API}/products/${id}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',

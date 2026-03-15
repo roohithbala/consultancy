@@ -9,7 +9,17 @@ const generateToken = (id) => {
     });
 };
 
-const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
+// Google Client Lazy Init
+let _client = null;
+const getClient = () => {
+    if (!_client) {
+        if (!process.env.GOOGLE_CLIENT_ID) {
+            console.error('GOOGLE_CLIENT_ID is missing from environment variables!');
+        }
+        _client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
+    }
+    return _client;
+};
 
 /**
  * @desc    Register a new user
@@ -151,11 +161,14 @@ const googleLogin = async (req, res) => {
     if (!tokenId) {
         return res.status(400).json({ message: 'No Google token provided' });
     }
-
     try {
+        const client = getClient();
         const ticket = await client.verifyIdToken({
             idToken: tokenId,
             audience: GOOGLE_CLIENT_ID,
+            // Tolerance for clock skew (server time vs Google time)
+            // Adding 5.5 hours to account for possible IST/UTC confusion or major system drift
+            clockSkewSeconds: 20000 
         });
 
         const { name, email, sub: googleId } = ticket.getPayload();
@@ -186,8 +199,13 @@ const googleLogin = async (req, res) => {
             token: generateToken(user._id),
         });
     } catch (error) {
-        console.error('Google Auth Error:', error);
-        res.status(401).json({ message: 'Google authentication failed' });
+        console.error('Google Auth Error Details:', {
+            message: error.message,
+            stack: error.stack,
+            providedClientId: GOOGLE_CLIENT_ID,
+            tokenReceived: tokenId ? 'YES' : 'NO'
+        });
+        res.status(401).json({ message: 'Google authentication failed', details: error.message });
     }
 };
 

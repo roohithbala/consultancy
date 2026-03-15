@@ -128,12 +128,64 @@ export const getMyOrders = async (req, res) => {
     res.json(orders);
 };
 
-// @desc    Get all orders
+// @desc    Get all orders with optional filtering
 // @route   GET /api/orders
 // @access  Private/Admin
 export const getOrders = async (req, res) => {
-    const orders = await Order.find({}).populate('user', 'name email phone companyName').sort({ createdAt: -1 });
-    res.json(orders);
+    try {
+        const { status, paymentMethod, startDate, endDate, keyword } = req.query;
+        let query = {};
+
+        if (status && status !== 'All') {
+            query.status = status;
+        }
+
+        if (paymentMethod && paymentMethod !== 'All') {
+            query.paymentMethod = paymentMethod;
+        }
+
+        if (startDate || endDate) {
+            query.createdAt = {};
+            if (startDate) query.createdAt.$gte = new Date(startDate);
+            if (endDate) {
+                const end = new Date(endDate);
+                end.setHours(23, 59, 59, 999);
+                query.createdAt.$lte = end;
+            }
+        }
+
+        if (keyword) {
+            const isObjectId = mongoose.Types.ObjectId.isValid(keyword);
+            query.$or = [
+                isObjectId ? { _id: keyword } : null,
+                { trackingNumber: { $regex: keyword, $options: 'i' } },
+                { courierName: { $regex: keyword, $options: 'i' } },
+                { 'shippingAddress.address': { $regex: keyword, $options: 'i' } },
+                { 'shippingAddress.phone': { $regex: keyword, $options: 'i' } }
+            ].filter(Boolean);
+
+            // Also search by user name/email if keyword is string
+            const users = await User.find({
+                $or: [
+                    { name: { $regex: keyword, $options: 'i' } },
+                    { email: { $regex: keyword, $options: 'i' } },
+                    { companyName: { $regex: keyword, $options: 'i' } }
+                ]
+            }).select('_id');
+            
+            if (users.length > 0) {
+                query.$or.push({ user: { $in: users.map(u => u._id) } });
+            }
+        }
+
+        const orders = await Order.find(query)
+            .populate('user', 'name email phone companyName')
+            .sort({ createdAt: -1 });
+
+        res.json(orders);
+    } catch (error) {
+        res.status(500).json({ message: 'Error fetching orders', error: error.message });
+    }
 };
 
 // @desc    Update order status
@@ -312,13 +364,13 @@ export const cancelOrder = async (req, res) => {
         // Customers can only cancel when order is still in 'Ordered' status
         if (!isAdmin && order.status !== 'Ordered') {
             res.status(400);
-            throw new Error(`Cannot cancel order in '${order.status}' status. Cancellation is only allowed before processing begins.`);
+            return res.json({ message: `Cannot cancel order in '${order.status}' status. Cancellation is only allowed before processing begins.` });
         }
 
         // Admins can cancel anything up to (not including) Shipped / Delivered
         if (isAdmin && ['Shipped', 'Out', 'Delivered'].includes(order.status)) {
             res.status(400);
-            throw new Error('Cannot cancel order that has already been shipped or delivered. Please raise a return instead.');
+            return res.json({ message: 'Cannot cancel order that has already been shipped or delivered. Please raise a return instead.' });
         }
 
         order.status = 'Cancelled';

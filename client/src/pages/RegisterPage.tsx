@@ -4,6 +4,7 @@ import { useDispatch } from 'react-redux';
 import { setCredentials } from '../store/authSlice';
 import { User, Mail, Lock, ArrowRight, Phone, Building, FileText } from 'lucide-react';
 import { GoogleLogin } from '@react-oauth/google';
+import { API } from '../config/api';
 
 const RegisterPage = () => {
     const [name, setName] = useState('');
@@ -34,7 +35,7 @@ const RegisterPage = () => {
         console.log('Attempting registration for:', email);
 
         try {
-            const res = await fetch('http://localhost:5000/api/auth/register', {
+            const res = await fetch(`${API}/auth/register`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -82,7 +83,7 @@ const RegisterPage = () => {
         setError('');
         console.log('Google registration fetch triggered');
         try {
-            const res = await fetch('http://localhost:5000/api/auth/google', {
+            const res = await fetch(`${API}/auth/google`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

@@ -11,7 +11,7 @@ import {
     Download, RefreshCw, Award, Clock
 } from 'lucide-react';
 
-const API = 'http://localhost:5000/api';
+import { API } from '../../config/api';
 
 const DAY_OPTIONS = [
     { label: '7 Days', value: '7' },
@@ -41,6 +41,8 @@ interface CustomerRow { _id: string; name: string; email: string; company: strin
 const AnalyticsDashboardPage = () => {
     const { user } = useSelector((state: RootState) => state.auth);
     const [days, setDays] = useState('30');
+    const [fromDate, setFromDate] = useState('');
+    const [toDate, setToDate] = useState('');
     const [loading, setLoading] = useState(true);
     const [activeTab, setActiveTab] = useState<'overview' | 'products' | 'customers'>('overview');
 
@@ -57,12 +59,13 @@ const AnalyticsDashboardPage = () => {
     const fetchAll = useCallback(async () => {
         setLoading(true);
         try {
+            const p = fromDate && toDate ? `from=${fromDate}&to=${toDate}` : `days=${days}`;
             const [statsRes, revenueRes, statusRes, prodRes, custRes] = await Promise.all([
                 fetch(`${API}/orders/admin/stats`, headers()),
-                fetch(`${API}/orders/analytics/revenue?days=${days}`, headers()),
-                fetch(`${API}/orders/analytics/status?days=${days}`, headers()),
-                fetch(`${API}/orders/analytics/products?days=${days}`, headers()),
-                fetch(`${API}/orders/analytics/customers?days=${days}`, headers()),
+                fetch(`${API}/orders/analytics/revenue?${p}`, headers()),
+                fetch(`${API}/orders/analytics/status?${p}`, headers()),
+                fetch(`${API}/orders/analytics/products?${p}`, headers()),
+                fetch(`${API}/orders/analytics/customers?${p}`, headers()),
             ]);
             setStats(await statsRes.json());
             setRevenue(await revenueRes.json());
@@ -71,7 +74,7 @@ const AnalyticsDashboardPage = () => {
             setCustomers(await custRes.json());
         } catch (e) { console.error(e); }
         setLoading(false);
-    }, [days, headers]);
+    }, [days, fromDate, toDate, headers]);
 
     useEffect(() => { fetchAll(); }, [fetchAll]);
 
@@ -130,13 +133,22 @@ const AnalyticsDashboardPage = () => {
                     <p className="text-secondary-text text-xs mt-1 tracking-widest uppercase">Revenue · Products · Customers</p>
                 </div>
                 <div className="flex flex-wrap gap-3 items-center">
+                    {/* Custom date range */}
+                    <div className="flex items-center gap-1 bg-secondary border border-theme rounded-xl px-3 py-1.5 shadow-sm">
+                        <input type="date" value={fromDate} onChange={e => { setFromDate(e.target.value); setDays(''); }}
+                            className="bg-transparent text-[10px] text-primary-text focus:outline-none w-28 cursor-pointer" />
+                        <span className="text-secondary-text text-xs">→</span>
+                        <input type="date" value={toDate} onChange={e => { setToDate(e.target.value); setDays(''); }}
+                            className="bg-transparent text-[10px] text-primary-text focus:outline-none w-28 cursor-pointer" />
+                    </div>
+
                     {/* Day filter */}
-                    <div className="flex gap-1 bg-secondary border border-theme rounded-xl p-1">
+                    <div className="flex gap-1 bg-secondary border border-theme rounded-xl p-1 shadow-sm">
                         {DAY_OPTIONS.map(opt => (
                             <button
                                 key={opt.value}
-                                onClick={() => setDays(opt.value)}
-                                className={`px-3 py-1.5 rounded-lg text-[10px] font-black uppercase tracking-wider transition-all ${days === opt.value ? 'bg-brand text-black' : 'text-secondary-text hover:text-primary-text'}`}
+                                onClick={() => { setDays(opt.value); setFromDate(''); setToDate(''); }}
+                                className={`px-3 py-1.5 rounded-lg text-[10px] font-black uppercase tracking-wider transition-all ${days === opt.value && !fromDate ? 'bg-brand text-black' : 'text-secondary-text hover:text-primary-text'}`}
                             >
                                 {opt.label}
                             </button>

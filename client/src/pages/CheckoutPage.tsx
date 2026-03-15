@@ -4,6 +4,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import type { RootState } from '../store';
 import { clearCart } from '../store/cartSlice';
 import { CheckCircle, Truck, MapPin, CreditCard } from 'lucide-react';
+import { API } from '../config/api';
 
 const CheckoutPage = () => {
     const { cartItems, totalAmount } = useSelector((state: RootState) => state.cart);
@@ -38,7 +39,7 @@ const CheckoutPage = () => {
         const fetchCredit = async () => {
             if (!user?.token) return;
             try {
-                const res = await fetch('http://localhost:5000/api/users/profile', {
+                const res = await fetch(`${API}/users/profile`, {
                     headers: { Authorization: `Bearer ${user.token}` }
                 });
                 const data = await res.json();
@@ -58,7 +59,7 @@ const CheckoutPage = () => {
     const fetchAddresses = async () => {
         if (!user) return;
         try {
-            const res = await fetch('http://localhost:5000/api/users/profile', {
+            const res = await fetch(`${API}/users/profile`, {
                 headers: { Authorization: `Bearer ${user.token}` }
             });
             const data = await res.json();
@@ -91,7 +92,7 @@ const CheckoutPage = () => {
         setLoading(true);
         try {
             // 1. Create PRELIMINARY Unpaid Order in Database
-            const createOrderRes = await fetch('http://localhost:5000/api/orders', {
+            const createOrderRes = await fetch(`${API}/orders`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -111,7 +112,7 @@ const CheckoutPage = () => {
             const localOrder = await createOrderRes.json();
 
             // 2. Create Razorpay Order on Server
-            const rzpOrderRes = await fetch('http://localhost:5000/api/payment/create-order', {
+            const rzpOrderRes = await fetch(`${API}/payment/create-order`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -140,7 +141,7 @@ const CheckoutPage = () => {
                 handler: async (response: any) => {
                     setLoading(true);
                     // 3. Verify Payment
-                    const verifyRes = await fetch('http://localhost:5000/api/payment/verify-payment', {
+                    const verifyRes = await fetch(`${API}/payment/verify-payment`, {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
@@ -243,7 +244,7 @@ const CheckoutPage = () => {
             try {
                 const creditDueDate = new Date();
                 creditDueDate.setDate(creditDueDate.getDate() + (creditInfo?.termsDays || 30));
-                const res = await fetch('http://localhost:5000/api/orders', {
+                const res = await fetch(`${API}/orders`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${user!.token}` },
                     body: JSON.stringify({
@@ -274,7 +275,7 @@ const CheckoutPage = () => {
 
         setLoading(true);
         try {
-            const res = await fetch('http://localhost:5000/api/orders', {
+            const res = await fetch(`${API}/orders`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

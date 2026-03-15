@@ -2,20 +2,62 @@ import 'dotenv/config';
 import express from 'express';
 import cors from 'cors';
 import mongoose from 'mongoose';
+import dns from 'dns';
+
+// Fix for MongoDB Atlas DNS SRV resolution issues in some environments
+dns.setServers(['8.8.8.8', '8.8.4.4']);
 
 const app = express();
 const PORT = process.env.PORT || 5000;
 
 // Middleware
-app.use(cors());
+app.use((req, res, next) => {
+    res.setHeader('Cross-Origin-Opener-Policy', 'same-origin-allow-popups');
+    next();
+});
+
+const allowedOrigins = [
+    'http://localhost:3000',
+    'http://localhost:5173',
+    'https://zain-fabrics.vercel.app',
+    'https://consultancy-iota.vercel.app',
+    'https://consultancy-orpin-seven.vercel.app'
+];
+
+app.use(cors({
+    origin: function (origin, callback) {
+        if (!origin || allowedOrigins.indexOf(origin) !== -1) {
+            callback(null, true);
+        } else {
+            callback(new Error('Not allowed by CORS'));
+        }
+    },
+    credentials: true
+}));
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use('/uploads', express.static('uploads'));
 
+// Health Check for Render
+app.get('/health', (req, res) => res.status(200).send('OK'));
+
 // Database Connection
-mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/zain-fabrics')
-    .then(() => console.log('MongoDB Connected'))
-    .catch(err => console.error('MongoDB connection error:', err));
+const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/zain-fabrics';
+console.log(`Attempting to connect to MongoDB...`);
+
+mongoose.connect(MONGODB_URI)
+    .then(() => {
+        const dbName = mongoose.connection.name;
+        const host = mongoose.connection.host;
+        console.log(`✅ MongoDB Connected successfully to ${dbName} on ${host}`);
+    })
+    .catch(err => {
+        console.error('❌ MongoDB connection error:', err.message);
+        if (err.message.includes('ECONNREFUSED')) {
+            console.error('Tip: Check your IP whitelisting in MongoDB Atlas and local firewall settings.');
+        }
+    });
 
 // Routes
 import authRoutes from './routes/authRoutes.js';

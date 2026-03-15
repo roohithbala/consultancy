@@ -11,10 +11,14 @@
  */
 
 import 'dotenv/config';
+import dns from 'dns';
 import mongoose from 'mongoose';
 import colors from 'colors';
 import Product from './models/Product.js';
 import User from './models/User.js';
+
+// DNS Resolution fix for MongoDB Atlas
+dns.setServers(['8.8.8.8', '8.8.4.4']);
 
 // ── DB Connection ────────────────────────────────────────────────────────────
 const connectDB = async () => {
@@ -59,7 +63,7 @@ const products = [
         width: '58 inches',
         gsm: 200,
         inStock: 2500,
-        imageUrl: '/products/eva_coating_product_1772736221090.png',
+        imageUrl: '/products/coating.png',
         samplePrice: 50,
         isAvailable: true
     },
@@ -71,7 +75,7 @@ const products = [
         width: '60 inches',
         gsm: 180,
         inStock: 1500,
-        imageUrl: '/products/raising_fabric_product_1772736237241.png',
+        imageUrl: '/products/raising.png',
         samplePrice: 50,
         isAvailable: true
     },
@@ -83,7 +87,7 @@ const products = [
         width: '56 inches',
         gsm: 240,
         inStock: 3000,
-        imageUrl: '/products/cotton_drill_product_1772736259941.png',
+        imageUrl: '/products/drill.png',
         samplePrice: 50,
         isAvailable: true
     },
@@ -95,7 +99,7 @@ const products = [
         width: '60 inches',
         gsm: 150,
         inStock: 2000,
-        imageUrl: '/products/shoe_jersey_product_1772736276272.png',
+        imageUrl: '/products/jersey.png',
         textureMaps: { map: '/3dmodel/jersey_texture.png' },
         samplePrice: 50,
         isAvailable: true
@@ -108,7 +112,7 @@ const products = [
         width: '54 inches',
         gsm: 310,
         inStock: 1200,
-        imageUrl: '/products/rugged_canvas_product_1772736292884.png',
+        imageUrl: '/products/canvas.png',
         samplePrice: 50,
         isAvailable: true
     },
@@ -120,7 +124,7 @@ const products = [
         width: '58 inches',
         gsm: 400,
         inStock: 800,
-        imageUrl: '/products/foam_lamination_product_1772736308509.png',
+        imageUrl: '/products/foam.png',
         textureMaps: { map: '/3dmodel/foam_texture.png' },
         samplePrice: 50,
         isAvailable: true
@@ -133,7 +137,7 @@ const products = [
         width: '48 inches',
         gsm: 80,
         inStock: 10000,
-        imageUrl: '/products/bonding_film_product_1772736329501.png',
+        imageUrl: '/products/bonding.png',
         samplePrice: 50,
         isAvailable: true
     },
@@ -145,7 +149,7 @@ const products = [
         width: '58 inches',
         gsm: 130,
         inStock: 3500,
-        imageUrl: '/products/interlining.png',
+        imageUrl: '/products/coating.png',
         textureMaps: { map: '/3dmodel/polyester_texture.png' },
         samplePrice: 50,
         isAvailable: true
@@ -158,7 +162,7 @@ const products = [
         width: '62 inches',
         gsm: 100,
         inStock: 4000,
-        imageUrl: '/products/jersey_texture_map_1772736415229.png',
+        imageUrl: '/products/jersey.png',
         textureMaps: { map: '/3dmodel/jersey_texture.png' },
         samplePrice: 50,
         isAvailable: true

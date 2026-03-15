@@ -1,3 +1,5 @@
+import { API } from '../../config/api';
+
 interface AdminPaymentCardProps {
     order: any;
     token: string;
@@ -7,7 +9,7 @@ interface AdminPaymentCardProps {
 const AdminPaymentCard = ({ order, token, onUpdate }: AdminPaymentCardProps) => {
     const togglePaid = async () => {
         try {
-            const res = await fetch(`http://localhost:5000/api/orders/${order._id}/payment`, {
+            const res = await fetch(`${API}/orders/${order._id}/payment`, {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
                 body: JSON.stringify({ isPaid: !order.isPaid })

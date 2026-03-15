@@ -141,17 +141,12 @@ const ProductListPage = () => {
 
                             {/* Image */}
                             <div className="relative aspect-[4/3] bg-secondary overflow-hidden border-b border-theme">
-                                {product.imageUrl ? (
                                     <img
-                                        src={product.imageUrl}
+                                        src={product.imageUrl || 'https://images.unsplash.com/photo-1544006659-f0b21f04cb1d?q=80&w=1000&auto=format&fit=crop'}
                                         alt={product.name}
                                         className="w-full h-full object-cover opacity-90 group-hover:opacity-100 group-hover:scale-105 transition-all duration-700"
+                                        onError={(e) => { (e.target as HTMLImageElement).src = 'https://images.unsplash.com/photo-1551232864-3f0890e580d9?q=80&w=1000&auto=format&fit=crop'; }}
                                     />
-                                ) : (
-                                    <div className="w-full h-full flex items-center justify-center text-secondary-text/20 font-black text-[10px] uppercase tracking-[0.4em]">
-                                        No Image
-                                    </div>
-                                )}
 
                                 {/* Gradient overlay */}
                                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />

@@ -7,7 +7,8 @@ import {
     FileText, Receipt, CreditCard, BarChart2, Building2
 } from 'lucide-react';
 
-const API = 'http://localhost:5000/api/billing';
+import { API as BASE_API } from '../../config/api';
+const API = `${BASE_API}/billing`;
 
 const DAY_OPTIONS = [
     { label: '7 Days', value: '7' },
@@ -370,7 +371,7 @@ const BillingPage = () => {
                                                 </td>
                                                 <td className="px-4 py-4">
                                                     {inv.invoiceUrl && (
-                                                        <a href={`http://localhost:5000${inv.invoiceUrl}`} target="_blank" rel="noreferrer"
+                                                        <a href={`${API.replace('/api/billing', '')}${inv.invoiceUrl}`} target="_blank" rel="noreferrer"
                                                             className="text-[9px] font-black text-brand hover:underline uppercase">PDF</a>
                                                     )}
                                                 </td>

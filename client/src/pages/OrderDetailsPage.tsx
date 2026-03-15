@@ -3,6 +3,7 @@ import { useParams, useSearchParams } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { useReactToPrint } from 'react-to-print';
 import type { RootState } from '../store';
+import { API } from '../config/api';
 
 // Modular Components
 import OrderHeader from '../components/OrderDetails/OrderHeader';
@@ -29,7 +30,7 @@ const OrderDetailsPage = () => {
     useEffect(() => {
         const fetchOrder = async () => {
             try {
-                const res = await fetch(`http://localhost:5000/api/orders/${id}`, {
+                const res = await fetch(`${API}/orders/${id}`, {
                     headers: { Authorization: `Bearer ${user?.token}` }
                 });
                 const data = await res.json();

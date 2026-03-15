@@ -4,6 +4,7 @@ import { setCredentials } from '../store/authSlice';
 import { useNavigate, Link } from 'react-router-dom';
 import { Lock, Mail, ArrowRight, Phone, Building, FileText, ShieldCheck } from 'lucide-react';
 import { GoogleLogin } from '@react-oauth/google';
+import { API } from '../config/api';
 
 const LoginPage = () => {
     const [email, setEmail] = useState('');
@@ -27,7 +28,7 @@ const LoginPage = () => {
         setIsLoading(true);
 
         try {
-            const res = await fetch('http://localhost:5000/api/auth/login', {
+            const res = await fetch(`${API}/auth/login`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -61,7 +62,7 @@ const LoginPage = () => {
         setIsLoading(true);
 
         try {
-            const res = await fetch('http://localhost:5000/api/auth/verify-otp', {
+            const res = await fetch(`${API}/auth/verify-otp`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -90,7 +91,7 @@ const LoginPage = () => {
         setError('');
 
         try {
-            const res = await fetch('http://localhost:5000/api/auth/google', {
+            const res = await fetch(`${API}/auth/google`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -128,7 +129,7 @@ const LoginPage = () => {
         setIsLoading(true);
         setError('');
         try {
-            const res = await fetch('http://localhost:5000/api/auth/google', {
+            const res = await fetch(`${API}/auth/google`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

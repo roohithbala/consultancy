@@ -115,10 +115,10 @@ const FootwearConfigurator = ({ color: externalColor, modelUrl, fallbackImage }:
                     /* Original → static image */
                     <div className="relative w-full h-full flex items-center justify-center bg-secondary rounded-lg overflow-hidden">
                         <img
-                            src={fallbackImage || '/3dmodel/t13.png'}
+                            src={fallbackImage || 'https://images.unsplash.com/photo-1544006659-f0b21f04cb1d?q=80&w=1000&auto=format&fit=crop'}
                             alt="Material View"
                             className="max-w-full max-h-full object-contain drop-shadow-[0_20px_50px_rgba(0,0,0,0.8)] hover:scale-105 transition-transform duration-700"
-                            onError={(e) => { (e.target as HTMLImageElement).src = '/3dmodel/t13.png'; }}
+                            onError={(e: any) => { (e.target as HTMLImageElement).src = 'https://images.unsplash.com/photo-1551232864-3f0890e580d9?q=80&w=1000&auto=format&fit=crop'; }}
                         />
                         <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent pointer-events-none" />
                         <div className="absolute top-4 left-4 z-10 px-3 py-1 bg-brand/90 backdrop-blur-md rounded-full border border-white/10 text-[10px] text-black uppercase tracking-widest font-black">
@@ -137,7 +137,7 @@ const FootwearConfigurator = ({ color: externalColor, modelUrl, fallbackImage }:
                         >
                             <color attach="background" args={['#0a0a0a']} />
                             <Suspense fallback={<LoadingOverlay />}>
-                                <Stage environment="city" intensity={1.5} adjustCamera={1.2}>
+                                <Stage environment="city" intensity={2} adjustCamera={1.2}>
                                     <ShoeModel
                                         modelUrl={effectiveModelUrl}
                                         color={color}

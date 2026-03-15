@@ -1,3 +1,5 @@
+import { API } from '../../config/api';
+
 interface OrderActionButtonsProps {
     status: string;
     orderId: string;
@@ -12,7 +14,7 @@ const OrderActionButtons = ({ status, orderId, token, onStatusUpdate, refundStat
     const handleCancel = async () => {
         if (!window.confirm('Are you sure you want to cancel this order?')) return;
         try {
-            const res = await fetch(`http://localhost:5000/api/orders/${orderId}/cancel`, {
+            const res = await fetch(`${API}/orders/${orderId}/cancel`, {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
                 body: JSON.stringify({ reason: 'User requested cancellation' })

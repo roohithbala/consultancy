@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import { GoogleOAuthProvider } from '@react-oauth/google';
+import { GOOGLE_CLIENT_ID } from './config/api';
 import { ThemeProvider } from './context/ThemeContext';
 
 // Components
@@ -31,6 +32,7 @@ import ProfilePage from './pages/ProfilePage';
 import CustomerListPage from './pages/admin/CustomerListPage';
 import AnalyticsDashboardPage from './pages/admin/AnalyticsDashboardPage';
 import BillingPage from './pages/admin/BillingPage';
+import ReportHubPage from './pages/admin/ReportHubPage';
 import PrivacyPage from './pages/PrivacyPage';
 import TermsPage from './pages/TermsPage';
 
@@ -44,10 +46,8 @@ const ScrollToTop = () => {
 };
 
 function App() {
-  const googleClientId = "317892299815-2cl6141mpcdnj82s1ebhls7pdpdjk7kh.apps.googleusercontent.com";
-
   return (
-    <GoogleOAuthProvider clientId={googleClientId}>
+    <GoogleOAuthProvider clientId={GOOGLE_CLIENT_ID}>
       <ThemeProvider>
         <Router>
           <ScrollToTop />
@@ -87,6 +87,7 @@ function App() {
                 <Route path="customers" element={<CustomerListPage />} />
                 <Route path="analytics" element={<AnalyticsDashboardPage />} />
                 <Route path="billing" element={<BillingPage />} />
+                <Route path="reports" element={<ReportHubPage />} />
               </Route>
             </Route>
           </Routes>

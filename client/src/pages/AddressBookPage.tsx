@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import type { RootState } from '../store';
 import { Trash2, MapPin, Plus, Check } from 'lucide-react';
+import { API } from '../config/api';
 
 interface Address {
     _id?: string;
@@ -34,7 +35,7 @@ const AddressBookPage = ({ isEmbedded = false }: { isEmbedded?: boolean }) => {
 
     const fetchAddresses = async () => {
         try {
-            const res = await fetch('http://localhost:5000/api/users/profile', {
+            const res = await fetch(`${API}/users/profile`, {
                 headers: { Authorization: `Bearer ${user?.token}` }
             });
             const data = await res.json();
@@ -47,7 +48,7 @@ const AddressBookPage = ({ isEmbedded = false }: { isEmbedded?: boolean }) => {
     const handleAddAddress = async (e: React.FormEvent) => {
         e.preventDefault();
         try {
-            const res = await fetch('http://localhost:5000/api/users/address', {
+            const res = await fetch(`${API}/users/address`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -75,7 +76,7 @@ const AddressBookPage = ({ isEmbedded = false }: { isEmbedded?: boolean }) => {
     const handleDeleteAddress = async (id: string) => {
         if (window.confirm('Delete this address?')) {
             try {
-                const res = await fetch(`http://localhost:5000/api/users/address/${id}`, {
+                const res = await fetch(`${API}/users/address/${id}`, {
                     method: 'DELETE',
                     headers: { Authorization: `Bearer ${user?.token}` }
                 });

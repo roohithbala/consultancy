@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Filter, X, Check } from 'lucide-react';
+import { API } from '../config/api';
 
 interface Product {
     _id: string;
@@ -25,7 +26,7 @@ const ProductsPage = () => {
     useEffect(() => {
         const fetchProducts = async () => {
             try {
-                const res = await fetch('http://localhost:5000/api/products');
+                const res = await fetch(`${API}/products`);
                 const data = await res.json();
                 setProducts(data);
                 setFilteredProducts(data);
@@ -200,17 +201,12 @@ const ProductsPage = () => {
  
                                              {/* Image container */}
                                             <div className="relative aspect-[4/5] bg-accent-dark overflow-hidden border-b border-border/10">
-                                                {product.imageUrl ? (
                                                     <img
-                                                        src={product.imageUrl}
+                                                        src={product.imageUrl || 'https://images.unsplash.com/photo-1544006659-f0b21f04cb1d?q=80&w=1000&auto=format&fit=crop'}
                                                         alt={product.name}
                                                         className="w-full h-full object-cover opacity-80 group-hover:opacity-100 group-hover:scale-105 transition-all duration-1000"
+                                                        onError={(e) => { (e.target as HTMLImageElement).src = 'https://images.unsplash.com/photo-1551232864-3f0890e580d9?q=80&w=1000&auto=format&fit=crop'; }}
                                                     />
-                                                ) : (
-                                                    <div className="w-full h-full flex items-center justify-center text-secondary-text/20 bg-bg-alt/5 font-black text-[10px] uppercase tracking-[0.4em]">
-                                                        Missing Asset
-                                                    </div>
-                                                )}
  
                                                 <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-60"></div>
  

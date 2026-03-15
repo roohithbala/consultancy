@@ -6,6 +6,7 @@ import StatsGrid from '../../components/AdminDashboard/StatsGrid';
 import RecentOrdersTable from '../../components/AdminDashboard/RecentOrdersTable';
 import FacilitiesManager from '../../components/AdminDashboard/FacilitiesManager';
 import SystemStatus from '../../components/AdminDashboard/SystemStatus';
+import { API } from '../../config/api';
 
 const AdminDashboardPage = () => {
     const { user } = useSelector((state: RootState) => state.auth);
@@ -17,7 +18,7 @@ const AdminDashboardPage = () => {
         const newVal = !facilities[key];
         setFacilities(prev => ({ ...prev, [key]: newVal }));
         try {
-            await fetch('http://localhost:5000/api/settings', {
+            await fetch(`${API}/settings`, {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${user?.token}` },
                 body: JSON.stringify({ [key]: newVal })
@@ -31,7 +32,7 @@ const AdminDashboardPage = () => {
         if (!window.confirm("Verify payment for Order #" + orderId.substring(0, 8) + "?")) return;
 
         try {
-            const res = await fetch(`http://localhost:5000/api/orders/${orderId}/payment`, {
+            const res = await fetch(`${API}/orders/${orderId}/payment`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
@@ -42,7 +43,7 @@ const AdminDashboardPage = () => {
 
             if (res.ok) {
                 // Refresh data
-                const sRes = await fetch('http://localhost:5000/api/orders/admin/stats', {
+                const sRes = await fetch(`${API}/orders/admin/stats`, {
                     headers: { Authorization: `Bearer ${user?.token}` }
                 });
                 const sData = await sRes.json();
@@ -61,8 +62,8 @@ const AdminDashboardPage = () => {
         const fetchData = async () => {
             try {
                 const [sRes, setRes] = await Promise.all([
-                    fetch('http://localhost:5000/api/orders/admin/stats', { headers: { Authorization: `Bearer ${user?.token}` } }),
-                    fetch('http://localhost:5000/api/settings', { headers: { Authorization: `Bearer ${user?.token}` } })
+                    fetch(`${API}/orders/admin/stats`, { headers: { Authorization: `Bearer ${user?.token}` } }),
+                    fetch(`${API}/settings`, { headers: { Authorization: `Bearer ${user?.token}` } })
                 ]);
                 const sData = await sRes.json();
                 setStats(sData);

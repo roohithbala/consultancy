@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import type { RootState } from '../../store';
 import { Upload } from 'lucide-react';
+import { API } from '../../config/api';
 
 const AddProductPage = () => {
     const navigate = useNavigate();
@@ -45,7 +46,7 @@ const AddProductPage = () => {
         setUploading(true);
 
         try {
-            const res = await fetch('http://localhost:5000/api/upload', {
+            const res = await fetch(`${API}/upload`, {
                 method: 'POST',
                 headers: {
                     Authorization: `Bearer ${user?.token}`,
@@ -54,7 +55,7 @@ const AddProductPage = () => {
             });
 
             const data = await res.text(); // Returns path
-            const fullUrl = `http://localhost:5000${data}`;
+            const fullUrl = `${API.replace('/api', '')}${data}`;
 
             if (index !== undefined) {
                 // Updating a document url
@@ -103,7 +104,7 @@ const AddProductPage = () => {
         };
 
         try {
-            const res = await fetch('http://localhost:5000/api/products', {
+            const res = await fetch(`${API}/products`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { CheckCircle, ChevronRight, Truck } from 'lucide-react';
+import { API } from '../../config/api';
 
 interface AdminStatusManagerProps {
     order: any;
@@ -30,7 +31,7 @@ const AdminStatusManager = ({ order, token, onUpdate, getValidNextStatuses }: Ad
         if (!window.confirm(`Move order to "${newStatus}"?`)) return;
         setLoading(true);
         try {
-            const res = await fetch(`http://localhost:5000/api/orders/${order._id}/status`, {
+            const res = await fetch(`${API}/orders/${order._id}/status`, {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
                 body: JSON.stringify({ status: newStatus })
@@ -49,7 +50,7 @@ const AdminStatusManager = ({ order, token, onUpdate, getValidNextStatuses }: Ad
         if (!tracking.trim()) return;
         setLoading(true);
         try {
-            const res = await fetch(`http://localhost:5000/api/orders/${order._id}/status`, {
+            const res = await fetch(`${API}/orders/${order._id}/status`, {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
                 body: JSON.stringify({ status: order.status, trackingInfo: tracking.trim(), courierName: courier })

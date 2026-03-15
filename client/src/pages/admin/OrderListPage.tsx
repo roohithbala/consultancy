@@ -3,6 +3,7 @@ import { useSelector } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
 import type { RootState } from '../../store';
 import { Truck, CheckCircle, Clock, XCircle, Search, Eye } from 'lucide-react';
+import { API } from '../../config/api';
 
 interface Order {
     _id: string;
@@ -20,14 +21,25 @@ const OrderListPage = () => {
     const [orders, setOrders] = useState<Order[]>([]);
     const [loading, setLoading] = useState(true);
     const { user } = useSelector((state: RootState) => state.auth);
-    const [searchTerm, setSearchTerm] = useState('');
     const [statusFilter, setStatusFilter] = useState('All');
+    const [paymentFilter, setPaymentFilter] = useState('All');
+    const [startDate, setStartDate] = useState('');
+    const [endDate, setEndDate] = useState('');
+    const [searchTerm, setSearchTerm] = useState('');
     const navigate = useNavigate();
 
     useEffect(() => {
         const fetchOrders = async () => {
+            setLoading(true);
             try {
-                const res = await fetch('http://localhost:5000/api/orders', {
+                const params = new URLSearchParams();
+                if (statusFilter !== 'All') params.append('status', statusFilter);
+                if (paymentFilter !== 'All') params.append('paymentMethod', paymentFilter);
+                if (startDate) params.append('startDate', startDate);
+                if (endDate) params.append('endDate', endDate);
+                if (searchTerm) params.append('keyword', searchTerm);
+
+                const res = await fetch(`${API}/orders?${params.toString()}`, {
                     headers: { Authorization: `Bearer ${user?.token}` },
                 });
                 const data = await res.json();
@@ -38,13 +50,39 @@ const OrderListPage = () => {
                 setLoading(false);
             }
         };
-        if (user && user.role === 'admin') fetchOrders();
-    }, [user]);
+        if (user && user.role === 'admin') {
+            const delayDebounceFn = setTimeout(() => {
+                fetchOrders();
+            }, 300);
+            return () => clearTimeout(delayDebounceFn);
+        }
+    }, [user, statusFilter, paymentFilter, startDate, endDate, searchTerm]);
+
+    const exportToCSV = () => {
+        const headers = ['Order ID', 'Customer', 'Email', 'Date', 'Amount', 'Payment', 'Status'];
+        const rows = orders.map(o => [
+            o._id,
+            o.user?.name || 'Guest',
+            o.user?.email || 'N/A',
+            new Date(o.createdAt).toLocaleDateString(),
+            o.totalPrice,
+            o.paymentMethod,
+            o.status
+        ]);
+
+        const csvContent = [headers, ...rows].map(e => e.join(',')).join('\n');
+        const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.setAttribute('href', url);
+        link.setAttribute('download', `orders_report_${new Date().toISOString().split('T')[0]}.csv`);
+        link.click();
+    };
 
     const updateStatus = async (id: string, status: string) => {
         if (!window.confirm(`Mark order as ${status}?`)) return;
         try {
-            const res = await fetch(`http://localhost:5000/api/orders/${id}/status`, {
+            const res = await fetch(`${API}/orders/${id}/status`, {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${user?.token}` },
                 body: JSON.stringify({ status }),
@@ -69,18 +107,7 @@ const OrderListPage = () => {
         }
     };
 
-    const filteredOrders = orders
-        .filter(o => {
-            const matchSearch = o._id.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                o.user?.name?.toLowerCase().includes(searchTerm.toLowerCase());
-            const matchStatus = statusFilter === 'All' || o.status === statusFilter;
-            return matchSearch && matchStatus;
-        })
-        .sort((a, b) => {
-            if (a.status === 'Cancelled' && b.status !== 'Cancelled') return 1;
-            if (a.status !== 'Cancelled' && b.status === 'Cancelled') return -1;
-            return 0;
-        });
+    const filteredOrders = orders; // Filtering is now handled by backend query params for better performance
 
     return (
         <div className="font-sans">
@@ -91,30 +118,63 @@ const OrderListPage = () => {
                     </h1>
                     <p className="text-secondary-text mt-2 text-xs tracking-widest uppercase">Fulfillment &amp; Tracking</p>
                 </div>
-                <div className="flex gap-3 items-center flex-wrap">
+                <div className="flex flex-wrap gap-3 items-center">
+                    <div className="flex bg-secondary border border-theme rounded-lg overflow-hidden p-1 shadow-sm">
+                        <input
+                            type="date"
+                            value={startDate}
+                            onChange={(e) => setStartDate(e.target.value)}
+                            className="bg-transparent text-xs text-primary-text px-2 py-1.5 focus:outline-none focus:border-brand cursor-pointer"
+                            title="Start Date"
+                        />
+                        <span className="text-secondary-text self-center px-1">→</span>
+                        <input
+                            type="date"
+                            value={endDate}
+                            onChange={(e) => setEndDate(e.target.value)}
+                            className="bg-transparent text-xs text-primary-text px-2 py-1.5 focus:outline-none focus:border-brand cursor-pointer"
+                            title="End Date"
+                        />
+                    </div>
                     <select
                         value={statusFilter}
                         onChange={(e) => setStatusFilter(e.target.value)}
-                        className="bg-secondary border border-theme rounded-lg px-4 py-2.5 text-sm text-primary-text focus:outline-none focus:border-brand transition-colors shadow-sm cursor-pointer"
+                        className="bg-secondary border border-theme rounded-lg px-3 py-2 text-xs text-primary-text focus:outline-none focus:border-brand transition-colors shadow-sm cursor-pointer"
                     >
                         <option value="All">All Statuses</option>
                         <option value="Ordered">Ordered</option>
-                        <option value="Pending">Pending</option>
                         <option value="Processing">Processing</option>
                         <option value="Shipped">Shipped</option>
                         <option value="Delivered">Delivered</option>
                         <option value="Cancelled">Cancelled</option>
                     </select>
+                    <select
+                        value={paymentFilter}
+                        onChange={(e) => setPaymentFilter(e.target.value)}
+                        className="bg-secondary border border-theme rounded-lg px-3 py-2 text-xs text-primary-text focus:outline-none focus:border-brand transition-colors shadow-sm cursor-pointer"
+                    >
+                        <option value="All">All Payments</option>
+                        <option value="Razorpay">Razorpay</option>
+                        <option value="BankTransfer">Bank Transfer</option>
+                        <option value="Credit">Credit</option>
+                        <option value="COD">COD</option>
+                    </select>
                     <div className="relative">
-                        <Search size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-secondary-text" />
+                        <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-secondary-text" />
                         <input
                             type="text"
-                            placeholder="Search by Order ID or Name..."
+                            placeholder="Order ID / Customer..."
                             value={searchTerm}
                             onChange={(e) => setSearchTerm(e.target.value)}
-                            className="bg-secondary border border-theme rounded-lg pl-9 pr-4 py-2.5 text-sm text-primary-text focus:outline-none focus:border-brand transition-colors w-64 md:w-72 shadow-sm placeholder:text-secondary-text"
+                            className="bg-secondary border border-theme rounded-lg pl-9 pr-4 py-2 text-xs text-primary-text focus:outline-none focus:border-brand transition-colors w-48 shadow-sm placeholder:text-secondary-text"
                         />
                     </div>
+                    <button 
+                        onClick={exportToCSV}
+                        className="bg-brand text-black px-4 py-2 rounded-lg text-xs font-bold hover:scale-[1.02] transition-all shadow-lg shadow-brand/10 uppercase tracking-wider"
+                    >
+                        Export CSV
+                    </button>
                 </div>
             </header>
 
