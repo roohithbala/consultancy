@@ -40,6 +40,7 @@ const Header = () => {
                                 <>
                                     <Link to="/products" className="text-[10px] font-black tracking-[0.2em] text-primary hover:text-brand transition-colors uppercase">Collection</Link>
                                     <Link to="/orders" className="text-[10px] font-black tracking-[0.2em] text-primary hover:text-brand transition-colors uppercase">My Orders</Link>
+                                    <Link to="/support" className="text-[10px] font-black tracking-[0.2em] text-primary hover:text-brand transition-colors uppercase">Support</Link>
                                 </>
                             )}
                         </>
@@ -76,9 +77,14 @@ const Header = () => {
                     {user ? (
                         <div className="flex items-center gap-6 pl-6 border-l border-theme">
                             {user?.role !== 'admin' && (
-                                <Link to="/orders" className="hidden lg:block text-[10px] font-black tracking-widest text-primary hover:text-brand transition-colors uppercase">
-                                    Orders
-                                </Link>
+                                <div className="hidden lg:flex items-center gap-6">
+                                    <Link to="/orders" className="text-[10px] font-black tracking-widest text-primary hover:text-brand transition-colors uppercase">
+                                        Orders
+                                    </Link>
+                                    <Link to="/support" className="text-[10px] font-black tracking-widest text-primary hover:text-brand transition-colors uppercase">
+                                        Support
+                                    </Link>
+                                </div>
                             )}
                             <div className="flex items-center gap-2 group cursor-pointer relative">
                                 <Link to="/profile" className="flex items-center gap-2 text-primary group-hover:text-brand transition-colors">

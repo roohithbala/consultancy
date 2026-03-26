@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Link, Outlet, useNavigate, useLocation } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { logout } from '../store/authSlice';
-import { Package, ShoppingBag, LogOut, Menu, X, ChevronRight, BarChart2, Receipt, Building2, FileText, Activity } from 'lucide-react';
+import { Package, ShoppingBag, LogOut, Menu, X, ChevronRight, BarChart2, Receipt, Building2, FileText, Activity, LifeBuoy } from 'lucide-react';
 import ThemeToggle from '../components/ThemeToggle';
 
 const AdminLayout = () => {
@@ -28,6 +28,7 @@ const AdminLayout = () => {
         { path: '/admin/billing',    icon: Receipt,         label: 'Billing' },
         { path: '/admin/activity',   icon: Activity,        label: 'User Logs' },
         { path: '/admin/reports',    icon: FileText,        label: 'Reports' },
+        { path: '/admin/support',    icon: LifeBuoy,        label: 'Support' },
     ];
 
     const sidebarWidth = isExpanded ? 'md:w-72' : 'md:w-20';

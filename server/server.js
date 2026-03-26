@@ -70,6 +70,7 @@ import serviceRoutes from './routes/serviceRoutes.js';
 import settingsRoutes from './routes/settingsRoutes.js';
 import billingRoutes from './routes/billingRoutes.js';
 import activityRoutes from './routes/activityRoutes.js';
+import ticketRoutes from './routes/ticketRoutes.js';
 
 app.use('/api/auth', authRoutes);
 app.use('/api/users', userRoutes);
@@ -81,6 +82,7 @@ app.use('/api/services', serviceRoutes);
 app.use('/api/settings', settingsRoutes);
 app.use('/api/billing', billingRoutes);
 app.use('/api/activity', activityRoutes);
+app.use('/api/tickets', ticketRoutes);
 
 app.get('/', (req, res) => {
     res.send('Zain Fabrics API is running...');

@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useSelector } from 'react-redux';
-import { ShoppingBag, Eye, Clock, CheckCircle, Package, XCircle, ArrowRight } from 'lucide-react';
+import { ShoppingBag, Eye, Clock, CheckCircle, Package, XCircle, ArrowRight, LifeBuoy } from 'lucide-react';
 import type { RootState } from '../store';
+import { API } from '../config/api';
 
 const OrderHistoryPage = () => {
     const { user } = useSelector((state: RootState) => state.auth);
@@ -13,7 +14,7 @@ const OrderHistoryPage = () => {
         const fetchOrders = async () => {
             if (!user) return;
             try {
-                const res = await fetch('http://localhost:5000/api/orders/myorders', {
+                const res = await fetch(`${API}/orders/myorders`, {
                     headers: { Authorization: `Bearer ${user.token}` }
                 });
                 const data = await res.json();
@@ -122,12 +123,20 @@ const OrderHistoryPage = () => {
                                             <p className="text-2xl font-serif font-bold text-primary">₹{order.totalPrice}</p>
                                         </div>
 
-                                        <Link
-                                            to={`/order/${order._id}?showInvoice=true`}
-                                            className="mt-6 flex items-center gap-2 text-xs font-bold uppercase tracking-widest border border-theme px-6 py-3 text-primary hover:bg-gold hover:text-black transition-all rounded"
-                                        >
-                                            <Eye size={16} /> View Invoice
-                                        </Link>
+                                        <div className="flex flex-col gap-2 mt-6 w-full">
+                                            <Link
+                                                to={`/order/${order._id}?showInvoice=true`}
+                                                className="flex justify-center items-center gap-2 text-xs font-bold uppercase tracking-widest border border-theme px-6 py-3 text-primary hover:bg-gold hover:text-black transition-all rounded"
+                                            >
+                                                <Eye size={16} /> View Invoice
+                                            </Link>
+                                            <Link
+                                                to={`/support?orderId=${order._id}`}
+                                                className="flex justify-center items-center gap-2 text-xs font-bold uppercase tracking-widest bg-gold/10 border border-gold/30 px-6 py-3 text-gold hover:bg-gold hover:text-black transition-all rounded"
+                                            >
+                                                <LifeBuoy size={16} /> Raise Ticket
+                                            </Link>
+                                        </div>
                                     </div>
                                 </div>
                             </div>

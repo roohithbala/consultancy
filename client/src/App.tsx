@@ -34,6 +34,9 @@ import AnalyticsDashboardPage from './pages/admin/AnalyticsDashboardPage';
 import BillingPage from './pages/admin/BillingPage';
 import ReportHubPage from './pages/admin/ReportHubPage';
 import UserActivityPage from './pages/admin/UserActivityPage';
+import SupportTicketsPage from './pages/SupportTicketsPage';
+import TicketDetailsPage from './pages/TicketDetailsPage';
+import AdminTicketsPage from './pages/admin/AdminTicketsPage';
 import PrivacyPage from './pages/PrivacyPage';
 import TermsPage from './pages/TermsPage';
 
@@ -67,6 +70,8 @@ function App() {
               <Route path="profile/addresses" element={<AddressBookPage />} />
               <Route path="order/:id" element={<OrderDetailsPage />} />
               <Route path="orders" element={<OrderHistoryPage />} />
+              <Route path="support" element={<SupportTicketsPage />} />
+              <Route path="support/:id" element={<TicketDetailsPage />} />
               <Route path="privacy" element={<PrivacyPage />} />
               <Route path="terms" element={<TermsPage />} />
             </Route>
@@ -90,6 +95,8 @@ function App() {
                 <Route path="billing" element={<BillingPage />} />
                 <Route path="activity" element={<UserActivityPage />} />
                 <Route path="reports" element={<ReportHubPage />} />
+                <Route path="support" element={<AdminTicketsPage />} />
+                <Route path="support/:id" element={<TicketDetailsPage />} />
               </Route>
             </Route>
           </Routes>

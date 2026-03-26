@@ -1,7 +1,8 @@
 import { useState, useEffect, useRef } from 'react';
-import { useParams, useSearchParams } from 'react-router-dom';
+import { useParams, useSearchParams, Link } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { useReactToPrint } from 'react-to-print';
+import { LifeBuoy } from 'lucide-react';
 import type { RootState } from '../store';
 import { API } from '../config/api';
 
@@ -57,7 +58,18 @@ const OrderDetailsPage = () => {
 
     return (
         <div className="container mx-auto px-4 py-12">
-            <OrderHeader orderId={order._id} createdAt={order.createdAt} onPrint={() => reactToPrintFn()} isAdmin={user?.role === 'admin'} />
+            <div className="flex justify-between items-start mb-6">
+                <div className="flex-1">
+                    <OrderHeader orderId={order._id} createdAt={order.createdAt} onPrint={() => reactToPrintFn()} isAdmin={user?.role === 'admin'} />
+                </div>
+                <Link
+                    to={`/support?orderId=${order._id}`}
+                    className="ml-4 flex items-center gap-2 bg-gold/10 border border-gold/30 text-gold hover:bg-gold hover:text-black transition-colors px-6 py-2.5 rounded-lg text-sm font-bold uppercase tracking-widest mt-2"
+                >
+                    <LifeBuoy size={18} /> Raise Ticket
+                </Link>
+            </div>
+            
             <OrderActionButtons status={order.status} orderId={order._id} token={user?.token || ''} onStatusUpdate={setOrder} refundStatus={order.refundStatus} refundAmount={order.refundAmount} isAdmin={user?.role === 'admin'} />
             
             {user?.role === 'admin' && (
