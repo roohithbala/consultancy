@@ -68,7 +68,7 @@ const TicketDetailsPage = () => {
 
     if (!user) return <div className="min-h-screen bg-primary flex items-center justify-center text-primary">Please login.</div>;
     if (loading) return <div className="min-h-screen bg-primary flex items-center justify-center text-primary">Loading ticket...</div>;
-    if (!ticket) return <div className="min-h-screen bg-primary flex flex-col items-center justify-center text-primary"><h2>Ticket not found</h2><Link to="/support" className="text-gold mt-4">Back to Support</Link></div>;
+    if (!ticket) return <div className="min-h-screen bg-primary flex flex-col items-center justify-center text-primary"><h2>Ticket not found</h2><Link to="/support" className="text-brand mt-4">Back to Support</Link></div>;
 
     const isAdminRoute = window.location.pathname.startsWith('/admin');
     const backLink = isAdminRoute ? '/admin/support' : '/support';
@@ -79,7 +79,7 @@ const TicketDetailsPage = () => {
                 
                 {/* Header */}
                 <div className="flex-shrink-0 mb-6">
-                    <Link to={backLink} className="inline-flex items-center gap-2 text-secondary hover:text-gold transition-colors mb-4 text-sm font-bold uppercase tracking-widest">
+                    <Link to={backLink} className="inline-flex items-center gap-2 text-secondary hover:text-brand transition-colors mb-4 text-sm font-bold uppercase tracking-widest">
                         <ArrowLeft size={16} /> Back to Tickets
                     </Link>
                     
@@ -96,7 +96,7 @@ const TicketDetailsPage = () => {
                             </div>
                             <div className="flex items-center gap-3">
                                 <span className="text-xs uppercase tracking-wider font-bold border border-theme px-3 py-1 rounded">Priority: {ticket.priority}</span>
-                                <span className={`text-xs font-bold px-3 py-1 rounded-full border flex items-center gap-2 uppercase tracking-wider ${ticket.status === 'Resolved' || ticket.status === 'Closed' ? 'text-green-500 border-green-500/30 bg-green-900/10' : 'text-gold border-gold/30 bg-gold/10'}`}>
+                                <span className={`text-xs font-bold px-3 py-1 rounded-full border flex items-center gap-2 uppercase tracking-wider ${ticket.status === 'Resolved' || ticket.status === 'Closed' ? 'text-green-500 border-green-500/30 bg-green-900/10' : 'text-brand border-brand/30 bg-brand/10'}`}>
                                     {ticket.status}
                                 </span>
                             </div>
@@ -118,12 +118,12 @@ const TicketDetailsPage = () => {
                                 return (
                                     <div key={idx} className={`flex flex-col ${isSelf ? 'items-end' : 'items-start'}`}>
                                         <div className="flex items-center gap-2 mb-1">
-                                            <span className={`text-xs font-bold ${showAsAdmin ? 'text-gold' : 'text-secondary'}`}>
+                                            <span className={`text-xs font-bold ${showAsAdmin ? 'text-brand' : 'text-secondary'}`}>
                                                 {showAsAdmin ? 'Support Team' : reply.user.name || 'User'}
                                             </span>
                                             <span className="text-[10px] text-zinc-500">{new Date(reply.createdAt).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</span>
                                         </div>
-                                        <div className={`max-w-[80%] rounded-2xl px-5 py-3 ${isSelf ? 'bg-gold text-black rounded-tr-sm' : 'bg-secondary/10 border border-theme text-primary rounded-tl-sm'}`}>
+                                        <div className={`max-w-[80%] rounded-2xl px-5 py-3 ${isSelf ? 'bg-brand text-black rounded-tr-sm' : 'bg-secondary/10 border border-theme text-primary rounded-tl-sm'}`}>
                                             <p className="whitespace-pre-wrap text-sm">{reply.message}</p>
                                         </div>
                                     </div>
@@ -142,7 +142,7 @@ const TicketDetailsPage = () => {
                         <div className="p-4 border-t border-theme bg-primary/50">
                             <form onSubmit={handleReply} className="flex gap-4">
                                 <textarea 
-                                    className="flex-1 bg-primary border border-theme rounded-xl px-4 py-3 text-primary focus:border-gold focus:outline-none resize-none transition-colors"
+                                    className="flex-1 bg-primary border border-theme rounded-xl px-4 py-3 text-primary focus:border-brand focus:outline-none resize-none transition-colors"
                                     rows={1}
                                     placeholder="Type your message..."
                                     value={replyMessage}
@@ -162,7 +162,7 @@ const TicketDetailsPage = () => {
                                 <button 
                                     type="submit" 
                                     disabled={submitting || !replyMessage.trim()}
-                                    className="bg-gold text-black px-6 rounded-xl font-bold hover:bg-yellow-500 transition-colors disabled:opacity-50 flex items-center justify-center"
+                                    className="bg-brand text-black px-6 rounded-xl font-bold hover:opacity-80 transition-colors disabled:opacity-50 flex items-center justify-center"
                                 >
                                     <Send size={20} className={submitting ? 'animate-pulse' : ''} />
                                 </button>

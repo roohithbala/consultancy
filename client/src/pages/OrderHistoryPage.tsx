@@ -132,7 +132,7 @@ const OrderHistoryPage = () => {
                                             </Link>
                                             <Link
                                                 to={`/support?orderId=${order._id}`}
-                                                className="flex justify-center items-center gap-2 text-xs font-bold uppercase tracking-widest bg-gold/10 border border-gold/30 px-6 py-3 text-gold hover:bg-gold hover:text-black transition-all rounded"
+                                                className="flex justify-center items-center gap-2 text-xs font-bold uppercase tracking-widest bg-brand/10 border border-brand/30 px-6 py-3 text-brand hover:bg-brand hover:text-black transition-all rounded"
                                             >
                                                 <LifeBuoy size={16} /> Raise Ticket
                                             </Link>

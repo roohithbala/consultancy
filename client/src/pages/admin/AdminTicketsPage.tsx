@@ -64,7 +64,7 @@ const AdminTicketsPage = () => {
                 <div className="flex flex-col md:flex-row justify-between md:items-center mb-8 gap-4 border-b border-theme pb-6">
                     <div>
                         <h1 className="text-3xl font-serif font-bold text-primary flex items-center gap-3">
-                            <LifeBuoy size={32} className="text-gold" />
+                            <LifeBuoy size={32} className="text-brand" />
                             Support <span className="text-secondary">Tickets</span>
                         </h1>
                         <p className="text-sm uppercase tracking-widest mt-2">{tickets.length} Total Issues</p>
@@ -76,7 +76,7 @@ const AdminTicketsPage = () => {
                             <select 
                                 value={filterStatus}
                                 onChange={(e) => setFilterStatus(e.target.value)}
-                                className="bg-card border border-theme text-primary pl-10 pr-4 py-2 rounded focus:outline-none focus:border-gold transition-colors appearance-none"
+                                className="bg-card border border-theme text-primary pl-10 pr-4 py-2 rounded focus:outline-none focus:border-brand transition-colors appearance-none"
                             >
                                 <option value="All">All Statuses</option>
                                 <option value="Open">Open</option>
@@ -121,13 +121,13 @@ const AdminTicketsPage = () => {
                                                 {ticket.order && <div className="text-[10px] text-brand uppercase font-mono mt-1 pt-1 opacity-80">Order #{ticket.order._id.substring(0, 8)}</div>}
                                             </td>
                                             <td className="p-4 text-xs font-bold">
-                                                <span className={`px-2 py-1 rounded-sm border ${ticket.priority === 'Urgent' ? 'text-red-500 border-red-500/30' : 'text-gold border-gold/30'}`}>{ticket.priority}</span>
+                                                <span className={`px-2 py-1 rounded-sm border ${ticket.priority === 'Urgent' ? 'text-red-500 border-red-500/30' : 'text-brand border-brand/30'}`}>{ticket.priority}</span>
                                             </td>
                                             <td className="p-4">
                                                 <select 
                                                     value={ticket.status}
                                                     onChange={(e) => handleStatusChange(ticket._id, e.target.value)}
-                                                    className={`text-xs font-bold px-2 py-1 rounded bg-transparent border uppercase tracking-wider focus:outline-none ${ticket.status === 'Resolved' || ticket.status === 'Closed' ? 'text-green-500 border-green-500/30' : 'text-gold border-gold/30'}`}
+                                                    className={`text-xs font-bold px-2 py-1 rounded bg-transparent border uppercase tracking-wider focus:outline-none ${ticket.status === 'Resolved' || ticket.status === 'Closed' ? 'text-green-500 border-green-500/30' : 'text-brand border-brand/30'}`}
                                                 >
                                                     <option value="Open" className="bg-primary text-primary">Open</option>
                                                     <option value="In Progress" className="bg-primary text-primary">In Progress</option>
@@ -139,7 +139,7 @@ const AdminTicketsPage = () => {
                                                 <Clock size={12} /> {new Date(ticket.createdAt).toLocaleDateString()}
                                             </td>
                                             <td className="p-4 text-right">
-                                                <Link to={`/admin/support/${ticket._id}`} className="text-xs uppercase tracking-widest text-gold hover:text-yellow-500 font-bold border border-gold/30 px-3 py-1.5 rounded transition-colors">
+                                                <Link to={`/admin/support/${ticket._id}`} className="text-xs uppercase tracking-widest text-brand hover:text-yellow-500 font-bold border border-brand/30 px-3 py-1.5 rounded transition-colors">
                                                     View Thread
                                                 </Link>
                                             </td>

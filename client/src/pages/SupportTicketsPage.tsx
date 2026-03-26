@@ -106,7 +106,7 @@ const SupportTicketsPage = () => {
             case 'Resolved':
             case 'Closed': return 'text-green-500 bg-green-900/10 border-green-500/30';
             case 'In Progress': return 'text-blue-500 bg-blue-900/10 border-blue-500/30';
-            default: return 'text-gold bg-gold/10 border-gold/30'; // Open
+            default: return 'text-brand bg-brand/10 border-brand/30'; // Open
         }
     };
 
@@ -115,15 +115,15 @@ const SupportTicketsPage = () => {
             <div className="container mx-auto px-6 max-w-6xl">
                 <div className="flex flex-col md:flex-row items-start md:items-center justify-between mb-12 border-b border-theme pb-6 gap-4">
                     <div>
-                        <span className="text-gold uppercase tracking-[0.2em] text-xs font-bold">Assistance</span>
+                        <span className="text-brand uppercase tracking-[0.2em] text-xs font-bold">Assistance</span>
                         <h1 className="text-4xl font-serif font-bold text-primary mt-2 flex items-center gap-3">
-                            <LifeBuoy size={36} className="text-gold" />
+                            <LifeBuoy size={36} className="text-brand" />
                             Support <span className="text-secondary">Tickets</span>
                         </h1>
                     </div>
                     <button 
                         onClick={() => setShowForm(!showForm)}
-                        className="flex items-center gap-2 bg-gold text-black px-6 py-3 font-bold uppercase tracking-widest hover:bg-yellow-500 transition-all rounded-lg"
+                        className="flex items-center gap-2 bg-brand text-black px-6 py-3 font-bold uppercase tracking-widest hover:opacity-80 transition-all rounded-lg"
                     >
                         {showForm ? 'Cancel' : <><PlusCircle size={18} /> New Ticket</>}
                     </button>
@@ -139,7 +139,7 @@ const SupportTicketsPage = () => {
                                     type="text" 
                                     value={subject}
                                     onChange={(e) => setSubject(e.target.value)}
-                                    className="w-full bg-primary border border-theme rounded-lg px-4 py-3 text-primary focus:border-gold focus:outline-none transition-colors" 
+                                    className="w-full bg-primary border border-theme rounded-lg px-4 py-3 text-primary focus:border-brand focus:outline-none transition-colors" 
                                     placeholder="Brief summary of the issue"
                                     required 
                                 />
@@ -150,7 +150,7 @@ const SupportTicketsPage = () => {
                                     rows={5}
                                     value={description}
                                     onChange={(e) => setDescription(e.target.value)}
-                                    className="w-full bg-primary border border-theme rounded-lg px-4 py-3 text-primary focus:border-gold focus:outline-none transition-colors" 
+                                    className="w-full bg-primary border border-theme rounded-lg px-4 py-3 text-primary focus:border-brand focus:outline-none transition-colors" 
                                     placeholder="Provide detailed information..."
                                     required 
                                 ></textarea>
@@ -160,7 +160,7 @@ const SupportTicketsPage = () => {
                                 <select 
                                     value={orderId}
                                     onChange={(e) => setOrderId(e.target.value)}
-                                    className="w-full bg-primary border border-theme rounded-lg px-4 py-3 text-primary focus:border-gold focus:outline-none transition-colors"
+                                    className="w-full bg-primary border border-theme rounded-lg px-4 py-3 text-primary focus:border-brand focus:outline-none transition-colors"
                                     required
                                 >
                                     <option value="" disabled>Select an Order</option>
@@ -176,7 +176,7 @@ const SupportTicketsPage = () => {
                                 <select 
                                     value={priority}
                                     onChange={(e) => setPriority(e.target.value)}
-                                    className="w-full bg-primary border border-theme rounded-lg px-4 py-3 text-primary focus:border-gold focus:outline-none transition-colors"
+                                    className="w-full bg-primary border border-theme rounded-lg px-4 py-3 text-primary focus:border-brand focus:outline-none transition-colors"
                                 >
                                     <option value="Low">Low</option>
                                     <option value="Medium">Medium</option>
@@ -187,7 +187,7 @@ const SupportTicketsPage = () => {
                             <button 
                                 type="submit" 
                                 disabled={submitting}
-                                className="bg-gold text-black font-bold uppercase tracking-widest px-8 py-4 rounded-lg hover:bg-yellow-500 transition-colors disabled:opacity-50"
+                                className="bg-brand text-black font-bold uppercase tracking-widest px-8 py-4 rounded-lg hover:opacity-80 transition-colors disabled:opacity-50"
                             >
                                 {submitting ? 'Submitting...' : 'Submit Ticket'}
                             </button>
@@ -209,13 +209,13 @@ const SupportTicketsPage = () => {
                             <Link 
                                 to={`/support/${ticket._id}`} 
                                 key={ticket._id} 
-                                className="block group bg-card border border-theme p-6 rounded-xl hover:border-gold/50 transition-all duration-300"
+                                className="block group bg-card border border-theme p-6 rounded-xl hover:border-brand/50 transition-all duration-300"
                             >
                                 <div className="flex flex-col md:flex-row justify-between md:items-center gap-4">
                                     <div className="flex-1">
                                         <div className="flex items-center gap-3 mb-2">
                                             <span className="font-mono text-xs text-secondary border border-theme px-2 py-1 rounded">#{ticket._id.substring(0, 8)}</span>
-                                            <h3 className="text-lg font-bold text-primary group-hover:text-gold transition-colors">{ticket.subject}</h3>
+                                            <h3 className="text-lg font-bold text-primary group-hover:text-brand transition-colors">{ticket.subject}</h3>
                                         </div>
                                         <div className="text-sm text-secondary flex items-center gap-4">
                                             <span className="flex items-center gap-1"><Clock size={14} /> {new Date(ticket.createdAt).toLocaleDateString()}</span>
@@ -227,7 +227,7 @@ const SupportTicketsPage = () => {
                                             {ticket.status === 'Resolved' || ticket.status === 'Closed' ? <CheckCircle size={14} /> : <div className="w-2 h-2 rounded-full bg-current animate-pulse"></div>}
                                             {ticket.status}
                                         </span>
-                                        <div className="text-secondary group-hover:text-gold transition-colors flex items-center gap-1 text-sm">
+                                        <div className="text-secondary group-hover:text-brand transition-colors flex items-center gap-1 text-sm">
                                             <MessageSquare size={16} /> {ticket.replies?.length || 0}
                                         </div>
                                     </div>

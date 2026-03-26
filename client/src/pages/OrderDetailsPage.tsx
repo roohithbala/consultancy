@@ -64,7 +64,7 @@ const OrderDetailsPage = () => {
                 </div>
                 <Link
                     to={`/support?orderId=${order._id}`}
-                    className="ml-4 flex items-center gap-2 bg-gold/10 border border-gold/30 text-gold hover:bg-gold hover:text-black transition-colors px-6 py-2.5 rounded-lg text-sm font-bold uppercase tracking-widest mt-2"
+                    className="ml-4 flex items-center gap-2 bg-brand/10 border border-brand/30 text-brand hover:bg-brand hover:text-black transition-colors px-6 py-2.5 rounded-lg text-sm font-bold uppercase tracking-widest mt-2"
                 >
                     <LifeBuoy size={18} /> Raise Ticket
                 </Link>
