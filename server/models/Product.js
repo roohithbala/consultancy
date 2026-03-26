@@ -1,5 +1,29 @@
 import mongoose from 'mongoose';
 
+const questionSchema = new mongoose.Schema({
+    user: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+        required: true,
+    },
+    question: {
+        type: String,
+        required: true,
+    },
+    answer: {
+        type: String,
+    },
+    answeredBy: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+    },
+    answeredAt: {
+        type: Date,
+    }
+}, {
+    timestamps: true,
+});
+
 const productSchema = new mongoose.Schema({
     name: {
         type: String,
@@ -79,7 +103,8 @@ const productSchema = new mongoose.Schema({
     isAvailable: {
         type: Boolean,
         default: true,
-    }
+    },
+    questions: [questionSchema]
 }, {
     timestamps: true,
 });

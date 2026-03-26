@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { ShoppingBag, Truck, ShieldCheck, FileText, Download, AlertTriangle, Check, Layers, ArrowRight } from 'lucide-react';
+import { ShoppingBag, Truck, ShieldCheck, FileText, Download, AlertTriangle, Check, Layers, ArrowRight, MessageCircle, Send } from 'lucide-react';
 import FabricViewer from '../components/FabricViewer';
 import FootwearConfigurator from '../components/FootwearConfigurator';
 import ThreeErrorBoundary from '../components/ThreeErrorBoundary';
@@ -11,6 +11,16 @@ import type { RootState } from '../store';
 import { API } from '../config/api';
 import { CATEGORY_FALLBACKS } from '../config/imageFallback';
 import { logActivity } from '../utils/activity';
+
+interface Question {
+    _id: string;
+    question: string;
+    answer?: string;
+    user: string;
+    answeredBy?: string;
+    createdAt: string;
+    answeredAt?: string;
+}
 
 interface Product {
     _id: string;
@@ -32,6 +42,7 @@ interface Product {
     }[];
     modelUrl?: string;
     samplePrice?: number;
+    questions?: Question[];
 }
 
 const ProductDetailPage = () => {
@@ -53,6 +64,10 @@ const ProductDetailPage = () => {
     const [isReadOnly, setIsReadOnly] = useState(false);
     const [viewMode, setViewMode] = useState<'3d' | 'image'>('3d');
     const [activeThumbnail, setActiveThumbnail] = useState(0);
+    
+    // Q&A State
+    const [newQuestion, setNewQuestion] = useState('');
+    const [adminAnswer, setAdminAnswer] = useState<{[key: string]: string}>({});
 
     useEffect(() => {
         const queryParams = new URLSearchParams(window.location.search);
@@ -135,6 +150,39 @@ const ProductDetailPage = () => {
         setRiskAccepted(false);
         // Custom UI feedback could replace this window alert in future
         alert(`Request Added: ${isSample ? 'Sample' : 'Fabric Order'}`);
+    };
+
+    const handlePostQuestion = async (e: React.FormEvent) => {
+        e.preventDefault();
+        if (!newQuestion.trim() || !user) return;
+        try {
+            const res = await fetch(`${API}/products/${id}/questions`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${user.token}` },
+                body: JSON.stringify({ question: newQuestion })
+            });
+            if (res.ok) {
+                const data = await res.json();
+                setProduct(prev => prev ? { ...prev, questions: data.questions } : null);
+                setNewQuestion('');
+            }
+        } catch (error) { console.error(error); }
+    };
+
+    const handleAnswerQuestion = async (questionId: string) => {
+        if (!adminAnswer[questionId]?.trim() || !user) return;
+        try {
+            const res = await fetch(`${API}/products/${id}/questions/${questionId}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${user.token}` },
+                body: JSON.stringify({ answer: adminAnswer[questionId] })
+            });
+            if (res.ok) {
+                const data = await res.json();
+                setProduct(prev => prev ? { ...prev, questions: data.questions } : null);
+                setAdminAnswer(prev => ({...prev, [questionId]: ''}));
+            }
+        } catch (error) { console.error(error); }
     };
 
     if (loading) return <div className="min-h-screen bg-bg-main flex items-center justify-center text-primary-text font-black uppercase tracking-widest text-xs">Loading Specification...</div>;
@@ -470,6 +518,91 @@ const ProductDetailPage = () => {
                         </div>
                     </div>
                 )}
+
+                {/* Product Q&A Section */}
+                <div className="mt-20 border-t border-theme pt-12">
+                    <div className="flex items-center gap-4 mb-8">
+                        <MessageCircle size={24} className="text-brand" />
+                        <h3 className="text-2xl font-serif font-bold text-primary-text">Customer Questions & Answers</h3>
+                    </div>
+                    
+                    {/* Question List */}
+                    <div className="space-y-6 mb-10">
+                        {product.questions && product.questions.length > 0 ? (
+                            product.questions.map(q => (
+                                <div key={q._id} className="bg-bg-alt/50 border border-theme p-6 rounded-2xl">
+                                    <div className="flex items-start gap-4 mb-4">
+                                        <div className="w-8 h-8 rounded-full bg-brand/20 flex items-center justify-center flex-shrink-0 text-brand font-bold text-xs">
+                                            Q
+                                        </div>
+                                        <div>
+                                            <p className="text-primary-text font-bold text-lg">{q.question}</p>
+                                            <span className="text-xs text-secondary-text">Asked on {new Date(q.createdAt).toLocaleDateString()}</span>
+                                        </div>
+                                    </div>
+                                    
+                                    {q.answer ? (
+                                        <div className="flex items-start gap-4 ml-8 mt-4 pt-4 border-t border-theme border-dashed">
+                                            <div className="w-8 h-8 rounded-full bg-primary flex items-center justify-center flex-shrink-0 text-primary-text font-bold text-xs border border-theme">
+                                                A
+                                            </div>
+                                            <div>
+                                                <p className="text-primary-text/90 italic">{q.answer}</p>
+                                                <span className="text-[10px] text-secondary-text uppercase tracking-widest font-black mt-2 inline-block px-2 py-0.5 bg-brand/10 text-brand rounded-sm">Zain Fabrics Support</span>
+                                            </div>
+                                        </div>
+                                    ) : user?.role === 'admin' ? (
+                                        <div className="ml-12 mt-4 flex gap-3">
+                                            <input 
+                                                type="text"
+                                                className="flex-1 bg-secondary border border-theme rounded-lg px-4 py-2 text-sm text-primary-text focus:border-brand outline-none"
+                                                placeholder="Type answer here..."
+                                                value={adminAnswer[q._id] || ''}
+                                                onChange={(e) => setAdminAnswer({...adminAnswer, [q._id]: e.target.value})}
+                                            />
+                                            <button 
+                                                onClick={() => handleAnswerQuestion(q._id)}
+                                                className="bg-brand text-black font-bold uppercase tracking-widest text-[10px] px-4 rounded-lg hover:opacity-90 transition-opacity"
+                                            >
+                                                Reply
+                                            </button>
+                                        </div>
+                                    ) : (
+                                        <div className="ml-12 mt-2">
+                                            <span className="text-xs text-secondary-text/50 italic">Awaiting answer...</span>
+                                        </div>
+                                    )}
+                                </div>
+                            ))
+                        ) : (
+                            <p className="text-secondary-text italic bg-bg-alt/30 p-8 rounded-xl border border-theme border-dashed text-center">No questions have been asked about this material yet.</p>
+                        )}
+                    </div>
+
+                    {/* Ask Question Form */}
+                    {user ? (
+                        <form onSubmit={handlePostQuestion} className="bg-card border border-theme p-6 rounded-2xl shadow-xl">
+                            <h4 className="text-sm font-bold uppercase tracking-widest text-primary-text mb-4">Ask a Question</h4>
+                            <div className="flex gap-4">
+                                <input 
+                                    type="text"
+                                    required
+                                    value={newQuestion}
+                                    onChange={(e) => setNewQuestion(e.target.value)}
+                                    className="flex-1 bg-secondary border border-theme rounded-lg px-4 py-3 text-primary-text focus:border-brand outline-none"
+                                    placeholder="E.g. What is the typical shrinkage percentage after washing?"
+                                />
+                                <button type="submit" className="bg-brand text-black font-bold uppercase tracking-widest text-xs px-8 rounded-lg hover:opacity-90 transition-opacity flex items-center gap-2">
+                                    <Send size={16} /> Post
+                                </button>
+                            </div>
+                        </form>
+                    ) : (
+                        <div className="bg-brand/5 border border-brand/20 p-6 rounded-2xl text-center">
+                            <p className="text-brand font-bold">Please log in to ask a question.</p>
+                        </div>
+                    )}
+                </div>
             </div>
 
             {/* Risk Modal */}

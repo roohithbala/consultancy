@@ -116,3 +116,55 @@ export const updateProduct = async (req, res) => {
         res.status(404).json({ message: 'Product not found' });
     }
 };
+
+// @desc    Add a new question to a product
+// @route   POST /api/products/:id/questions
+// @access  Private
+export const addProductQuestion = async (req, res) => {
+    const { question } = req.body;
+    
+    const product = await Product.findById(req.params.id);
+    
+    if (product) {
+        const newQuestion = {
+            user: req.user._id,
+            question
+        };
+
+        product.questions.push(newQuestion);
+        await product.save();
+        
+        // Return the updated product or just the questions
+        // Easiest is to return message and updated product
+        res.status(201).json({ message: 'Question added', questions: product.questions });
+    } else {
+        res.status(404).json({ message: 'Product not found' });
+    }
+};
+
+// @desc    Answer a product question
+// @route   PUT /api/products/:id/questions/:questionId
+// @access  Private/Admin
+export const answerProductQuestion = async (req, res) => {
+    const { answer } = req.body;
+    
+    const product = await Product.findById(req.params.id);
+    
+    if (product) {
+        const questionObj = product.questions.id(req.params.questionId);
+        
+        if (questionObj) {
+            questionObj.answer = answer;
+            questionObj.answeredBy = req.user._id;
+            questionObj.answeredAt = Date.now();
+            
+            await product.save();
+            res.json({ message: 'Question answered', questions: product.questions });
+        } else {
+            res.status(404).json({ message: 'Question not found' });
+        }
+    } else {
+        res.status(404).json({ message: 'Product not found' });
+    }
+};
+
