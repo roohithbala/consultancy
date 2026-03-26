@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useSelector } from 'react-redux';
+import { toast } from 'react-hot-toast';
 import { Link } from 'react-router-dom';
 import type { RootState } from '../../store';
 import { 
@@ -53,7 +54,7 @@ const ReportHubPage = () => {
             if (Array.isArray(data) || (data && typeof data === 'object')) {
                 const finalData = Array.isArray(data) ? data : (data.orders || data.expenses || [data]);
                 if (finalData.length === 0) {
-                    alert('No data found for the selected period.');
+                    toast.error('No data found for the selected period.');
                     setLoading(null);
                     return;
                 }
@@ -75,7 +76,7 @@ const ReportHubPage = () => {
             }
         } catch (error) {
             console.error(error);
-            alert('Failed to generate report.');
+            toast.error('Failed to generate report.');
         }
         setLoading(null);
     };

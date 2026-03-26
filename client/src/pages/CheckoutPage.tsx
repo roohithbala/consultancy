@@ -4,6 +4,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import type { RootState } from '../store';
 import { clearCart } from '../store/cartSlice';
 import { CheckCircle, Truck, MapPin, CreditCard } from 'lucide-react';
+import { toast } from 'react-hot-toast';
 import { API } from '../config/api';
 
 const CheckoutPage = () => {
@@ -159,9 +160,10 @@ const CheckoutPage = () => {
                         setOrderId(localOrder._id);
                         dispatch(clearCart());
                         setStep(2);
+                        toast.success('Payment verified successfully!');
                     } else {
                         await verifyRes.json();
-                        alert('Payment verification failed, please contact support with Order ID: ' + localOrder._id);
+                        toast.error('Payment verification failed. Contact support with Order ID: ' + localOrder._id);
                     }
                     setLoading(false);
                 },
@@ -185,7 +187,7 @@ const CheckoutPage = () => {
             rzp.open();
         } catch (error: any) {
             console.error(error);
-            alert(error.message || 'Razorpay payment failed to initiate');
+            toast.error(error.message || 'Razorpay payment failed to initiate');
             setLoading(false);
         }
     };
@@ -194,13 +196,13 @@ const CheckoutPage = () => {
         e.preventDefault();
 
         if (!user) {
-            alert('Please sign in to place an order');
+            toast.error('Please sign in to place an order');
             navigate('/login');
             return;
         }
 
         if (paymentMethod === 'BankTransfer' && !utrNumber.trim()) {
-            alert('Please enter the UTR/Transaction Reference Number.');
+            toast.error('Please enter the UTR/Transaction Reference Number.');
             return;
         }
 
@@ -261,12 +263,13 @@ const CheckoutPage = () => {
                     setOrderId(order._id);
                     dispatch(clearCart());
                     setStep(2);
+                    toast.success('Credit order placed!');
                 } else {
-                    alert('Credit order placement failed');
+                    toast.error('Credit order placement failed');
                 }
             } catch (error) {
                 console.error(error);
-                alert('Something went wrong');
+                toast.error('Something went wrong');
             } finally {
                 setLoading(false);
             }
@@ -298,12 +301,13 @@ const CheckoutPage = () => {
                 setOrderId(order._id);
                 dispatch(clearCart());
                 setStep(2);
+                toast.success('Order placed successfully!');
             } else {
-                alert('Order placement failed');
+                toast.error('Order placement failed');
             }
         } catch (error) {
             console.error(error);
-            alert('Something went wrong');
+            toast.error('Something went wrong');
         } finally {
             setLoading(false);
         }

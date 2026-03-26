@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { Search, Mail, User, Clock, CheckCircle } from 'lucide-react';
+import { toast } from 'react-hot-toast';
 import type { RootState } from '../../store';
 import { API } from '../../config/api';
 
@@ -46,15 +47,15 @@ const CustomerListPage = () => {
                 body: JSON.stringify(emailData)
             });
             if (res.ok) {
-                alert('Email sent successfully');
+                toast.success('Email sent successfully');
                 setShowEmailModal(false);
                 setEmailData({ subject: '', message: '' });
             } else {
-                alert('Failed to send email');
+                toast.error('Failed to send email');
             }
         } catch (error) {
             console.error(error);
-            alert('Error sending email');
+            toast.error('Error sending email');
         } finally {
             setSending(false);
         }

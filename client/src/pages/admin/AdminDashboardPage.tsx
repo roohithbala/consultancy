@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
+import { toast } from 'react-hot-toast';
 import type { RootState } from '../../store';
 import DashboardHeader from '../../components/AdminDashboard/DashboardHeader';
 import StatsGrid from '../../components/AdminDashboard/StatsGrid';
@@ -48,13 +49,13 @@ const AdminDashboardPage = () => {
                 });
                 const sData = await sRes.json();
                 setStats(sData);
-                alert("Payment verified successfully.");
+                toast.success("Payment verified successfully.");
             } else {
-                alert("Failed to verify payment.");
+                toast.error("Failed to verify payment.");
             }
         } catch (error) {
             console.error(error);
-            alert("An error occurred during verification.");
+            toast.error("An error occurred during verification.");
         }
     };
 

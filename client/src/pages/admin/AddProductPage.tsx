@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
+import { toast } from 'react-hot-toast';
 import type { RootState } from '../../store';
 import { Upload } from 'lucide-react';
 import { API } from '../../config/api';
@@ -69,6 +70,7 @@ const AddProductPage = () => {
             setUploading(false);
         } catch (error) {
             console.error(error);
+            toast.error('File upload failed');
             setUploading(false);
         }
     };
@@ -114,9 +116,10 @@ const AddProductPage = () => {
             });
 
             if (res.ok) {
+                toast.success('Product created successfully');
                 navigate('/admin/products');
             } else {
-                alert('Failed to create product');
+                toast.error('Failed to create product');
             }
         } catch (error) {
             console.error(error);

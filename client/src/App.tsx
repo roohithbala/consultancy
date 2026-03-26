@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-route
 import { GoogleOAuthProvider } from '@react-oauth/google';
 import { GOOGLE_CLIENT_ID } from './config/api';
 import { ThemeProvider } from './context/ThemeContext';
+import { Toaster } from 'react-hot-toast';
 
 // Components
 import MainLayout from './layouts/MainLayout';
@@ -55,6 +56,25 @@ function App() {
     <GoogleOAuthProvider clientId={GOOGLE_CLIENT_ID}>
       <ThemeProvider>
         <Router>
+          <Toaster 
+            position="top-right"
+            toastOptions={{
+              className: 'bg-bg-alt border border-theme text-primary-text text-sm font-bold rounded-2xl shadow-2xl backdrop-blur-xl',
+              duration: 4000,
+              style: {
+                background: 'var(--bg-alt)',
+                color: 'var(--text-primary)',
+                border: '1px solid var(--border-theme)',
+                backdropFilter: 'blur(16px)',
+              },
+              success: {
+                iconTheme: {
+                  primary: 'var(--color-brand)',
+                  secondary: '#000',
+                },
+              },
+            }}
+          />
           <ScrollToTop />
           <Routes>
             {/* Public Routes */}

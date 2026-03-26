@@ -3,6 +3,7 @@ import { API } from '../../config/api';
 import { Link } from 'react-router-dom';
 import { Plus, Edit, Trash2, Search, Filter, X, Eye } from 'lucide-react';
 import { useSelector } from 'react-redux';
+import { toast } from 'react-hot-toast';
 import type { RootState } from '../../store';
 
 interface Product {
@@ -43,8 +44,12 @@ const ProductListPage = () => {
             method: 'DELETE',
             headers: { Authorization: `Bearer ${user?.token}` },
         });
-        if (res.ok) setProducts(p => p.filter(x => x._id !== id));
-        else alert('Failed to delete product');
+        if (res.ok) {
+            setProducts(p => p.filter(x => x._id !== id));
+            toast.success('Product deleted');
+        } else {
+            toast.error('Failed to delete product');
+        }
     };
 
     const toggleAvailability = async (id: string, current: boolean) => {

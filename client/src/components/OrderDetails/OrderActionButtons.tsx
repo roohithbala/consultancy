@@ -1,3 +1,4 @@
+import { toast } from 'react-hot-toast';
 import { API } from '../../config/api';
 
 interface OrderActionButtonsProps {
@@ -19,10 +20,12 @@ const OrderActionButtons = ({ status, orderId, token, onStatusUpdate, refundStat
                 headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
                 body: JSON.stringify({ reason: 'User requested cancellation' })
             });
-            if (res.ok) onStatusUpdate(await res.json());
-            else {
+            if (res.ok) {
+                onStatusUpdate(await res.json());
+                toast.success('Order cancelled successfully');
+            } else {
                 const err = await res.json();
-                alert(err.message || 'Failed to cancel order');
+                toast.error(err.message || 'Failed to cancel order');
             }
         } catch (e) { console.error(e); }
     };

@@ -5,6 +5,7 @@ import FabricViewer from '../components/FabricViewer';
 import FootwearConfigurator from '../components/FootwearConfigurator';
 import ThreeErrorBoundary from '../components/ThreeErrorBoundary';
 import { useDispatch, useSelector } from 'react-redux';
+import { toast } from 'react-hot-toast';
 import { addToCart } from '../store/cartSlice';
 import ColorTools from '../components/ColorTools';
 import type { RootState } from '../store';
@@ -152,8 +153,15 @@ const ProductDetailPage = () => {
         
         setShowRiskModal(false);
         setRiskAccepted(false);
-        // Custom UI feedback could replace this window alert in future
-        alert(`Request Added: ${isSample ? 'Sample' : 'Fabric Order'}`);
+        // Custom UI feedback
+        toast.success(`Request Added: ${isSample ? 'Sample' : 'Fabric Order'}`, {
+            icon: isSample ? '🧪' : '📦',
+            style: {
+                borderRadius: '10px',
+                background: '#333',
+                color: '#fff',
+            },
+        });
     };
 
     const handlePostQuestion = async (e: React.FormEvent) => {

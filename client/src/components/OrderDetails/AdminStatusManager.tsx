@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { CheckCircle, ChevronRight, Truck } from 'lucide-react';
+import { toast } from 'react-hot-toast';
 import { API } from '../../config/api';
 
 interface AdminStatusManagerProps {
@@ -38,11 +39,12 @@ const AdminStatusManager = ({ order, token, onUpdate, getValidNextStatuses }: Ad
             });
             if (res.ok) {
                 onUpdate(await res.json());
+                toast.success(`Order moved to ${newStatus}`);
             } else {
                 const err = await res.json();
-                alert(`Failed: ${err.message || res.statusText}`);
+                toast.error(`Failed: ${err.message || res.statusText}`);
             }
-        } catch (e) { console.error(e); alert('Network error occurred.'); }
+        } catch (e) { console.error(e); toast.error('Network error occurred.'); }
         setLoading(false);
     };
 
@@ -58,12 +60,12 @@ const AdminStatusManager = ({ order, token, onUpdate, getValidNextStatuses }: Ad
             if (res.ok) {
                 onUpdate(await res.json());
                 setTracking('');
-                alert('Tracking details saved!');
+                toast.success('Tracking details saved!');
             } else {
                 const err = await res.json();
-                alert(`Failed: ${err.message || res.statusText}`);
+                toast.error(`Failed: ${err.message || res.statusText}`);
             }
-        } catch (e) { console.error(e); alert('Network error occurred.'); }
+        } catch (e) { console.error(e); toast.error('Network error occurred.'); }
         setLoading(false);
     };
 

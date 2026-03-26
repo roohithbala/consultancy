@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useSelector } from 'react-redux';
+import { toast } from 'react-hot-toast';
 import type { RootState } from '../../store';
 import { Upload } from 'lucide-react';
 import { API } from '../../config/api';
@@ -93,6 +94,7 @@ const EditProductPage = () => {
             setUploading(false);
         } catch (error) {
             console.error(error);
+            toast.error('File upload failed');
             setUploading(false);
         }
     };
@@ -132,9 +134,10 @@ const EditProductPage = () => {
                 body: JSON.stringify(productData),
             });
             if (res.ok) {
+                toast.success('Product updated successfully');
                 navigate('/admin/products');
             } else {
-                alert('Failed to update product');
+                toast.error('Failed to update product');
             }
         } catch (error) {
             console.error(error);
