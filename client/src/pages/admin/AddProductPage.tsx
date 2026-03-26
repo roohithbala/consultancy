@@ -188,21 +188,21 @@ const AddProductPage = () => {
 
                 <div>
                     <label className="block text-xs font-bold text-secondary-text uppercase tracking-widest mb-3">Sample Price (₹) <span className="text-secondary-text/60 lowercase">(0 for free)</span></label>
-                    <input type="number" name="samplePrice" value={formData.samplePrice} onChange={handleInputChange} className="w-full px-5 py-4 bg-bg-main border border-theme rounded-xl text-primary-text focus:border-brand outline-none transition-all shadow-sm font-mono" />
+                    <input type="number" min="0" step="0.01" name="samplePrice" value={formData.samplePrice} onChange={handleInputChange} className="w-full px-5 py-4 bg-bg-main border border-theme rounded-xl text-primary-text focus:border-brand outline-none transition-all shadow-sm font-mono" />
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                     <div>
                         <label className="block text-xs font-bold text-secondary-text uppercase tracking-widest mb-3">Price / Meter (₹)</label>
-                        <input type="number" name="pricePerMeter" value={formData.pricePerMeter} onChange={handleInputChange} className="w-full px-5 py-4 bg-bg-main border border-theme rounded-xl text-primary-text focus:border-brand outline-none transition-all shadow-sm font-mono" required />
+                        <input type="number" min="0" step="0.01" name="pricePerMeter" value={formData.pricePerMeter} onChange={handleInputChange} className="w-full px-5 py-4 bg-bg-main border border-theme rounded-xl text-primary-text focus:border-brand outline-none transition-all shadow-sm font-mono" required />
                     </div>
                     <div>
                         <label className="block text-xs font-bold text-secondary-text uppercase tracking-widest mb-3">Stock (Meters)</label>
-                        <input type="number" name="inStock" value={formData.inStock} onChange={handleInputChange} className="w-full px-5 py-4 bg-bg-main border border-theme rounded-xl text-primary-text focus:border-brand outline-none transition-all shadow-sm font-mono" required />
+                        <input type="number" min="0" step="1" name="inStock" value={formData.inStock} onChange={handleInputChange} className="w-full px-5 py-4 bg-bg-main border border-theme rounded-xl text-primary-text focus:border-brand outline-none transition-all shadow-sm font-mono" required />
                     </div>
                     <div>
                         <label className="block text-xs font-bold text-secondary-text uppercase tracking-widest mb-3">GSM</label>
-                        <input type="number" name="gsm" value={formData.gsm} onChange={handleInputChange} className="w-full px-5 py-4 bg-bg-main border border-theme rounded-xl text-primary-text focus:border-brand outline-none transition-all shadow-sm font-mono" />
+                        <input type="number" min="0" step="1" name="gsm" value={formData.gsm} onChange={handleInputChange} className="w-full px-5 py-4 bg-bg-main border border-theme rounded-xl text-primary-text focus:border-brand outline-none transition-all shadow-sm font-mono" />
                     </div>
                 </div>
 

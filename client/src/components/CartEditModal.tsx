@@ -17,7 +17,7 @@ const CartEditModal = ({ isOpen, onClose, item }: CartEditModalProps) => {
     const dispatch = useDispatch();
     const [product, setProduct] = useState<any>(null);
     const [loading, setLoading] = useState(true);
-    const [editQuantity, setEditQuantity] = useState(item.quantity);
+    const [editQuantity, setEditQuantity] = useState<number | string>(item.quantity);
     const [editColor, setEditColor] = useState(item.color || '#10b981');
     const [editCustomization, setEditCustomization] = useState(item.customization || '');
 
@@ -49,7 +49,7 @@ const CartEditModal = ({ isOpen, onClose, item }: CartEditModalProps) => {
             type: item.type,
             oldCustomization: item.customization,
             oldColor: item.color,
-            newQuantity: editQuantity,
+            newQuantity: item.type === 'sample' ? 1 : Math.max(5, parseInt(editQuantity.toString()) || 5),
             newColor: editColor,
             newCustomization: editCustomization
         }));
@@ -123,17 +123,22 @@ const CartEditModal = ({ isOpen, onClose, item }: CartEditModalProps) => {
                                          <div className="flex items-center gap-3">
                                             <div className="flex items-center bg-secondary border border-theme rounded-xl p-1">
                                                 <button
-                                                    onClick={() => setEditQuantity(Math.max(5, editQuantity - 5))}
+                                                    onClick={() => setEditQuantity(Math.max(5, (parseInt(editQuantity.toString()) || 5) - 5))}
                                                     className="w-12 h-12 flex items-center justify-center hover:bg-bg-main text-primary-text transition-colors rounded-lg font-bold"
                                                 >-</button>
                                                 <input
                                                     type="number"
                                                     value={editQuantity}
-                                                    onChange={(e) => setEditQuantity(Math.max(5, parseInt(e.target.value) || 5))}
+                                                    onChange={(e) => setEditQuantity(e.target.value)}
+                                                    onBlur={(e) => {
+                                                        const val = parseInt(e.target.value);
+                                                        setEditQuantity(isNaN(val) || val < 5 ? 5 : val);
+                                                    }}
+                                                    min="5"
                                                     className="w-16 bg-transparent border-none text-center text-primary-text font-black text-lg outline-none"
                                                 />
                                                 <button
-                                                    onClick={() => setEditQuantity(editQuantity + 5)}
+                                                    onClick={() => setEditQuantity((parseInt(editQuantity.toString()) || 5) + 5)}
                                                     className="w-12 h-12 flex items-center justify-center hover:bg-bg-main text-primary-text transition-colors rounded-lg font-bold"
                                                 >+</button>
                                             </div>
@@ -177,7 +182,7 @@ const CartEditModal = ({ isOpen, onClose, item }: CartEditModalProps) => {
                 <div className="p-8 border-t border-theme bg-secondary/30 flex flex-col sm:flex-row justify-between items-center gap-6">
                     <div className="flex flex-col">
                         <p className="text-xs text-secondary-text/60 font-bold uppercase tracking-widest">Price Estimate</p>
-                        <p className="text-3xl font-serif font-black text-brand italic tracking-tighter">₹{(item.price * editQuantity).toLocaleString()}</p>
+                        <p className="text-3xl font-serif font-black text-brand italic tracking-tighter">₹{(item.price * (parseInt(editQuantity.toString()) || 5)).toLocaleString()}</p>
                     </div>
                      <div className="flex gap-4 w-full sm:w-auto">
                         <button 

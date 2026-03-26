@@ -51,9 +51,10 @@ const ProductDetailPage = () => {
     const { user } = useSelector((state: RootState) => state.auth);
     const [product, setProduct] = useState<Product | null>(null);
     const [loading, setLoading] = useState(true);
-    const [quantity, setQuantity] = useState(5);
+    // Interactive State
+    const [color, setColor] = useState('#10b981');
+    const [quantity, setQuantity] = useState<number | string>(5); // MOQ is 5
     const [customization, setCustomization] = useState('');
-    const [selectedColor, setSelectedColor] = useState('#10b981');
 
     // Strict Ordering State
     const [verifiedSamples, setVerifiedSamples] = useState<any[]>([]);
@@ -77,7 +78,7 @@ const ProductDetailPage = () => {
         const isReadOnlyMode = queryParams.get('readonly') === 'true';
         setIsReadOnly(isReadOnlyMode);
 
-        if (urlColor) setSelectedColor(urlColor);
+        if (urlColor) setColor(urlColor);
         if (urlCustomization) setCustomization(urlCustomization);
 
         const fetchProduct = async () => {
@@ -121,6 +122,8 @@ const ProductDetailPage = () => {
     const addToCartHandler = (type: 'regular' | 'sample' = 'regular') => {
         if (!product) return;
 
+        const finalQuantity = Math.max(5, parseInt(quantity.toString()) || 5);
+
         if (type === 'regular') {
             // Strict Logic Check
             if (!selectedSampleId && !manualSampleId && !riskAccepted) {
@@ -131,7 +134,7 @@ const ProductDetailPage = () => {
 
         const isSample = type === 'sample';
         const price = isSample ? (product.samplePrice || 50) : product.pricePerMeter;
-        const qty = isSample ? 1 : quantity;
+        const qty = isSample ? 1 : finalQuantity;
 
         dispatch(addToCart({
             id: product._id,
@@ -142,11 +145,11 @@ const ProductDetailPage = () => {
             materialType: product.materialType,
             type: type,
             customization: customization,
-            color: selectedColor,
+            color: color,
             relatedSampleId: selectedSampleId || manualSampleId,
             isRiskAccepted: riskAccepted
         }));
-
+        
         setShowRiskModal(false);
         setRiskAccepted(false);
         // Custom UI feedback could replace this window alert in future
@@ -207,14 +210,14 @@ const ProductDetailPage = () => {
                                     {viewMode === '3d' ? (
                                         (product.materialType === 'INTERLININGS' || product.materialType === 'JERSEY' || product.materialType === 'FOAM LAMINATIONS' || product.modelUrl) ? (
                                             <FootwearConfigurator 
-                                                color={selectedColor} 
+                                                color={color} 
                                                 modelUrl={product.modelUrl} 
                                                 fallbackImage={product.imageUrl}
                                             />
                                         ) : product.textureMaps?.map ? (
                                             <FabricViewer
                                                 textureUrl={product.textureMaps.map}
-                                                color={selectedColor}
+                                                color={color}
                                                 normalMapUrl={product.textureMaps.normalMap}
                                                 roughnessMapUrl={product.textureMaps.roughnessMap}
                                             />
@@ -365,14 +368,14 @@ const ProductDetailPage = () => {
                             {(product.materialType === 'INTERLININGS' || product.textureMaps?.map) && (
                                 <div className={isReadOnly ? 'pointer-events-none opacity-80' : ''}>
                                     <ColorTools 
-                                        color={selectedColor} 
-                                        onChange={(color) => {
-                                            setSelectedColor(color);
+                                        color={color} 
+                                        onChange={(newColor) => {
+                                            setColor(newColor);
                                             logActivity('3D_MODEL_INTERACTION', { 
                                                 productId: product._id, 
                                                 productName: product.name, 
                                                 type: 'Color Change',
-                                                color: color
+                                                color: newColor
                                             });
                                         }} 
                                     />
@@ -396,15 +399,25 @@ const ProductDetailPage = () => {
                                 <label className="block text-[10px] font-black text-secondary-text/60 uppercase tracking-[0.2em] mb-3">Quantity (Meters)</label>
                                 <div className="flex items-center gap-4 mb-2">
                                     <div className="flex items-center bg-bg-alt/50 border border-border/10 rounded-xl overflow-hidden">
-                                        <button onClick={() => setQuantity(Math.max(5, quantity - 5))} className="px-5 py-4 text-primary-text hover:bg-brand hover:text-black transition-all font-black">-</button>
-                                        <input
-                                            type="number"
-                                            value={quantity}
-                                            onChange={(e) => setQuantity(Number(e.target.value))}
-                                            className="w-20 text-center bg-transparent border-none outline-none text-primary-text font-black text-lg"
+                                        <button 
+                                            onClick={() => setQuantity(Math.max(5, (parseInt(quantity.toString()) || 5) - 5))}
+                                            className="w-12 h-12 flex items-center justify-center hover:bg-bg-main text-primary-text transition-colors rounded-lg font-bold"
+                                        >-</button>
+                                        <input 
+                                            type="number" 
+                                            value={quantity} 
+                                            onChange={(e) => setQuantity(e.target.value)}
+                                            onBlur={(e) => {
+                                                const val = parseInt(e.target.value);
+                                                setQuantity(isNaN(val) || val < 5 ? 5 : val);
+                                            }}
                                             min="5"
+                                            className="w-16 bg-transparent border-none text-center text-primary-text font-black text-lg outline-none"
                                         />
-                                        <button onClick={() => setQuantity(quantity + 5)} className="px-5 py-4 text-primary-text hover:bg-brand hover:text-black transition-all font-black">+</button>
+                                        <button 
+                                            onClick={() => setQuantity((parseInt(quantity.toString()) || 5) + 5)}
+                                            className="w-12 h-12 flex items-center justify-center hover:bg-bg-main text-primary-text transition-colors rounded-lg font-bold"
+                                        >+</button>
                                     </div>
                                     <span className="text-[10px] font-black text-secondary-text/40 uppercase tracking-widest italic">Min Order: 5m</span>
                                 </div>

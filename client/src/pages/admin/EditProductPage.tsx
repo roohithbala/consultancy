@@ -198,22 +198,22 @@ const EditProductPage = () => {
                 {/* Sample Price */}
                 <div>
                     <label className={labelCls}>Sample Price (₹) <span className="text-secondary-text/50 lowercase">(0 for free)</span></label>
-                    <input type="number" name="samplePrice" value={formData.samplePrice} onChange={handleInputChange} className={`${fieldCls} font-mono`} />
+                    <input type="number" min="0" step="0.01" name="samplePrice" value={formData.samplePrice} onChange={handleInputChange} className={`${fieldCls} font-mono`} />
                 </div>
 
                 {/* Price / Stock / GSM */}
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                     <div>
                         <label className={labelCls}>Price / Meter (₹)</label>
-                        <input type="number" name="pricePerMeter" value={formData.pricePerMeter} onChange={handleInputChange} className={`${fieldCls} font-mono`} required />
+                        <input type="number" min="0" step="0.01" name="pricePerMeter" value={formData.pricePerMeter} onChange={handleInputChange} className={`${fieldCls} font-mono`} required />
                     </div>
                     <div>
                         <label className={labelCls}>Stock (Meters)</label>
-                        <input type="number" name="inStock" value={formData.inStock} onChange={handleInputChange} className={`${fieldCls} font-mono`} required />
+                        <input type="number" min="0" step="1" name="inStock" value={formData.inStock} onChange={handleInputChange} className={`${fieldCls} font-mono`} required />
                     </div>
                     <div>
                         <label className={labelCls}>GSM</label>
-                        <input type="number" name="gsm" value={formData.gsm} onChange={handleInputChange} className={`${fieldCls} font-mono`} />
+                        <input type="number" min="0" step="1" name="gsm" value={formData.gsm} onChange={handleInputChange} className={`${fieldCls} font-mono`} />
                     </div>
                 </div>
 

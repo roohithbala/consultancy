@@ -32,6 +32,16 @@ export const addOrderItems = async (req, res) => {
         res.status(400).json({ message: 'No order items' });
         return;
     } else {
+        // Prevent negative values hacker injection
+        for (const item of orderItems) {
+            if (item.quantity < 1 || item.price < 0) {
+                return res.status(400).json({ message: 'Invalid quantity or price detected.' });
+            }
+        }
+        if (itemsPrice < 0 || taxPrice < 0 || shippingPrice < 0 || totalPrice < 0) {
+            return res.status(400).json({ message: 'Invalid order totals detected.' });
+        }
+
         try {
             const order = new Order({
                 orderItems,
@@ -466,14 +476,14 @@ export const updateOrderFinancials = async (req, res) => {
             order.orderItems.forEach(item => {
                 const updatedItem = orderItems.find(i => i._id.toString() === item._id.toString());
                 if (updatedItem) {
-                    item.price = Number(updatedItem.price);
+                    item.price = Math.max(0, Number(updatedItem.price));
                 }
             });
         }
 
         // Update Shipping
         if (shippingPrice !== undefined) {
-            order.shippingPrice = Number(shippingPrice);
+            order.shippingPrice = Math.max(0, Number(shippingPrice));
         }
 
         // Recalculate Totals

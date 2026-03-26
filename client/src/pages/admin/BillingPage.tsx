@@ -544,7 +544,7 @@ const BillingPage = () => {
                                 <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
                                     <input placeholder="Description *" value={expForm.description} onChange={e => setExpForm(p => ({ ...p, description: e.target.value }))}
                                         className="col-span-2 md:col-span-2 px-3 py-2.5 bg-bg-alt border border-theme rounded-xl text-xs text-primary-text placeholder:text-secondary-text focus:outline-none focus:border-brand/40" />
-                                    <input type="number" placeholder="Amount (₹) *" value={expForm.amount} onChange={e => setExpForm(p => ({ ...p, amount: e.target.value }))}
+                                    <input type="number" min="0" step="0.01" placeholder="Amount (₹) *" value={expForm.amount} onChange={e => setExpForm(p => ({ ...p, amount: e.target.value }))}
                                         className="px-3 py-2.5 bg-bg-alt border border-theme rounded-xl text-xs text-primary-text placeholder:text-secondary-text focus:outline-none focus:border-brand/40" />
                                     <select value={expForm.category} onChange={e => setExpForm(p => ({ ...p, category: e.target.value }))}
                                         className="px-3 py-2.5 bg-bg-alt border border-theme rounded-xl text-xs text-primary-text focus:outline-none focus:border-brand/40">
@@ -639,7 +639,7 @@ const BillingPage = () => {
                                         </div>
                                         <div>
                                             <label className="text-[9px] text-secondary-text uppercase tracking-wider mb-1 block">Credit Limit (₹)</label>
-                                            <input type="number" value={editCredit.creditLimit} onChange={e => setEditCredit((p: any) => ({ ...p, creditLimit: parseFloat(e.target.value) }))}
+                                            <input type="number" min="0" step="0.01" value={editCredit.creditLimit} onChange={e => setEditCredit((p: any) => ({ ...p, creditLimit: parseFloat(e.target.value) }))}
                                                 className="w-full px-3 py-2 bg-bg-alt border border-theme rounded-xl text-xs text-primary-text focus:outline-none focus:border-brand/40" />
                                         </div>
                                         <div>

@@ -40,6 +40,13 @@ export const createProduct = async (req, res) => {
         coatings
     } = req.body;
 
+    if (
+        (pricePerMeter !== undefined && pricePerMeter < 0) ||
+        (samplePrice !== undefined && samplePrice < 0) ||
+        (inStock !== undefined && inStock < 0)
+    ) {
+        return res.status(400).json({ message: 'Prices and stock cannot be negative' });
+    }
 
     const product = new Product({
         name,
@@ -93,6 +100,13 @@ export const updateProduct = async (req, res) => {
         coatings
     } = req.body;
 
+    if (
+        (pricePerMeter !== undefined && pricePerMeter < 0) ||
+        (samplePrice !== undefined && samplePrice < 0) ||
+        (inStock !== undefined && inStock < 0)
+    ) {
+        return res.status(400).json({ message: 'Prices and stock cannot be negative' });
+    }
 
     const product = await Product.findById(req.params.id);
 
