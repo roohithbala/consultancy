@@ -168,3 +168,37 @@ export const answerProductQuestion = async (req, res) => {
     }
 };
 
+// @desc    Get all questions across all products
+// @route   GET /api/products/admin/questions
+// @access  Private/Admin
+export const getAllQuestions = async (req, res) => {
+    // Find products that have at least one question
+    const products = await Product.find({ 'questions.0': { $exists: true } })
+        .populate('questions.user', 'name email');
+        
+    let allQuestions = [];
+    products.forEach(product => {
+        product.questions.forEach(q => {
+            allQuestions.push({
+                productId: product._id,
+                productName: product.name,
+                questionId: q._id,
+                question: q.question,
+                answer: q.answer,
+                user: q.user,
+                createdAt: q.createdAt,
+            });
+        });
+    });
+    
+    // Sort so unanswered ones appear first, then by date descending
+    allQuestions.sort((a, b) => {
+        if (!a.answer && b.answer) return -1;
+        if (a.answer && !b.answer) return 1;
+        return new Date(b.createdAt) - new Date(a.createdAt);
+    });
+    
+    res.json(allQuestions);
+};
+
+

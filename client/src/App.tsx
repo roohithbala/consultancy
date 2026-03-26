@@ -34,6 +34,7 @@ import AnalyticsDashboardPage from './pages/admin/AnalyticsDashboardPage';
 import BillingPage from './pages/admin/BillingPage';
 import ReportHubPage from './pages/admin/ReportHubPage';
 import UserActivityPage from './pages/admin/UserActivityPage';
+import AdminFAQPage from './pages/admin/AdminFAQPage';
 import SupportTicketsPage from './pages/SupportTicketsPage';
 import TicketDetailsPage from './pages/TicketDetailsPage';
 import AdminTicketsPage from './pages/admin/AdminTicketsPage';
@@ -95,6 +96,7 @@ function App() {
                 <Route path="billing" element={<BillingPage />} />
                 <Route path="activity" element={<UserActivityPage />} />
                 <Route path="reports" element={<ReportHubPage />} />
+                <Route path="faqs" element={<AdminFAQPage />} />
                 <Route path="support" element={<AdminTicketsPage />} />
                 <Route path="support/:id" element={<TicketDetailsPage />} />
               </Route>
