@@ -168,6 +168,27 @@ export const answerProductQuestion = async (req, res) => {
     }
 };
 
+// @desc    Delete a product question
+// @route   DELETE /api/products/:id/questions/:questionId
+// @access  Private/Admin
+export const deleteProductQuestion = async (req, res) => {
+    const product = await Product.findById(req.params.id);
+    
+    if (product) {
+        const questionObj = product.questions.id(req.params.questionId);
+        
+        if (questionObj) {
+            product.questions.pull({ _id: req.params.questionId });
+            await product.save();
+            res.json({ message: 'Question removed' });
+        } else {
+            res.status(404).json({ message: 'Question not found' });
+        }
+    } else {
+        res.status(404).json({ message: 'Product not found' });
+    }
+};
+
 // @desc    Get all questions across all products
 // @route   GET /api/products/admin/questions
 // @access  Private/Admin

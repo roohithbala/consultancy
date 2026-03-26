@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
-import { MessageCircle, Search, User, CheckCircle, Package } from 'lucide-react';
+import { MessageCircle, Search, User, CheckCircle, Package, Trash2 } from 'lucide-react';
 import type { RootState } from '../../store';
 import { API } from '../../config/api';
 
@@ -60,7 +60,22 @@ const AdminFAQPage = () => {
         }
     };
 
-    const filteredQuestions = questions.filter(q => 
+    const handleDeleteQuestion = async (productId: string, questionId: string) => {
+        if (!window.confirm('Are you sure you want to delete this question?')) return;
+        try {
+            const res = await fetch(`${API}/products/${productId}/questions/${questionId}`, {
+                method: 'DELETE',
+                headers: { Authorization: `Bearer ${user?.token}` }
+            });
+            if (res.ok) {
+                setQuestions(prev => prev.filter(q => q.questionId !== questionId));
+            }
+        } catch (error) {
+            console.error(error);
+        }
+    };
+
+    const filteredQuestions = questions.filter(q =>  
         q.question.toLowerCase().includes(searchTerm.toLowerCase()) || 
         q.productName.toLowerCase().includes(searchTerm.toLowerCase()) ||
         (q.user?.name && q.user.name.toLowerCase().includes(searchTerm.toLowerCase()))
@@ -114,11 +129,20 @@ const AdminFAQPage = () => {
                                             </div>
                                         </div>
                                     </div>
-                                    {!q.answer && (
-                                        <span className="px-3 py-1 bg-amber-500/10 text-amber-500 border border-amber-500/20 rounded-full text-[10px] font-black uppercase tracking-widest">
-                                            Needs Answer
-                                        </span>
-                                    )}
+                                    <div className="flex items-center gap-2">
+                                        {!q.answer && (
+                                            <span className="px-3 py-1 bg-amber-500/10 text-amber-500 border border-amber-500/20 rounded-full text-[10px] font-black uppercase tracking-widest">
+                                                Needs Answer
+                                            </span>
+                                        )}
+                                        <button 
+                                            onClick={() => handleDeleteQuestion(q.productId, q.questionId)} 
+                                            className="text-red-500/70 hover:text-red-500 p-2 hover:bg-red-500/10 rounded-full transition-colors"
+                                            title="Delete Question"
+                                        >
+                                            <Trash2 size={16} />
+                                        </button>
+                                    </div>
                                 </div>
 
                                 {q.answer ? (

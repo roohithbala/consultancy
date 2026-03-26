@@ -68,6 +68,7 @@ const ProductDetailPage = () => {
     // Q&A State
     const [newQuestion, setNewQuestion] = useState('');
     const [adminAnswer, setAdminAnswer] = useState<{[key: string]: string}>({});
+    const [isSubmittingQuestion, setIsSubmittingQuestion] = useState(false);
 
     useEffect(() => {
         const queryParams = new URLSearchParams(window.location.search);
@@ -154,7 +155,8 @@ const ProductDetailPage = () => {
 
     const handlePostQuestion = async (e: React.FormEvent) => {
         e.preventDefault();
-        if (!newQuestion.trim() || !user) return;
+        if (!newQuestion.trim() || !user || isSubmittingQuestion) return;
+        setIsSubmittingQuestion(true);
         try {
             const res = await fetch(`${API}/products/${id}/questions`, {
                 method: 'POST',
@@ -166,7 +168,11 @@ const ProductDetailPage = () => {
                 setProduct(prev => prev ? { ...prev, questions: data.questions } : null);
                 setNewQuestion('');
             }
-        } catch (error) { console.error(error); }
+        } catch (error) { 
+            console.error(error); 
+        } finally {
+            setIsSubmittingQuestion(false);
+        }
     };
 
     const handleAnswerQuestion = async (questionId: string) => {
@@ -592,8 +598,8 @@ const ProductDetailPage = () => {
                                     className="flex-1 bg-secondary border border-theme rounded-lg px-4 py-3 text-primary-text focus:border-brand outline-none"
                                     placeholder="E.g. What is the typical shrinkage percentage after washing?"
                                 />
-                                <button type="submit" className="bg-brand text-black font-bold uppercase tracking-widest text-xs px-8 rounded-lg hover:opacity-90 transition-opacity flex items-center gap-2">
-                                    <Send size={16} /> Post
+                                <button type="submit" disabled={isSubmittingQuestion} className="bg-brand text-black font-bold uppercase tracking-widest text-xs px-8 rounded-lg hover:opacity-90 transition-opacity flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed">
+                                    <Send size={16} /> {isSubmittingQuestion ? 'Posting...' : 'Post'}
                                 </button>
                             </div>
                         </form>
