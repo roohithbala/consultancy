@@ -1,6 +1,7 @@
 import { Canvas, useLoader } from '@react-three/fiber';
 import { OrbitControls, Stage, Html } from '@react-three/drei';
 import { Suspense, useState, useLayoutEffect } from 'react';
+import { useTheme } from '../context/ThemeContext';
 import * as THREE from 'three';
 import { FBXLoader } from 'three/addons/loaders/FBXLoader.js';
 import ThreeErrorBoundary from './ThreeErrorBoundary';
@@ -92,6 +93,7 @@ const MATERIAL_LABELS: Record<string, string> = {
 };
 
 const FootwearConfigurator = ({ color: externalColor, modelUrl, fallbackImage }: FootwearConfiguratorProps) => {
+    const { theme } = useTheme();
     const color = externalColor || '#10b981';
     const [materialType, setMaterialType] = useState('Original');
 
@@ -107,10 +109,14 @@ const FootwearConfigurator = ({ color: externalColor, modelUrl, fallbackImage }:
     const currentTexture = textures[materialType];
     const show3D = materialType !== 'Original';
 
+    const bgColor = theme === 'dark' ? '#020617' : '#ffffff';
+    const uiBg = theme === 'dark' ? 'bg-black/70' : 'bg-white/80';
+    const textColor = theme === 'dark' ? 'text-brand' : 'text-brand-dark';
+
     return (
-        <div className="flex flex-col lg:flex-row h-full">
+        <div className="flex flex-col lg:flex-row h-full transition-colors duration-500">
             {/* Viewer Area */}
-            <div className="flex-1 h-full bg-[#0a0a0a] relative overflow-hidden lg:rounded-l-[2.5rem] flex items-center justify-center">
+            <div className="flex-1 h-full relative overflow-hidden lg:rounded-l-[2.5rem] flex items-center justify-center transition-colors duration-500" style={{ backgroundColor: bgColor }}>
                 {!show3D ? (
                     /* Original → static image */
                     <div className="relative w-full h-full flex items-center justify-center bg-secondary rounded-lg overflow-hidden">
@@ -135,7 +141,7 @@ const FootwearConfigurator = ({ color: externalColor, modelUrl, fallbackImage }:
                             gl={{ alpha: false }}
                             className="w-full h-full"
                         >
-                            <color attach="background" args={['#0a0a0a']} />
+                            <color attach="background" args={[bgColor]} />
                             <Suspense fallback={<LoadingOverlay />}>
                                 <Stage environment="city" intensity={2} adjustCamera={1.2}>
                                     <ShoeModel
@@ -147,7 +153,7 @@ const FootwearConfigurator = ({ color: externalColor, modelUrl, fallbackImage }:
                             </Suspense>
                             <OrbitControls makeDefault enablePan={false} />
                         </Canvas>
-                        <div className="absolute top-4 left-4 z-10 px-3 py-1 bg-black/70 backdrop-blur-md rounded-full border border-white/10 text-[10px] text-brand uppercase tracking-widest font-bold pointer-events-none">
+                        <div className={`absolute top-4 left-4 z-10 px-3 py-1 ${uiBg} backdrop-blur-md rounded-full border border-theme text-[10px] ${textColor} uppercase tracking-widest font-bold pointer-events-none shadow-sm`}>
                             Interactive 3D · {MATERIAL_LABELS[materialType] || materialType}
                         </div>
                     </ThreeErrorBoundary>

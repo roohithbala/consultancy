@@ -89,7 +89,7 @@ const Footer = () => {
                         <div className="flex items-center gap-4">
                             <div className="w-2 h-2 rounded-full bg-brand animate-pulse"></div>
                             <p className="text-[10px] font-black uppercase tracking-[0.2em] text-secondary">
-                                &copy; {new Date().getFullYear()} Zain Fabrics &bull; Est. 2014 &bull; Precision Engineered
+                                &copy; {new Date().getFullYear()} Zain Fabrics &bull; Est. 2014
                             </p>
                         </div>
                         <div className="h-4 w-px bg-theme hidden md:block"></div>

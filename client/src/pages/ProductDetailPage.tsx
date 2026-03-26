@@ -12,6 +12,7 @@ import type { RootState } from '../store';
 import { API } from '../config/api';
 import { CATEGORY_FALLBACKS } from '../config/imageFallback';
 import { logActivity } from '../utils/activity';
+import { useTheme } from '../context/ThemeContext';
 
 interface Question {
     _id: string;
@@ -50,6 +51,7 @@ const ProductDetailPage = () => {
     const { id } = useParams();
     const dispatch = useDispatch();
     const { user } = useSelector((state: RootState) => state.auth);
+    const { theme } = useTheme();
     const [product, setProduct] = useState<Product | null>(null);
     const [loading, setLoading] = useState(true);
     // Interactive State
@@ -205,13 +207,16 @@ const ProductDetailPage = () => {
     if (loading) return <div className="min-h-screen bg-bg-main flex items-center justify-center text-primary-text font-black uppercase tracking-widest text-xs">Loading Specification...</div>;
     if (!product) return <div className="min-h-screen bg-bg-main flex items-center justify-center text-primary-text font-black uppercase tracking-widest text-xs">Product not found</div>;
 
+    const isModelAvailable = (product.materialType === 'INTERLININGS' || product.materialType === 'JERSEY' || product.materialType === 'FOAM LAMINATIONS' || product.modelUrl);
+    const is3DActive = viewMode === '3d' && (isModelAvailable || product.textureMaps?.map);
+
     return (
         <div className="bg-bg-main min-h-screen pb-20 text-primary-text font-sans selection:bg-brand/30 selection:text-brand transition-colors duration-300">
             <div className="container mx-auto px-6 py-12">
                 <div className="flex flex-col lg:flex-row gap-16">
                     {/* Left Column - Visuals */}
                     <div className="lg:w-2/3">
-                        <div className="relative h-[650px] bg-[#0a0a0a] border border-theme rounded-[2.5rem] overflow-hidden shadow-2xl mb-10 group">
+                        <div className={`relative h-[650px] border border-theme rounded-[2.5rem] overflow-hidden shadow-2xl mb-10 group transition-colors duration-500 ${theme === 'dark' ? 'bg-[#020617]' : 'bg-white'}`}>
                             {/* 3D Fabric Viewer or Image */}
                             <div className="absolute inset-0 z-0">
                                 <ThreeErrorBoundary>
@@ -230,15 +235,15 @@ const ProductDetailPage = () => {
                                                 roughnessMapUrl={product.textureMaps.roughnessMap}
                                             />
                                         ) : (
-                                            <div className="w-full h-full flex flex-col items-center justify-center bg-[#0a0a0a] p-12 text-center">
+                                            <div className={`w-full h-full flex flex-col items-center justify-center p-12 text-center transition-colors duration-500 ${theme === 'dark' ? 'bg-[#020617]' : 'bg-slate-50'}`}>
                                                 <div className="w-32 h-32 mb-8 relative">
                                                     <div className="absolute inset-0 bg-brand/20 rounded-full animate-ping"></div>
                                                     <div className="relative bg-brand/10 border border-brand/30 w-full h-full rounded-full flex items-center justify-center">
                                                         <Layers size={48} className="text-brand opacity-50" />
                                                     </div>
                                                 </div>
-                                                <h3 className="text-2xl font-serif font-bold text-white mb-4">3D Material Not Available</h3>
-                                                <p className="text-gray-400 text-sm max-w-sm mx-auto leading-relaxed">
+                                                <h3 className={`text-2xl font-serif font-bold mb-4 ${theme === 'dark' ? 'text-white' : 'text-slate-800'}`}>3D Material Not Available</h3>
+                                                <p className={`${theme === 'dark' ? 'text-gray-400' : 'text-slate-500'} text-sm max-w-sm mx-auto leading-relaxed`}>
                                                     This specific material grade is currently being digitized.
                                                     Please refer to the high-resolution gallery and technical specifications below.
                                                 </p>
@@ -259,16 +264,16 @@ const ProductDetailPage = () => {
                             </div>
  
                             <div className="absolute top-8 left-8 z-10">
-                                <span className="glass border border-theme text-brand px-5 py-2 text-[10px] font-black uppercase tracking-[0.3em] rounded-full">
+                                <span className="glass border border-theme text-brand px-5 py-2 text-[10px] font-black uppercase tracking-[0.3em] rounded-full shadow-lg">
                                     {viewMode === '3d' ? 'Spatial Preview 4K' : 'High-Res Texture 8K'}
                                 </span>
                             </div>
  
-                            <div className={`absolute bottom-0 left-0 p-8 flex flex-col justify-end pointer-events-none ${viewMode === '3d' && (product.materialType === 'INTERLININGS' || product.materialType === 'JERSEY' || product.materialType === 'FOAM LAMINATIONS' || product.modelUrl) ? 'w-full lg:w-[calc(100%-18rem)] bg-gradient-to-t from-black via-black/40 to-transparent' : 'w-full bg-gradient-to-t from-bg-main/90 via-bg-main/30 to-transparent'}`}>
+                            <div className={`absolute bottom-0 left-0 p-8 flex flex-col justify-end pointer-events-none transition-all duration-500 ${is3DActive ? 'w-full lg:w-[calc(100%-18rem)] bg-gradient-to-t from-black via-black/40 to-transparent' : theme === 'dark' ? 'w-full bg-gradient-to-t from-[#020617] via-[#020617]/40 to-transparent' : 'w-full bg-gradient-to-t from-white via-white/40 to-transparent'}`}>
                                 <div className="flex items-center justify-between">
                                     <p className="text-[11px] text-primary-text/80 flex items-center gap-3 uppercase tracking-[0.1em] font-black">
                                         <Layers size={16} className="text-brand" strokeWidth={3} />
-                                        {viewMode === '3d' ? 'Interactive Render • Zenith Certified' : 'Fabric Surface Detail • Macro Inspection'}
+                                        {viewMode === '3d' ? 'Interactive Render' : 'Fabric Surface Detail • Macro Inspection'}
                                     </p>
                                     <div className="flex gap-2">
                                         <div className="w-1.5 h-1.5 rounded-full bg-secondary-text/20"></div>
