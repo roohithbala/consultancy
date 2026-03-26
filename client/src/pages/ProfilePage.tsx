@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { User, Shield, MapPin, Lock, Save, Loader } from 'lucide-react';
 import type { RootState } from '../store';
 import { setCredentials } from '../store/authSlice';
+import { API } from '../config/api';
 
 // Reusing AddressBook logic or components would be ideal, but for now we'll inline a simple view or link to it.
 import AddressBookPage from './AddressBookPage';
@@ -55,7 +56,7 @@ const ProfilePage = () => {
         setErrorMessage('');
         setSuccessMessage('');
         try {
-            const res = await fetch('http://localhost:5000/api/users/profile', {
+            const res = await fetch(`${API}/users/profile`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
@@ -92,7 +93,7 @@ const ProfilePage = () => {
         try {
             const body = activeTab === 'details' ? details : { password: passwordData.password };
 
-            const res = await fetch('http://localhost:5000/api/users/profile', {
+            const res = await fetch(`${API}/users/profile`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',

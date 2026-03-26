@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { API } from '../../config/api';
 import { Link } from 'react-router-dom';
 import { Plus, Edit, Trash2, Search, Filter, X, Eye } from 'lucide-react';
 import { useSelector } from 'react-redux';
@@ -30,7 +31,7 @@ const ProductListPage = () => {
 
     const fetchProducts = async () => {
         try {
-            const res = await fetch('http://localhost:5000/api/products');
+            const res = await fetch(`${API}/products`);
             setProducts(await res.json());
             setLoading(false);
         } catch (e) { console.error(e); setLoading(false); }
@@ -38,7 +39,7 @@ const ProductListPage = () => {
 
     const deleteHandler = async (id: string) => {
         if (!window.confirm('Delete this product?')) return;
-        const res = await fetch(`http://localhost:5000/api/products/${id}`, {
+        const res = await fetch(`${API}/products/${id}`, {
             method: 'DELETE',
             headers: { Authorization: `Bearer ${user?.token}` },
         });
@@ -47,7 +48,7 @@ const ProductListPage = () => {
     };
 
     const toggleAvailability = async (id: string, current: boolean) => {
-        const res = await fetch(`http://localhost:5000/api/products/${id}`, {
+        const res = await fetch(`${API}/products/${id}`, {
             method: 'PUT',
             headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${user?.token}` },
             body: JSON.stringify({ isAvailable: !current }),

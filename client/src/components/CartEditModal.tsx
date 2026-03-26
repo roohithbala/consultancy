@@ -5,6 +5,7 @@ import ThreeErrorBoundary from './ThreeErrorBoundary';
 import ColorTools from './ColorTools';
 import { useDispatch } from 'react-redux';
 import { updateCartItem } from '../store/cartSlice';
+import { API } from '../config/api';
 
 interface CartEditModalProps {
     isOpen: boolean;
@@ -29,7 +30,7 @@ const CartEditModal = ({ isOpen, onClose, item }: CartEditModalProps) => {
             const fetchProduct = async () => {
                 setLoading(true);
                 try {
-                    const res = await fetch(`http://localhost:5000/api/products/${item.id}`);
+                    const res = await fetch(`${API}/products/${item.id}`);
                     const data = await res.json();
                     setProduct(data);
                 } catch (error) {

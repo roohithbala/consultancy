@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { Search, Mail, User, Clock, CheckCircle } from 'lucide-react';
 import type { RootState } from '../../store';
+import { API } from '../../config/api';
 
 const CustomerListPage = () => {
     const { user } = useSelector((state: RootState) => state.auth);
@@ -15,7 +16,7 @@ const CustomerListPage = () => {
 
     const fetchCustomers = async () => {
         try {
-            const res = await fetch('http://localhost:5000/api/users', {
+            const res = await fetch(`${API}/users`, {
                 headers: { Authorization: `Bearer ${user?.token}` }
             });
             const data = await res.json();
@@ -36,7 +37,7 @@ const CustomerListPage = () => {
         if (!selectedCustomer) return;
         setSending(true);
         try {
-            const res = await fetch(`http://localhost:5000/api/users/${selectedCustomer._id}/email`, {
+            const res = await fetch(`${API}/users/${selectedCustomer._id}/email`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
